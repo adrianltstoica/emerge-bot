@@ -1,6 +1,7 @@
 """
 EMERGE AI Ethics Information Bot - RAG Backend
-Flask server with PDF upload, chunking, retrieval, and Claude API.
+API key loaded from environment variable. Documents pre-loaded from /documents folder.
+Users only see the chat interface.
 """
 
 import os
@@ -26,7 +27,8 @@ CHUNK_SIZE = 400
 CHUNK_OVERLAP = 80
 TOP_K = 6
 
-app.config['MAX_CONTENT_LENGTH'] = 30 * 1024 * 1024  # 30MB per file
+# API key from environment variable - never exposed to users
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
 chunk_store = []
 
@@ -114,23 +116,6 @@ def chunk_text(text, source_name):
     return chunks
 
 
-def extract_from_bytes(pdf_bytes, source_name):
-    if PDF_BACKEND != "pdfplumber":
-        return ""
-    try:
-        import pdfplumber, io
-        text = ""
-        with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
-            for page in pdf.pages:
-                t = page.extract_text()
-                if t:
-                    text += t + "\n"
-        return text.strip()
-    except Exception as e:
-        print(f"Error reading {source_name}: {e}")
-        return ""
-
-
 def extract_from_path(pdf_path):
     if PDF_BACKEND != "pdfplumber":
         return ""
@@ -144,7 +129,7 @@ def extract_from_path(pdf_path):
                     text += t + "\n"
         return text.strip()
     except Exception as e:
-        print(f"Error reading {pdf_path}: {e}")
+        print(f"  Error reading {pdf_path}: {e}")
         return ""
 
 
@@ -161,12 +146,12 @@ def load_documents():
         print("Loading from cache...")
         with open(CHUNKS_CACHE) as f:
             chunk_store = json.load(f)
-        print(f"  {len(chunk_store)} chunks from {len(set(c['source'] for c in chunk_store))} docs")
+        print(f"  {len(chunk_store)} chunks from {len(set(c['source'] for c in chunk_store))} documents")
         return
 
     pdfs = list(DOCS_FOLDER.glob("*.pdf"))
     if not pdfs:
-        print("No PDFs found — upload via the web interface.")
+        print("No PDFs found in /documents folder.")
         return
 
     print(f"Processing {len(pdfs)} PDFs...")
@@ -177,7 +162,7 @@ def load_documents():
             chunk_store.extend(chunks)
             print(f"  {p.stem}: {len(chunks)} chunks")
     save_cache()
-    print(f"Total: {len(chunk_store)} chunks")
+    print(f"Total: {len(chunk_store)} chunks ready")
 
 
 def retrieve_chunks(query):
@@ -209,75 +194,22 @@ def index():
 @app.route("/status")
 def status():
     docs = sorted(set(c["source"] for c in chunk_store))
-    return jsonify({"chunks_loaded": len(chunk_store), "documents": docs, "pdf_backend": PDF_BACKEND})
-
-
-@app.route("/upload", methods=["POST"])
-def upload():
-    if "files" not in request.files:
-        return jsonify({"error": "No files provided"}), 400
-
-    files = request.files.getlist("files")
-    results = []
-
-    for f in files:
-        if not f.filename.lower().endswith(".pdf"):
-            results.append({"name": f.filename, "status": "skipped — not a PDF"})
-            continue
-
-        source_name = Path(f.filename).stem
-        pdf_bytes = f.read()
-
-        text = extract_from_bytes(pdf_bytes, source_name)
-        if not text:
-            results.append({"name": f.filename, "status": "error — could not extract text"})
-            continue
-
-        # Remove old chunks for this source
-        global chunk_store
-        chunk_store = [c for c in chunk_store if c["source"] != source_name]
-
-        new_chunks = chunk_text(text, source_name)
-        chunk_store.extend(new_chunks)
-
-        # Save PDF to disk
-        DOCS_FOLDER.mkdir(exist_ok=True)
-        with open(DOCS_FOLDER / f.filename, "wb") as out:
-            out.write(pdf_bytes)
-
-        save_cache()
-        results.append({"name": f.filename, "source": source_name, "chunks": len(new_chunks), "status": "ok"})
-
     return jsonify({
-        "results": results,
-        "total_chunks": len(chunk_store),
-        "total_docs": len(set(c["source"] for c in chunk_store))
+        "chunks_loaded": len(chunk_store),
+        "documents": docs,
+        "ready": len(chunk_store) > 0
     })
-
-
-@app.route("/delete-doc", methods=["POST"])
-def delete_doc():
-    global chunk_store
-    source = request.json.get("source")
-    if not source:
-        return jsonify({"error": "No source provided"}), 400
-    chunk_store = [c for c in chunk_store if c["source"] != source]
-    save_cache()
-    p = DOCS_FOLDER / f"{source}.pdf"
-    if p.exists():
-        p.unlink()
-    return jsonify({"message": f"Removed {source}", "total_chunks": len(chunk_store)})
 
 
 @app.route("/chat", methods=["POST"])
 def chat():
+    if not ANTHROPIC_API_KEY:
+        return jsonify({"error": "API key not configured on server."}), 500
+
     data = request.json
     messages = data.get("messages", [])
-    api_key = data.get("api_key", "")
     stakeholder = data.get("stakeholder", "")
 
-    if not api_key:
-        return jsonify({"error": "No API key provided"}), 400
     if not messages:
         return jsonify({"error": "No messages provided"}), 400
 
@@ -294,7 +226,7 @@ def chat():
     full_system = SYSTEM_PROMPT + stakeholder_note + context_block
 
     try:
-        client = anthropic.Anthropic(api_key=api_key)
+        client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
         response = client.messages.create(
             model="claude-sonnet-4-20250514",
             max_tokens=1000,
@@ -303,7 +235,7 @@ def chat():
         )
         return jsonify({"reply": response.content[0].text, "chunks_used": len(chunks)})
     except anthropic.AuthenticationError:
-        return jsonify({"error": "Invalid API key."}), 401
+        return jsonify({"error": "Invalid API key on server."}), 401
     except anthropic.RateLimitError:
         return jsonify({"error": "Rate limit reached. Please wait a moment."}), 429
     except Exception as e:
@@ -314,6 +246,8 @@ if __name__ == "__main__":
     print("=" * 50)
     print("EMERGE AI Ethics Information Bot")
     print("=" * 50)
+    if not ANTHROPIC_API_KEY:
+        print("WARNING: ANTHROPIC_API_KEY environment variable not set!")
     load_documents()
     port = int(os.environ.get("PORT", 5000))
     print(f"\nStarting at http://localhost:{port}\n")
