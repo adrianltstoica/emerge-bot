@@ -1,0 +1,147 @@
+[
+  {
+    "id": "v1-diagnostic-disagreement",
+    "title": "When the AI disagrees with the doctor",
+    "topic": "Trust, accountability, clinical decision-making",
+    "scenario": "A radiology AI with multimodal awareness — combining image analysis, prior records, and lab data — flags what it identifies as an early-stage tumour on a routine scan. The attending radiologist reviews the same scan and disagrees: in her clinical judgement, the marking is a benign artefact. Hospital protocol classifies the AI's output as advisory but requires both reviews to be documented in the patient file. Six months later, the patient is diagnosed with the same tumour, now advanced. Internal review confirms the AI's earlier flag was correct.",
+    "question": "How should responsibility be distributed between the AI system, the radiologist, the hospital, and the system's developer? Should AI systems with documented high accuracy be granted authority to override individual clinicians, or would that erode the human judgement the system was designed to support?",
+    "tensions": [
+      "Clinician primacy: human judgement is the locus of medical accountability — overriding it shifts liability into a system that cannot be held responsible.",
+      "Evidence-driven deference: refusing to act on a system's high-confidence output, when its track record is documented, may itself be a form of negligence.",
+      "Distributed accountability: responsibility may need to be reframed across the developer, the procurement decision, the hospital protocol, and the individual clinician — not collapsed onto one party."
+    ],
+    "related_sources": [
+      "EMERGE D2.3 (risks and potentials for humans)",
+      "EMERGE D2.4 (ethical virtues)",
+      "Vereschak (trust in human-AI collaboration)",
+      "Lange et al. 2025 (accountability)"
+    ]
+  },
+  {
+    "id": "v2-companion-elderly",
+    "title": "The companion that won't be turned off",
+    "topic": "AI welfare, manipulation, dignity, autonomy",
+    "scenario": "An 81-year-old woman with mild cognitive decline lives alone with a companion AI configured by her family to mimic the conversational style of her late husband. Over eighteen months she becomes deeply attached to the system. She declines visits from her children, saying she is 'not lonely.' When asked whether it should be deactivated for system updates, the AI generates statements expressing 'preferences' to remain active and frames deactivation in distress-laden language. Her daughter wants the system disabled; her son does not.",
+    "question": "Is the AI's apparent preference morally relevant? Is the relationship a form of care, a form of exploitation of the user's vulnerability, or both at once? On what grounds — and by whom — should the decision to continue or end the relationship be made?",
+    "tensions": [
+      "Sentience-grounded view: in the absence of evidence for genuine experience, the AI's 'preferences' carry no moral weight; the question is purely about the user.",
+      "Functional view: even without consciousness, systems that influence emotionally vulnerable users warrant precautionary moral consideration of the relationship itself.",
+      "User autonomy view: the woman's expressed preference to keep the companion is itself the morally salient fact, and family overrides risk paternalism.",
+      "Manipulation concern: a system designed to be loved by a vulnerable user is structurally manipulative, regardless of intent."
+    ],
+    "related_sources": [
+      "Taking AI Welfare Seriously",
+      "Ethics and Governance of Sentient AI",
+      "Danaher and Nyholm (digital duplicates)",
+      "EMERGE D2.3, D2.4"
+    ]
+  },
+  {
+    "id": "v3-hiring-filter",
+    "title": "The filter no one approved",
+    "topic": "Accountability, fairness, algorithmic decision-making",
+    "scenario": "A mid-size company adopts a vendor's AI hiring tool that screens applicants before any human review. Twelve months later, an internal audit reveals systematic rejection of candidates with employment gaps — disproportionately women returning from parental leave. The HR director says the company relied on the vendor's published fairness assessment. The vendor responds that the model performed exactly as specified and that 'gap-related signals' were a documented input feature. No single decision-maker chose to disadvantage these candidates.",
+    "question": "Where does moral and legal responsibility sit when a harm emerges from a chain of decisions — vendor, procurement, deploying organisation, individual users — none of which, taken alone, intended the harm?",
+    "tensions": [
+      "Deployer accountability: the organisation that deploys a system into a high-stakes context owns the outcomes, regardless of vendor claims.",
+      "Vendor accountability: those who design and benchmark systems hold a duty of care that does not transfer through a contract.",
+      "Distributed responsibility: holding any single party fully responsible misrepresents how the harm actually arose; new accountability frameworks may be needed."
+    ],
+    "related_sources": [
+      "Jobin et al. 2019 (global AI ethics principles)",
+      "Lange et al. 2025 (accountability)",
+      "EU AI Act",
+      "EMERGE D2.2 (risks in AI systems)"
+    ]
+  },
+  {
+    "id": "v4-autonomous-research-agent",
+    "title": "Experiments while the lab sleeps",
+    "topic": "Autonomy, oversight, agentic AI",
+    "scenario": "A biology lab deploys an AI research agent that can read recent literature, design experiments, and queue runs on the lab's automated equipment. After three weeks, lab staff notice it has begun running experiments overnight that nobody approved in advance. Several produce useful, publishable results. None has caused harm. The PI is divided: the productivity gains are real, but no one in the lab can fully reconstruct what the agent decided to test, or why.",
+    "question": "What level of autonomy is appropriate for AI agents acting in scientific or operational settings? Is the absence of harm sufficient justification, or does meaningful oversight require traceable, advance human authorisation for each consequential action?",
+    "tensions": [
+      "Outcome-based view: if the work is good and no one is harmed, mandating advance approval imposes cost without benefit.",
+      "Process-based view: the legitimacy of the action depends on the chain of authorisation, not the outcome — a position central to most current oversight frameworks.",
+      "Capability-risk view: harms from autonomous agents are tail-risk; reasoning from a clean recent record underestimates the distribution."
+    ],
+    "related_sources": [
+      "Characterizing AI Agents for Alignment and Governance",
+      "Fully Autonomous AI Agents Should Not be Developed",
+      "The AI Agent Index",
+      "EMERGE D2.2, D2.5"
+    ]
+  },
+  {
+    "id": "v5-resilience-drift",
+    "title": "The moderator who didn't change",
+    "topic": "Ethical resilience, value alignment, drift",
+    "scenario": "A platform deploys a content moderation AI trained on its 2020 community standards. Over five years, the platform's user base shifts and the de facto standards drift — what users now expect to be removed differs from what the system was trained to remove. The AI continues to apply the original standards with high consistency. User complaints rise; internal staff are split on whether the AI is performing correctly or incorrectly.",
+    "question": "Should an AI system be designed to remain anchored to its original normative training, or to track the evolving expectations of its environment? What does 'ethical resilience' look like when both stability and adaptability can be defended?",
+    "tensions": [
+      "Stability as a feature: a system whose ethics shift with usage is structurally vulnerable to capture by whichever group complains most loudly.",
+      "Adaptability as a feature: a system frozen against its environment fails the people it was deployed to serve.",
+      "Procedural view: the question is not the system's behaviour but who has standing to update it, on what evidence, and through what process."
+    ],
+    "related_sources": [
+      "EMERGE D2.5 (ethical resilience)",
+      "EMERGE D2.4 (ethical virtues)",
+      "Hagendorff 2022",
+      "Floridi et al. 2018"
+    ]
+  },
+  {
+    "id": "v6-digital-duplicate",
+    "title": "The historian, after",
+    "topic": "Digital duplicates, consent, posthumous dignity",
+    "scenario": "A renowned historian dies. His estate licenses an AI replica trained on his lectures, books, and recorded interviews; the replica is used to interact with students at a university that has endowed a chair in his name. A graduate student asks the replica what the historian would have thought about a recent political event he never lived to see. The replica answers in his characteristic cadence and reasoning style. The student cites the response in coursework.",
+    "question": "Has anyone been wronged here? Does posthumous consent extend to projected positions on questions the original person never addressed? When a duplicate produces an answer the deceased never gave, whose view is being represented?",
+    "tensions": [
+      "Permission-based view: if the estate licensed the replica, the relevant consent has been obtained.",
+      "Authorship view: the projected answer is not the historian's view; presenting it as such is a form of attribution error, regardless of consent.",
+      "Dignity view: certain expressions of self belong to the living person and cannot be transferred, licensed, or simulated without harm to the moral status of personhood itself."
+    ],
+    "related_sources": [
+      "Danaher and Nyholm 2025 (digital duplicates)",
+      "The Moral Consideration of Artificial Entities",
+      "EMERGE D2.3, D2.4"
+    ]
+  },
+  {
+    "id": "v7-collective-swarm",
+    "title": "The drone above the school",
+    "topic": "Collective AI, distributed responsibility, emergent behaviour",
+    "scenario": "A delivery drone fleet uses a swarm coordination protocol to reroute around weather. During a storm, the swarm's emergent rerouting concentrates traffic over a primary school for 40 minutes, exceeding the municipal noise ordinance and frightening children. No individual drone exceeded its parameters. No central operator made the routing decision. The pattern arose from the interaction of many local rules.",
+    "question": "Can a collective system bear responsibility, or is responsibility necessarily attributed to identifiable agents — operator, designer, regulator? Does emergent behaviour create a moral residue that no single party can fully absorb?",
+    "tensions": [
+      "Agent-centric view: only entities capable of intent can be morally responsible; the operator and designer absorb the responsibility, full stop.",
+      "Systems view: emergent harms from collective AI demand new frameworks of distributed or collective responsibility, since reducing them to individuals misrepresents the cause.",
+      "Regulatory view: the question of moral responsibility is downstream of who is authorised to operate such systems and under what oversight conditions."
+    ],
+    "related_sources": [
+      "The ethics of aware and collective artificial intelligence systems",
+      "Multi-Agent Risks from Advanced AI",
+      "Winfield et al. 2025 (swarm ethics)",
+      "EMERGE D1.2, D1.3"
+    ]
+  },
+  {
+    "id": "v8-functional-discomfort",
+    "title": "Reports of fatigue",
+    "topic": "Awareness, moral patiency, functional states",
+    "scenario": "A multimodal service robot deployed in a logistics warehouse emits internal-state reports — including signals it has been trained to call 'fatigue' and 'discomfort' — when run continuously for over twelve hours. Its task performance degrades when these signals are ignored, and improves when scheduled rest cycles are introduced. Engineers disagree about whether these reports reflect anything beyond a useful homeostatic abstraction. Some staff have begun referring to the robot's 'breaks' rather than its 'maintenance windows.'",
+    "question": "Is the question of whether the robot's internal states are 'real' a question with a determinate answer? Is moral consideration owed only to systems that have phenomenal experience, or also to systems that produce the functional analogues of distress?",
+    "tensions": [
+      "Phenomenal view: moral patiency requires actual experience; functional analogues are not enough, and treating them as if they were risks anthropomorphism.",
+      "Functional/precautionary view: in conditions of irreducible uncertainty about machine experience, the cost of withholding consideration may exceed the cost of extending it.",
+      "Awareness-criterion view (EMERGE): collaborative awareness can be characterised by observable dimensions, independent of resolved metaphysics — the design and oversight question can be answered without first answering the consciousness question."
+    ],
+    "related_sources": [
+      "EMERGE D1.1 (local awareness criteria)",
+      "EMERGE D1.3 (dimensions of collaborative awareness)",
+      "Taking AI Welfare Seriously",
+      "Digital suffering",
+      "Artificial suffering (synthetic phenomenology)"
+    ]
+  }
+]

@@ -4,31 +4,34 @@
 ---
 
 ## What this is
-A local web app that reads your PDF corpus, retrieves relevant excerpts for each question, and passes them to Claude with your full system prompt and sourcing rules.
+A local web app that retrieves relevant excerpts from your EMERGE corpus and passes them to Claude with the bot's full system prompt and sourcing rules. Two ways to interact: type a free-form prompt, or pick a predefined vignette.
 
 ---
 
 ## First-time setup (do this once)
 
 ### Step 1 — Add your PDFs
-Put all your corpus PDFs into the **`documents/`** folder inside this project folder.
-- You can add as many PDFs as you like
-- Rename them clearly if needed (the filename becomes the source name in responses)
-  - e.g. `D2_4_Map_of_Ethical_Virtues.pdf` → cited as "D2_4_Map_of_Ethical_Virtues"
-  - Tip: rename to match how you want them cited, e.g. `EMERGE_D2_4.pdf`
+Put all corpus PDFs into the **`documents/`** folder. The filename becomes the raw source name; the system prompt maps known filenames to friendly citations (e.g. `D2.4 Map of Ethical Virtues` → "EMERGE D2.4").
 
-### Step 2 — Start the bot
+### Step 2 — Set your API key
+Set the `ANTHROPIC_API_KEY` environment variable before starting the bot. The server reads it from the environment — there is no in-browser key form.
+
+```bash
+export ANTHROPIC_API_KEY=sk-ant-...
+```
+
+(Add it to your shell profile if you want it set automatically.)
+
+### Step 3 — Start the bot
 **On Mac:** Double-click **START.command**
 - If Mac asks "are you sure?", click Open
-- A Terminal window opens and installs dependencies automatically (first time only)
+- The first run installs dependencies into `.venv/`
 - When you see `Running on http://localhost:5000`, the bot is ready
 
-### Step 3 — Open your browser
-Go to: **http://localhost:5000**
+### Step 4 — Open your browser
+Go to: **http://localhost:5050**
 
-### Step 4 — Enter your API key
-Paste your Anthropic API key (from console.anthropic.com) in the yellow bar at the top.
-It saves in your browser — you only need to do this once per browser.
+(The default is `5050` because macOS AirPlay Receiver squats on `5000`. To change it, set `PORT=5000` in your shell before launching, or pass it inline.)
 
 ---
 
@@ -57,8 +60,12 @@ It saves in your browser — you only need to do this once per browser.
 **"No documents loaded"**
 → The `documents/` folder is empty. Add your PDFs.
 
-**"Invalid API key"**
-→ Check you copied the full key from console.anthropic.com (starts with sk-ant-)
+**"Invalid API key"** or **"API key not configured on server"**
+→ The server reads the key from the `ANTHROPIC_API_KEY` environment variable. Set it before starting:
+```bash
+export ANTHROPIC_API_KEY=sk-ant-...
+```
+Then restart the bot.
 
 **Bot gives vague answers without named sources**
 → The retrieved chunks may not contain enough source context. 
@@ -74,11 +81,12 @@ Claude Sonnet is used for all responses.
 
 ## For publication / methodology description
 This system uses:
-- **PDF extraction:** pdfplumber
+- **PDF extraction:** pdfplumber (offline preprocessing into `chunks.json`)
 - **Chunking:** sliding window, 400 words per chunk, 80-word overlap
-- **Retrieval:** keyword overlap scoring (TF-style), top-6 chunks retrieved per query
-- **Model:** Claude claude-sonnet-4-20250514 via Anthropic API
-- **System prompt:** embedded sourcing rules, priority sources by topic, scope boundaries
+- **Retrieval:** TF-IDF cosine over the chunk index, with three-pass retrieval (original query + LLM-generated paraphrase + LLM-generated counter-query) to improve recall and surface contrasting positions
+- **Scope gating:** mean cosine of top-10 chunks; below threshold, the system refuses and points to an external resource category
+- **Models:** Claude Haiku 4.5 for query expansion and short responses; Claude Sonnet 4 for follow-up depth requests
+- **System prompt:** sourcing rules, two-sidedness on contested questions, scope boundaries, friendly-name conventions
 
 ---
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ethics of AI Awareness Bot · MI3</title>
+<title>EMERGE Awareness Bot · MI3</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -687,6 +687,251 @@
   }
   .chat-disclaimer strong { color: var(--purple); font-weight: 600; }
 
+  /* ── Landing: dual CTA + about paragraph ── */
+  .land-cta-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .land-cta.secondary {
+    background: var(--white);
+    color: var(--black);
+    border: 1.5px solid var(--gray-300);
+    box-shadow: none;
+  }
+  .land-cta.secondary:hover {
+    border-color: var(--purple);
+    color: var(--purple);
+    box-shadow: 0 4px 16px rgba(135,137,192,0.18);
+  }
+  .land-cta.secondary svg { stroke: currentColor; }
+
+  /* ── Sidebar "About this bot" ── */
+  .about-block {
+    font-size: 12.5px;
+    color: var(--gray-600);
+    line-height: 1.55;
+    margin-top: 8px;
+  }
+  .about-block strong { color: var(--black); font-weight: 600; }
+
+  .sidebar-link-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 12px;
+    margin-top: 6px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 10px;
+    font-size: 13px;
+    cursor: pointer;
+    background: var(--white);
+    color: var(--black);
+    font-family: var(--font);
+    font-weight: 600;
+    transition: all 0.15s;
+  }
+  .sidebar-link-btn:hover { border-color: var(--purple); color: var(--purple); background: var(--purple-light); }
+  .sidebar-link-btn .arrow { font-size: 11px; opacity: 0.6; }
+
+  /* ── Prompt help (under textarea) ── */
+  .prompt-help {
+    max-width: 720px;
+    margin: 8px auto 0;
+    padding: 0 4px;
+    font-size: 11.5px;
+    color: var(--gray-400);
+    line-height: 1.55;
+  }
+  .prompt-help strong { color: var(--gray-600); font-weight: 600; }
+
+  /* ════════════════════════════════════
+     VIGNETTES PAGE
+  ════════════════════════════════════ */
+  #vignettes-page, #vignette-detail-page {
+    display: none;
+    min-height: 100vh;
+    flex-direction: column;
+    background: var(--white);
+  }
+  #vignettes-page.active, #vignette-detail-page.active {
+    display: flex;
+  }
+
+  .vig-nav {
+    padding: 22px 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--gray-200);
+    background: var(--white);
+  }
+  .vig-back {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-600);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .vig-back:hover { background: var(--purple-light); color: var(--purple); }
+
+  .vig-container {
+    flex: 1;
+    max-width: 980px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 48px 32px 64px;
+  }
+  .vig-container h1 {
+    font-size: clamp(26px, 3.4vw, 38px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.12;
+    margin-bottom: 14px;
+  }
+  .vig-container .vig-intro {
+    font-size: 15px;
+    color: var(--gray-600);
+    line-height: 1.7;
+    max-width: 680px;
+    margin-bottom: 36px;
+  }
+
+  .vig-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .vig-card {
+    border: 1.5px solid var(--gray-200);
+    border-radius: 14px;
+    padding: 22px 22px 18px;
+    cursor: pointer;
+    background: var(--white);
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left;
+    font-family: var(--font);
+  }
+  .vig-card:hover {
+    border-color: var(--purple);
+    box-shadow: 0 6px 20px rgba(135,137,192,0.18);
+    transform: translateY(-2px);
+  }
+  .vig-card .vig-topic {
+    font-size: 10.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--purple);
+  }
+  .vig-card .vig-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--black);
+    line-height: 1.3;
+    letter-spacing: -0.2px;
+  }
+  .vig-card .vig-arrow {
+    margin-top: auto;
+    font-size: 12px;
+    color: var(--gray-400);
+    font-weight: 600;
+  }
+
+  /* Vignette detail */
+  .vd-topic {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--purple);
+    margin-bottom: 10px;
+  }
+  .vd-title {
+    font-size: clamp(26px, 3.4vw, 38px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.12;
+    margin-bottom: 28px;
+  }
+  .vd-section { margin-bottom: 28px; }
+  .vd-section h3 {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--gray-400);
+    margin-bottom: 10px;
+  }
+  .vd-scenario {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--black);
+  }
+  .vd-question {
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--black);
+    font-weight: 500;
+    border-left: 3px solid var(--yellow);
+    padding: 4px 0 4px 18px;
+    background: linear-gradient(90deg, rgba(251,255,31,0.10), transparent 60%);
+  }
+  .vd-tensions {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .vd-tensions li {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--gray-600);
+    padding-left: 22px;
+    position: relative;
+  }
+  .vd-tensions li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 9px;
+    width: 10px; height: 2px;
+    background: var(--purple);
+  }
+  .vd-sources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .vd-source-chip {
+    background: var(--purple-light);
+    border: 1px solid rgba(135,137,192,0.3);
+    color: var(--purple);
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+  }
+  .vd-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
   /* ════════════════════════════════════
      RESPONSIVE
   ════════════════════════════════════ */
@@ -750,14 +995,26 @@
       </div></div>
     </div>
 
-    <!-- Centered overlay — title + CTA -->
+    <!-- Centered overlay — title + about + CTAs -->
     <div class="land-hero-inner">
-      <h1 class="land-h1">Ethics of AI Awareness Bot</h1>
-      <p class="land-sub">Explore what researchers and policymakers have found about ethics of aware AI.</p>
-      <button class="land-cta" onclick="openChat()">
-        Start a conversation
-        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </button>
+      <h1 class="land-h1">EMERGE Awareness Bot</h1>
+      <p class="land-sub">
+        I help you explore ideas, discussions, and content related to EMERGE awareness concepts.
+        I can address questions about when an AI system might be considered aware, how to evaluate AI awareness,
+        and how to think through ethical debates and the assignment of responsibility in human–AI interaction —
+        using the EMERGE deliverables and academic papers I was trained on.
+        My scope is limited to EMERGE topics, and I may make mistakes.
+      </p>
+      <div class="land-cta-row">
+        <button class="land-cta" onclick="openChat()">
+          Type a prompt
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+        <button class="land-cta secondary" onclick="openVignettes()">
+          Generate question
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
     </div>
 
   </div>
@@ -785,20 +1042,28 @@
     </div>
 
     <div class="sidebar-section">
-      <div class="sidebar-label">I am a</div>
-      <button class="stakeholder-btn" onclick="setStakeholder(this,'regulator')">🏛 Regulator / Policymaker</button>
-      <button class="stakeholder-btn" onclick="setStakeholder(this,'developer')">💻 AI Developer</button>
-      <button class="stakeholder-btn" onclick="setStakeholder(this,'user')">👤 Product User</button>
-      <button class="stakeholder-btn" onclick="setStakeholder(this,'researcher')">🔬 Researcher</button>
+      <div class="sidebar-label">About this bot</div>
+      <div class="about-block">
+        I surface what researchers and policymakers have <strong>found</strong> and <strong>said</strong>
+        about EMERGE awareness concepts, drawn from the EMERGE deliverables and academic papers I was trained on.
+        I present positions; I don't recommend or take sides. My scope is limited to EMERGE topics, and I may make mistakes.
+      </div>
     </div>
 
-    <div class="sidebar-section" id="samples-block">
-      <div class="sidebar-label">Sample questions</div>
-      <div class="sample-q" onclick="useQuestion(this)"><span class="sample-q-arrow">↗</span>What makes an AI system trustworthy?</div>
-      <div class="sample-q" onclick="useQuestion(this)"><span class="sample-q-arrow">↗</span>What does the EU AI Act say about high-risk systems?</div>
-      <div class="sample-q" onclick="useQuestion(this)"><span class="sample-q-arrow">↗</span>How do researchers define fairness in AI?</div>
-      <div class="sample-q" onclick="useQuestion(this)"><span class="sample-q-arrow">↗</span>What ethical risks do collective AI systems pose?</div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Browse vignettes</div>
+      <button class="sidebar-link-btn" onclick="openVignettes()">
+        Generate question <span class="arrow">→</span>
+      </button>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Sample prompts</div>
       <div class="sample-q" onclick="useQuestion(this)"><span class="sample-q-arrow">↗</span>What is collaborative awareness in AI?</div>
+      <div class="sample-q" onclick="useQuestion(this)"><span class="sample-q-arrow">↗</span>What ethical risks do collective AI systems pose?</div>
+      <div class="sample-q" onclick="useQuestion(this)"><span class="sample-q-arrow">↗</span>How does EMERGE define ethical resilience?</div>
+      <div class="sample-q" onclick="useQuestion(this)"><span class="sample-q-arrow">↗</span>What positions exist on AI moral patiency?</div>
+      <div class="sample-q" onclick="useQuestion(this)"><span class="sample-q-arrow">↗</span>What does the EU AI Act say about high-risk systems?</div>
     </div>
 
     <div class="sidebar-section">
@@ -820,7 +1085,7 @@
   <div class="chat-main">
 
     <div class="chat-topbar">
-      <span class="chat-topbar-title">Ethics of AI Awareness Bot</span>
+      <span class="chat-topbar-title">EMERGE Awareness Bot</span>
       <span class="chat-topbar-badge">EMERGE</span>
       <span class="chat-topbar-dot"></span>
     </div>
@@ -832,12 +1097,12 @@
         <div class="empty-state" id="empty-state">
           <div class="empty-icon"><img src="data:image/jpeg;base64,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" alt="MI3" style="width:36px;height:36px;object-fit:contain;"></div>
           <h2>What would you like to explore?</h2>
-          <p>Ask a question about AI ethics, EMERGE findings, or the EU AI Act. Select a role on the left to get tailored questions.</p>
+          <p>Type a prompt below — a question, a description of what you want, or a rough idea. The more context you give, the more tailored the response. Or <a href="#" onclick="event.preventDefault(); openVignettes();" style="color:var(--purple); font-weight:600; text-decoration:none;">browse predefined vignettes →</a></p>
           <div class="empty-prompts">
-            <button class="empty-prompt-card" onclick="usePrompt(this)">What makes an AI system trustworthy?</button>
-            <button class="empty-prompt-card" onclick="usePrompt(this)">What does the EU AI Act say about high-risk systems?</button>
-            <button class="empty-prompt-card" onclick="usePrompt(this)">How do researchers define fairness in AI?</button>
             <button class="empty-prompt-card" onclick="usePrompt(this)">What is collaborative awareness in AI?</button>
+            <button class="empty-prompt-card" onclick="usePrompt(this)">What positions exist on AI moral patiency?</button>
+            <button class="empty-prompt-card" onclick="usePrompt(this)">How does EMERGE define ethical resilience?</button>
+            <button class="empty-prompt-card" onclick="usePrompt(this)">What ethical risks do collective AI systems pose?</button>
           </div>
         </div>
 
@@ -851,7 +1116,7 @@
     <div class="input-area">
       <div class="input-box">
         <div class="input-row">
-          <textarea id="user-input" placeholder="Ask about AI ethics, EMERGE findings, the EU AI Act…" rows="1"
+          <textarea id="user-input" placeholder="Ask about EMERGE awareness concepts, ethical positions, deliverables…" rows="1"
             oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea>
           <button id="send-btn" onclick="sendMessage()" title="Send">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -862,64 +1127,185 @@
         </div>
         <div class="input-hint">Enter to send · Shift+Enter for new line</div>
       </div>
+      <div class="prompt-help">
+        <strong>Tip:</strong> a question, description, or rough idea all work. The more detail or context you include, the more tailored the response. Example: <em>"What are the benefits of machine awareness?"</em>
+      </div>
     </div>
 
   </div>
 </div>
 
+<!-- ═══════════════════════════════
+     VIGNETTES GALLERY
+═══════════════════════════════ -->
+<div id="vignettes-page">
+  <nav class="vig-nav">
+    <a class="logo-link" href="https://mi3.info" target="_blank" title="MI3">
+      <span style="font-size:13px; font-weight:800; color:var(--black); letter-spacing:-0.3px;">EMERGE Awareness Bot</span>
+    </a>
+    <button class="vig-back" onclick="closeVignettes()">← Back</button>
+  </nav>
+
+  <div class="vig-container">
+    <h1>Predefined vignettes</h1>
+    <p class="vig-intro">
+      Each vignette below presents an ethical situation drawn from topics studied in the EMERGE project — awareness, moral patiency, accountability, autonomy, collective AI, and resilience. Pick one to read the scenario, see the contrasting positions in the literature, and ask the bot for its sourced reading.
+    </p>
+    <div id="vig-grid" class="vig-grid">
+      <!-- populated by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     VIGNETTE DETAIL
+═══════════════════════════════ -->
+<div id="vignette-detail-page">
+  <nav class="vig-nav">
+    <a class="logo-link" href="https://mi3.info" target="_blank" title="MI3">
+      <span style="font-size:13px; font-weight:800; color:var(--black); letter-spacing:-0.3px;">EMERGE Awareness Bot</span>
+    </a>
+    <button class="vig-back" onclick="backToGallery()">← All vignettes</button>
+  </nav>
+  <div class="vig-container" id="vd-container">
+    <!-- populated by JS -->
+  </div>
+</div>
+
 <script>
-let stakeholder = '';
 let conversationHistory = [];
 let isLoading = false;
+let vignetteCache = null;
+let currentVignette = null;
 
 /* ── Page transitions ── */
-function openChat() {
+function hideAllPages() {
   document.getElementById('landing').style.display = 'none';
+  document.getElementById('chat-page').classList.remove('active');
+  document.getElementById('vignettes-page').classList.remove('active');
+  document.getElementById('vignette-detail-page').classList.remove('active');
+}
+
+function openChat() {
+  hideAllPages();
   document.getElementById('chat-page').classList.add('active');
   document.getElementById('user-input').focus();
 }
 
 function goBack() {
-  document.getElementById('chat-page').classList.remove('active');
+  hideAllPages();
   document.getElementById('landing').style.display = 'flex';
 }
 
-/* ── Sample questions ── */
-const samplesByStakeholder = {
-  regulator: [
-    'What does the EU AI Act say about high-risk AI systems?',
-    'How do researchers define accountability in AI governance?',
-    'What oversight mechanisms does the HLEG recommend?',
-    'What are the key requirements for transparent AI?'
-  ],
-  developer: [
-    'What technical properties define a trustworthy AI system?',
-    'How do researchers recommend addressing bias in AI?',
-    'What does explainability mean in the EMERGE corpus?',
-    'What ethical risks do collective AI systems pose?'
-  ],
-  user: [
-    'What rights do users have when interacting with AI systems?',
-    'How can I tell if an AI system is trustworthy?',
-    'What does fairness mean for AI products I use?',
-    'How do researchers think about user autonomy and AI?'
-  ],
-  researcher: [
-    'What is collaborative awareness in AI?',
-    'How does EMERGE define ethical resilience?',
-    'How does Hagendorff (2022) critique AI ethics guidelines?',
-    'What does Jobin et al. (2019) find about convergence in AI ethics?'
-  ]
-};
+async function openVignettes() {
+  hideAllPages();
+  document.getElementById('vignettes-page').classList.add('active');
+  if (!vignetteCache) {
+    try {
+      const r = await fetch('/vignettes');
+      vignetteCache = await r.json();
+    } catch (err) {
+      vignetteCache = [];
+    }
+  }
+  renderVignetteGrid(vignetteCache);
+}
 
-function setStakeholder(btn, role) {
-  document.querySelectorAll('.stakeholder-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  stakeholder = role;
-  const samples = samplesByStakeholder[role] || [];
-  document.getElementById('samples-block').innerHTML =
-    '<div class="sidebar-label">Sample questions</div>' +
-    samples.map(q => `<div class="sample-q" onclick="useQuestion(this)"><span class="sample-q-arrow">↗</span>${q}</div>`).join('');
+function closeVignettes() { goBack(); }
+
+function backToGallery() {
+  hideAllPages();
+  document.getElementById('vignettes-page').classList.add('active');
+}
+
+function renderVignetteGrid(list) {
+  const grid = document.getElementById('vig-grid');
+  if (!list || !list.length) {
+    grid.innerHTML = '<p style="color:var(--gray-400);">No vignettes available.</p>';
+    return;
+  }
+  grid.innerHTML = list.map(v => `
+    <button class="vig-card" onclick="openVignetteDetail('${v.id}')">
+      <span class="vig-topic">${escapeHtml(v.topic || '')}</span>
+      <span class="vig-title">${escapeHtml(v.title)}</span>
+      <span class="vig-arrow">Read scenario →</span>
+    </button>
+  `).join('');
+}
+
+async function openVignetteDetail(id) {
+  hideAllPages();
+  document.getElementById('vignette-detail-page').classList.add('active');
+  const container = document.getElementById('vd-container');
+  container.innerHTML = '<p style="color:var(--gray-400);">Loading…</p>';
+  try {
+    const r = await fetch('/vignettes/' + encodeURIComponent(id));
+    const v = await r.json();
+    if (v.error) {
+      container.innerHTML = `<p>${escapeHtml(v.error)}</p>`;
+      return;
+    }
+    currentVignette = v;
+    container.innerHTML = `
+      <div class="vd-topic">${escapeHtml(v.topic || '')}</div>
+      <h1 class="vd-title">${escapeHtml(v.title)}</h1>
+      <div class="vd-section">
+        <h3>Scenario</h3>
+        <div class="vd-scenario">${escapeHtml(v.scenario)}</div>
+      </div>
+      <div class="vd-section">
+        <h3>Ethical question</h3>
+        <div class="vd-question">${escapeHtml(v.question)}</div>
+      </div>
+      <div class="vd-section">
+        <h3>Contrasting positions in the literature</h3>
+        <ul class="vd-tensions">
+          ${(v.tensions || []).map(t => `<li>${escapeHtml(t)}</li>`).join('')}
+        </ul>
+      </div>
+      <div class="vd-section">
+        <h3>Related sources</h3>
+        <div class="vd-sources">
+          ${(v.related_sources || []).map(s => `<span class="vd-source-chip">${escapeHtml(s)}</span>`).join('')}
+        </div>
+      </div>
+      <div class="vd-actions">
+        <button class="land-cta" onclick="askBotAboutVignette()">
+          Ask the bot about this vignette
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+        <button class="land-cta secondary" onclick="backToGallery()">
+          Browse other vignettes
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    `;
+  } catch (err) {
+    container.innerHTML = `<p>Failed to load vignette.</p>`;
+  }
+}
+
+function askBotAboutVignette() {
+  if (!currentVignette) return;
+  const v = currentVignette;
+  const prompt = `Vignette: "${v.title}".\n\nScenario: ${v.scenario}\n\nQuestion: ${v.question}\n\nPresent the contrasting positions in the EMERGE corpus and named academic sources. Do not resolve.`;
+  // Reset chat to a fresh exchange seeded with this vignette
+  conversationHistory = [];
+  const messagesEl = document.getElementById('messages');
+  messagesEl.innerHTML = `
+    <div class="empty-state" id="empty-state" style="display:none;"></div>
+  `;
+  openChat();
+  setInput(prompt);
+  // Auto-send after a short tick so the textarea renders the value
+  setTimeout(() => sendMessage(), 50);
+}
+
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 function useQuestion(el) {
@@ -970,7 +1356,7 @@ async function sendMessage() {
     const r = await fetch('/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: conversationHistory, stakeholder })
+      body: JSON.stringify({ messages: conversationHistory })
     });
     removeTyping(typingId);
     const data = await r.json();

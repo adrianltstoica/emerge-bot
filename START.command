@@ -21,17 +21,33 @@ fi
 echo "Python found: $(python3 --version)"
 echo ""
 
-# Install dependencies if needed
-echo "Checking dependencies..."
-python3 -m pip install -r requirements.txt -q --break-system-packages 2>/dev/null || python3 -m pip install -r requirements.txt -q
+# Use a local venv to avoid PEP 668 / Homebrew clashes
+if [ ! -d ".venv" ]; then
+    echo "Creating virtual environment..."
+    python3 -m venv .venv
+fi
+
+echo "Installing dependencies..."
+.venv/bin/pip install -q -r requirements.txt
+
+# Default to port 5050 — macOS AirPlay Receiver squats on 5000
+export PORT="${PORT:-5050}"
+
+if [ -z "$ANTHROPIC_API_KEY" ]; then
+    echo ""
+    echo "WARNING: ANTHROPIC_API_KEY is not set. The /chat endpoint will return an error."
+    echo "Set it in your shell before running, e.g.:"
+    echo "    export ANTHROPIC_API_KEY=sk-ant-..."
+    echo ""
+fi
 
 echo ""
 echo "Starting server..."
-echo "When you see 'Running on http://localhost:5000', open your browser"
-echo "and go to:  http://localhost:5000"
+echo "When you see 'Running on http://localhost:$PORT', open your browser"
+echo "and go to:  http://localhost:$PORT"
 echo ""
 echo "To stop the bot: press Ctrl+C"
 echo "================================================"
 echo ""
 
-python3 app.py
+.venv/bin/python app.py
