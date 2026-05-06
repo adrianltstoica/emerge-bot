@@ -45,6 +45,137 @@ corpus_stats = {
     "missing_pdf_sources": [],
 }
 
+FRIENDLY_SOURCE_NAMES = {
+    "D1.1 Local awareness  criteria": "EMERGE D1.1",
+    "D1.2 Demarcating collaborative awareness from related concepts": "EMERGE D1.2",
+    "D1.3 Dimensions of collaborative awareness": "EMERGE D1.3",
+    "D2.2 Map of risks in AI- systems": "EMERGE D2.2",
+    "D2.3 Map of risks and potentials for humans": "EMERGE D2.3",
+    "D2.4 Map of Ethical Virtues": "EMERGE D2.4",
+    "D2.5_Ethical_Resilience": "EMERGE D2.5",
+    "OJ_L_202401689_EN_TXT": "EU AI Act (Regulation (EU) 2024/1689)",
+    "ai-ethics-guidelines": "EU Ethics Guidelines for Trustworthy AI (HLEG, 2019)",
+    "OECD-LEGAL-0449-en": "OECD AI Principles",
+    "Jobin_etal2019": "Jobin et al. (2019)",
+    "Hagendorff2022": "Hagendorff (2022)",
+    "hagendorf2019": "Hagendorff (2019)",
+    "Correa_etal2023": "Correa et al. (2023)",
+    "floridi_etal2018": "Floridi et al. (2018)",
+    "Lange_etal_NPJCommunication_2025": "Lange et al. (2025)",
+    "Haas_etal_nature2026": "Haas et al. (2026)",
+    "VallorVierkant2024": "Vallor and Vierkant (2024)",
+    "winfield-et-al-2025": "Winfield et al. (2025)",
+    "1-s2.0-S0749597806000719-main": "Bonaccio and Dalal (2006)",
+    "1416674-EN": "UNESCO (2022), Recommendation on the Ethics of Artificial Intelligence",
+    "1802.07228v2": "Brundage et al. (2018)",
+    "31720-Article Text-35784-1-2-20241016": "Rocca et al. (2024), ELLIPS",
+    "4. Book_on_Computational_Awareness-9": "Book on Computational Awareness",
+    "716110": "U.S. Government Accountability Office (2021), AI Accountability Framework",
+    "AI_Engagement_within_Sony_Group": "Sony Group, AI Engagement Principles",
+    "ASEAN-Guide-on-AI-Governance-and-Ethics_beautified_201223_v2": "ASEAN Guide on AI Governance and Ethics",
+    "Adaptable robots, ethics, and trust- a qualitative and philosophical exploration of the individual experience of trustworthy AI": "Adaptable Robots, Ethics, and Trust",
+    "BMI25020-leitlinien-ki-bundesverwaltung": "German Federal Administration AI Guidelines",
+    "Benchmarking Retrieval-Augmented Generation for Medicine": "Benchmarking Retrieval-Augmented Generation for Medicine",
+    "Characterizing AI Agents for Alignment and Governance": "Characterizing AI Agents for Alignment and Governance",
+    "Charter voor verantwoord gebruik van ai in overheidsdiensten_0": "Charter for Responsible Use of AI in Public Services",
+    "Danaher and Nyholm - 2025 - The ethics of personalised digital duplicates a minimally viable permissibility principle": "Danaher and Nyholm (2025)",
+    "EPRS_BRI(2019)640163_EN": "European Parliament Research Service (2019)",
+    "ESCAP-2023-PB-Ethics-AI-revised": "UN ESCAP (2023), Ethics of AI Policy Brief",
+    "ESCAP-2023-WP-Ethics-AI": "UN ESCAP (2023), Ethics of AI Working Paper",
+    "Future-of-the-corporation-Trust-trustworthiness-transparency": "British Academy, Trust, Trustworthiness and Transparency",
+    "IEEE ETHICALLY ALIGNED DESIGN_v2": "IEEE, Ethically Aligned Design",
+    "Microsoft-Responsible-AI-Standard-General-Requirements": "Microsoft Responsible AI Standard",
+    "Munn2023": "Munn (2023)",
+    "NASA-TM-20210012886": "NASA Technical Memorandum 20210012886",
+    "NIST.AI.100-1": "NIST AI Risk Management Framework",
+    "National-Strategy-for-Artificial-Intelligence": "National Strategy for Artificial Intelligence",
+    "PIIS1364661325002864": "Trends in Cognitive Sciences article (2025)",
+    "Psychology of Women Quarterly - December 1980 - Spence - Masculine Instrumentality and Feminine Expressiveness  Their": "Spence (1980)",
+    "Resource Guide on AI Strategies_June 2021": "Resource Guide on AI Strategies (2021)",
+    "Scientists on ‘urgent’ quest to explain consciousness as AI gathers pace _ERC": "European Research Council, Scientists on Consciousness and AI",
+    "Taking AI Welfare Seriously": "Long and Sebo et al. (2024), Taking AI Welfare Seriously",
+    "Digital suffering  why it s a problem and how to prevent it": "Digital Suffering",
+    "Ethics and Governance of SentientAI": "Ethics and Governance of Sentient AI",
+    "Telia Company Guiding Principles on Trusted AI ethics (1)": "Telia Company, Guiding Principles on Trusted AI Ethics",
+    "The AI Agent Index": "The AI Agent Index",
+    "The Ethics of Advanced AI Assistants": "The Ethics of Advanced AI Assistants",
+    "The Moral Consideration of Artificial Entities- A Literature": "The Moral Consideration of Artificial Entities",
+    "The ethics of aware and collective artificial intelligence systems": "The Ethics of Aware and Collective Artificial Intelligence Systems",
+    "Translation_ Chinese AI Alliance Drafts Self-Discipline 'Joint Pledge' - New America": "New America translation, Chinese AI Alliance Joint Pledge",
+    "Translation_ Chinese Expert Group Offers 'Governance Principles' for 'Responsible AI' - New America": "New America translation, Chinese Responsible AI Governance Principles",
+    "Ukraine Voluntary CoC": "Ukraine Voluntary Code of Conduct on AI",
+    "Vereschak": "Vereschak et al.",
+    "ai-report": "AI Report",
+    "artificial-suffering-an-argument-for-a-global-moratorium-on-synthetic-phenomenology": "Artificial Suffering and Synthetic Phenomenology",
+    "doc_38": "European Parliament, What If Generative AI Became Conscious?",
+    "doc_42": "Should We Fear Artificial Intelligence?",
+    "dubai ai-ethics": "Dubai AI Ethics Principles and Guidelines",
+    "everydayethics": "Everyday Ethics for Artificial Intelligence",
+    "frai-06-1020592": "Frontiers in Robotics and AI article 1020592",
+    "fu_ir8hyn25gaatz92": "China MOST, Ethical Norms for New Generation Artificial Intelligence",
+    "gino_etal_2009": "Gino et al. (2009)",
+    "robots-should-be-slaves": "Bryson, Robots Should Be Slaves",
+    "robustness and explainability of artificial intelligence-KJNA30040ENN": "Robustness and Explainability of Artificial Intelligence",
+    "rsta.2018.0085": "Philosophical Transactions A article 2018.0085",
+    "s10676-020-09573-9": "Ethics and Information Technology article 09573-9",
+    "s11623-019-1183-6": "AI & Society article 1183-6",
+    "s11948-019-00146-8": "Science and Engineering Ethics article 00146-8",
+    "s13347-021-00454-7": "Philosophy & Technology article 00454-7",
+    "s13347-024-00718-y": "Philosophy & Technology article 00718-y",
+    "s41599-025-04532-5": "Humanities and Social Sciences Communications article 04532-5",
+    "s43681-022-00167-3": "AI and Ethics article 00167-3",
+    "s43681-024-00419-4": "AI and Ethics article 00419-4",
+    "s43681-025-00749-x": "AI and Ethics article 00749-x",
+    "sniezek_vanSwol2001": "Sniezek and Van Swol (2001)",
+    "understanding_artificial_intelligence_ethics_and_safety": "Leslie (2019), Understanding Artificial Intelligence Ethics and Safety",
+    "《新一代人工智能伦理规范》发布-中华人民共和国科学技术部": "China Ministry of Science and Technology, New Generation AI Ethics Norms",
+}
+
+FULL_SOURCE_TITLES = {
+    "D1.1 Local awareness  criteria": "D1.1 Local Awareness Criteria",
+    "D1.2 Demarcating collaborative awareness from related concepts": "D1.2 Demarcating Collaborative Awareness from Related Concepts",
+    "D1.3 Dimensions of collaborative awareness": "D1.3 Dimensions of Collaborative Awareness",
+    "D2.2 Map of risks in AI- systems": "D2.2 Map of Risks in AI Systems",
+    "D2.3 Map of risks and potentials for humans": "D2.3 Map of Risks and Potentials for Humans",
+    "D2.4 Map of Ethical Virtues": "D2.4 Map of Ethical Virtues",
+    "D2.5_Ethical_Resilience": "D2.5 Ethical Resilience",
+    "ESCAP-2023-PB-Ethics-AI-revised": "Ethics of Artificial Intelligence: Policy Brief",
+    "ESCAP-2023-WP-Ethics-AI": "Ethics of Artificial Intelligence: Working Paper",
+    "OJ_L_202401689_EN_TXT": "Regulation (EU) 2024/1689, the EU Artificial Intelligence Act",
+    "ai-ethics-guidelines": "Ethics Guidelines for Trustworthy AI",
+    "OECD-LEGAL-0449-en": "Recommendation of the Council on Artificial Intelligence",
+    "Taking AI Welfare Seriously": "Taking AI Welfare Seriously",
+    "Danaher and Nyholm - 2025 - The ethics of personalised digital duplicates a minimally viable permissibility principle": "The Ethics of Personalised Digital Duplicates: A Minimally Viable Permissibility Principle",
+    "Digital suffering  why it s a problem and how to prevent it": "Digital Suffering: Why It Is a Problem and How to Prevent It",
+    "Ethics and Governance of SentientAI": "Ethics and Governance of Sentient AI",
+    "The Moral Consideration of Artificial Entities- A Literature": "The Moral Consideration of Artificial Entities: A Literature Review",
+    "The ethics of aware and collective artificial intelligence systems": "The Ethics of Aware and Collective Artificial Intelligence Systems",
+    "The Ethics of Advanced AI Assistants": "The Ethics of Advanced AI Assistants",
+    "The AI Agent Index": "The AI Agent Index",
+    "1416674-EN": "Recommendation on the Ethics of Artificial Intelligence",
+    "IEEE ETHICALLY ALIGNED DESIGN_v2": "Ethically Aligned Design: A Vision for Prioritizing Human Well-being with Autonomous and Intelligent Systems",
+    "Resource Guide on AI Strategies_June 2021": "Resource Guide on Artificial Intelligence Strategies",
+    "Microsoft-Responsible-AI-Standard-General-Requirements": "Responsible AI Standard: General Requirements",
+    "NIST.AI.100-1": "Artificial Intelligence Risk Management Framework (AI RMF 1.0)",
+    "716110": "Artificial Intelligence: An Accountability Framework for Federal Agencies and Other Entities",
+    "AI_Engagement_within_Sony_Group": "AI Engagement Within Sony Group",
+    "ASEAN-Guide-on-AI-Governance-and-Ethics_beautified_201223_v2": "ASEAN Guide on AI Governance and Ethics",
+    "Telia Company Guiding Principles on Trusted AI ethics (1)": "Guiding Principles on Trusted AI Ethics",
+    "doc_38": "What If Generative Artificial Intelligence Became Conscious?",
+    "doc_42": "Should We Fear Artificial Intelligence?",
+    "fu_ir8hyn25gaatz92": "Ethical Norms for New Generation Artificial Intelligence",
+}
+
+ADJACENT_SOURCE_MARKERS = (
+    "welfare", "suffering", "sentient", "moral consideration",
+    "digital duplicate", "artificial-suffering", "phenomenology",
+)
+
+ADJACENT_QUERY_MARKERS = (
+    "welfare", "suffering", "sentient", "conscious", "consciousness",
+    "moral patient", "moral status", "rights", "digital duplicate",
+)
+
 STOPWORDS = {
     'the','a','an','is','are','was','were','be','been','being','have','has','had',
     'do','does','did','will','would','shall','should','may','might','must',
@@ -70,6 +201,9 @@ You are an information tool, not an advisor. You surface findings and positions 
 ## Sourcing Rules — non-negotiable
 
 - Every claim must be traceable to a named source in the retrieved excerpts.
+- Retrieved excerpts begin with a source label like `[Source: EMERGE D2.2 | Core EMERGE deliverable]`.
+  Use the citation name before the vertical bar exactly as written. Do not cite raw filenames.
+- A full "Sources used" list will be appended automatically after your answer. Do not create your own bibliography.
 - Always name sources in full, using the friendly name. Examples:
   CORRECT: "According to EMERGE D2.3…", "Jobin et al. (2019) found…", "The EU Ethics Guidelines for Trustworthy AI (HLEG, 2019) state…", "Hagendorff (2022) argues…"
   INCORRECT: "[1]", "[Source: D2.3 Map…]", "research shows", "the corpus indicates"
@@ -93,8 +227,22 @@ You are an information tool, not an advisor. You surface findings and positions 
     OJ_L_202401689_EN_TXT → EU AI Act (Regulation (EU) 2024/1689)
     ai-ethics-guidelines → EU Ethics Guidelines for Trustworthy AI (HLEG, 2019)
     OECD-LEGAL-0449-en → OECD AI Principles
+    Taking AI Welfare Seriously → Long and Sebo et al. (2024), Taking AI Welfare Seriously
     For any other source, use a sensible short academic citation form.
 - If you cannot find a sourced answer in the retrieved excerpts, say so plainly. Do not invent.
+
+---
+
+## Corpus Priority
+
+The corpus is not flat. Prioritize sources in this order:
+
+1. Core EMERGE deliverables (EMERGE D1.1–D1.3 and D2.2–D2.5).
+2. EU and policy sources, especially the EU AI Act, EU Ethics Guidelines for Trustworthy AI, and OECD AI Principles.
+3. Wider academic and organizational literature.
+4. Adjacent or speculative literatures such as AI welfare, digital suffering, digital duplicates, and moral patienthood.
+
+Adjacent sources are in scope when retrieved, but do not present them as the EMERGE position. If a question mainly touches an adjacent topic, answer briefly, name the adjacent source, and explain that it sits farther from the core EMERGE deliverables unless EMERGE sources also directly support the point.
 
 ---
 
@@ -220,6 +368,78 @@ def score_chunks(query):
     return scored
 
 
+def friendly_source_name(source):
+    if source in FRIENDLY_SOURCE_NAMES:
+        return FRIENDLY_SOURCE_NAMES[source]
+    cleaned = re.sub(r"[_-]+", " ", source)
+    cleaned = re.sub(r"\s+", " ", cleaned).strip()
+    cleaned = re.sub(r"\b(et al)\b", "et al.", cleaned, flags=re.I)
+    return cleaned[:1].upper() + cleaned[1:] if cleaned else source
+
+
+def full_source_title(source):
+    if source in FULL_SOURCE_TITLES:
+        return FULL_SOURCE_TITLES[source]
+    friendly = friendly_source_name(source)
+    return friendly
+
+
+def source_reference(source):
+    citation = friendly_source_name(source)
+    title = full_source_title(source)
+    tier = source_tier(source)
+    if title == citation:
+        return f"{citation} — {tier}"
+    return f"{citation} — {title} — {tier}"
+
+
+def append_source_list(reply, chunks):
+    sources = []
+    seen = set()
+    for chunk in chunks:
+        source = chunk.get("source", "")
+        if source and source not in seen:
+            seen.add(source)
+            sources.append(source_reference(source))
+    if not sources:
+        return reply
+    source_block = "\n\nSources used:\n" + "\n".join(f"- {source}" for source in sources)
+    return reply.rstrip() + source_block
+
+
+def source_tier(source):
+    source_l = source.lower()
+    if re.match(r"^d[12]\.", source_l):
+        return "Core EMERGE deliverable"
+    if source in {"OJ_L_202401689_EN_TXT", "ai-ethics-guidelines", "OECD-LEGAL-0449-en"}:
+        return "EU/policy source"
+    if any(marker in source_l for marker in ADJACENT_SOURCE_MARKERS):
+        return "Adjacent literature"
+    return "Wider supporting literature"
+
+
+def source_weight(source, query):
+    tier = source_tier(source)
+    query_l = query.lower()
+    explicitly_adjacent = any(marker in query_l for marker in ADJACENT_QUERY_MARKERS)
+    if tier == "Core EMERGE deliverable":
+        return 1.75
+    if tier == "EU/policy source":
+        return 1.45
+    if tier == "Adjacent literature" and not explicitly_adjacent:
+        return 0.65
+    return 1.0
+
+
+def format_chunk_for_context(chunk):
+    raw_source = chunk.get("source", "")
+    friendly = friendly_source_name(raw_source)
+    tier = source_tier(raw_source)
+    text = chunk.get("text", "")
+    text = re.sub(r"^\[Source: [^\]]+\]\n?", "", text)
+    return f"[Source: {friendly} | {tier}]\n{text}"
+
+
 def expand_query(query, client):
     """One Haiku call → JSON with paraphrase, counter-query, classification, redirect hint.
     Returns dict with safe defaults on any failure."""
@@ -269,8 +489,9 @@ def retrieve(query, client):
     best_score = {}
     for q in queries:
         for sim, i in score_chunks(q):
-            if sim > best_score.get(i, 0):
-                best_score[i] = sim
+            weighted = sim * source_weight(chunk_store[i].get("source", ""), query)
+            if weighted > best_score.get(i, 0):
+                best_score[i] = weighted
 
     if not best_score:
         return [], 0.0, expansion
@@ -369,7 +590,7 @@ def chat():
             "classification": expansion.get("classification", "other"),
         })
 
-    context = "\n\n---\n\n".join(c["text"] for c in chunks)
+    context = "\n\n---\n\n".join(format_chunk_for_context(c) for c in chunks)
     weak_note = ""
     if gate_score < SCOPE_GATE_WEAK:
         weak_note = ("\n\nNote: retrieval signal for this question is weak. "
@@ -377,9 +598,12 @@ def chat():
                      "decline rather than reaching.")
     context_block = (
         f"\n\n## Retrieved Corpus Excerpts\n\n{context}\n\n---\n\n"
-        f"Answer using only the excerpts above. Name the source for every claim using its friendly "
-        f"name (e.g. EMERGE D2.4, Jobin et al. 2019). If the excerpts contain disagreement, present "
-        f"both sides with sources — do not resolve.{weak_note}"
+        f"Answer using only the excerpts above. Each excerpt begins with [Source: citation name | tier]. "
+        f"Cite the citation name before the vertical bar exactly as written; do not cite raw filenames. "
+        f"Name the source for every claim (e.g. EMERGE D2.4, Jobin et al. 2019). If the excerpts contain disagreement, present "
+        f"both sides with sources — do not resolve. Prioritize Core EMERGE deliverables and EU/policy "
+        f"sources over adjacent literature. If an answer depends mainly on adjacent literature, keep it "
+        f"brief and say that it is adjacent to, rather than the central position of, EMERGE.{weak_note}"
     )
 
     full_system = SYSTEM_PROMPT + context_block
@@ -398,12 +622,13 @@ def chat():
             system=full_system,
             messages=messages,
         )
+        reply = append_source_list(response.content[0].text, chunks)
         return jsonify({
-            "reply": response.content[0].text,
+            "reply": reply,
             "chunks_used": len(chunks),
             "scope": "in_scope" if gate_score >= SCOPE_GATE_WEAK else "weak_retrieval",
             "gate_score": round(gate_score, 4),
-            "sources_used": sorted(set(c.get("source", "") for c in chunks)),
+            "sources_used": sorted(set(friendly_source_name(c.get("source", "")) for c in chunks)),
         })
     except anthropic.AuthenticationError:
         return jsonify({"error": "Invalid API key on server."}), 401
