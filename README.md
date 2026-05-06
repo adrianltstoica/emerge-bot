@@ -47,8 +47,11 @@ Go to: **http://localhost:5050**
 ## Adding new documents
 1. Stop the bot (Ctrl+C)
 2. Add the new PDF to the `documents/` folder
-3. Delete the file called `chunks_cache.json` (this forces a re-read of all PDFs)
-4. Start the bot again
+3. Rebuild the corpus index:
+```bash
+python scripts/build_chunks.py
+```
+4. Commit the updated `documents/` and `chunks.json`, then redeploy/restart the bot.
 
 ---
 
@@ -59,6 +62,13 @@ Go to: **http://localhost:5050**
 
 **"No documents loaded"**
 → The `documents/` folder is empty. Add your PDFs.
+
+**A PDF is uploaded but the bot ignores it**
+→ The bot answers from `chunks.json`, not live PDF reads. Run:
+```bash
+python scripts/build_chunks.py
+```
+Then check `/status`; `missing_pdf_sources` should be empty or explain what still needs attention.
 
 **"Invalid API key"** or **"API key not configured on server"**
 → The server reads the key from the `ANTHROPIC_API_KEY` environment variable. Set it before starting:
@@ -83,9 +93,9 @@ Claude Sonnet is used for all responses.
 This system uses:
 - **PDF extraction:** pdfplumber (offline preprocessing into `chunks.json`)
 - **Chunking:** sliding window, 400 words per chunk, 80-word overlap
-- **Retrieval:** TF-IDF cosine over the chunk index, with three-pass retrieval (original query + LLM-generated paraphrase + LLM-generated counter-query) to improve recall and surface contrasting positions
+- **Retrieval:** TF-IDF cosine over the chunk index, with three-pass retrieval (original query + LLM-generated paraphrase + LLM-generated counter-query), source diversity, and broader context windows to improve recall and surface contrasting positions
 - **Scope gating:** mean cosine of top-10 chunks; below threshold, the system refuses and points to an external resource category
-- **Models:** Claude Haiku 4.5 for query expansion and short responses; Claude Sonnet 4 for follow-up depth requests
+- **Models:** Claude Haiku 4.5 for query expansion; Claude Sonnet 4 for user-facing answers
 - **System prompt:** sourcing rules, two-sidedness on contested questions, scope boundaries, friendly-name conventions
 
 ---

@@ -19,15 +19,17 @@ CORS(app)
 
 CHUNKS_FILE = Path("chunks.json")
 VIGNETTES_FILE = Path("vignettes.json")
-TOP_K = 12
+DOCUMENTS_DIR = Path("documents")
+TOP_K = 18
+PER_SOURCE_LIMIT = 3
 
 # Empirical thresholds on the *mean cosine of top-10 chunks* — a far cleaner signal
 # than max alone, because off-topic queries usually surface 1–2 lucky matches but the
 # rest of top-10 trails off, while real ethics queries pull a coherent block of chunks.
 # Calibrated against in-scope (collab awareness, accountability, duplicates → 0.13–0.27)
 # vs out-of-scope (pizza, taxes, joke, weather → 0.05–0.10) on this corpus.
-SCOPE_GATE_MIN = 0.10   # below this → hard refuse, return redirect
-SCOPE_GATE_WEAK = 0.13  # below this → tell the model retrieval is weak
+SCOPE_GATE_MIN = 0.07   # below this → hard refuse, return redirect
+SCOPE_GATE_WEAK = 0.10  # below this → tell the model retrieval is weak
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
@@ -37,6 +39,11 @@ doc_norms = []    # list[float]
 idf = {}          # dict[token, idf weight]
 
 vignettes = []
+corpus_stats = {
+    "pdf_documents": 0,
+    "indexed_sources": 0,
+    "missing_pdf_sources": [],
+}
 
 STOPWORDS = {
     'the','a','an','is','are','was','were','be','been','being','have','has','had',
@@ -136,7 +143,7 @@ def tokenize(text):
 
 
 def load_chunks():
-    global chunk_store, chunk_tf, doc_norms, idf
+    global chunk_store, chunk_tf, doc_norms, idf, corpus_stats
     if not CHUNKS_FILE.exists():
         print("WARNING: chunks.json not found.")
         return
@@ -163,8 +170,20 @@ def load_chunks():
         chunk_tf.append(weighted)
         doc_norms.append(norm)
 
-    docs = len(set(c["source"] for c in chunk_store))
-    print(f"Loaded {len(chunk_store)} chunks from {docs} documents; vocab={len(idf)}")
+    sources = sorted(set(c["source"] for c in chunk_store))
+    pdf_stems = sorted(p.stem for p in DOCUMENTS_DIR.glob("*.pdf")) if DOCUMENTS_DIR.exists() else []
+    missing = [
+        stem for stem in pdf_stems
+        if not any(stem.lower() in src.lower() or src.lower() in stem.lower() for src in sources)
+    ]
+    corpus_stats = {
+        "pdf_documents": len(pdf_stems),
+        "indexed_sources": len(sources),
+        "missing_pdf_sources": missing,
+    }
+    print(f"Loaded {len(chunk_store)} chunks from {len(sources)} sources; vocab={len(idf)}")
+    if missing:
+        print(f"WARNING: {len(missing)} PDFs do not have an obvious source match in chunks.json")
 
 
 def load_vignettes():
@@ -259,7 +278,16 @@ def retrieve(query, client):
     ranked = sorted(best_score.items(), key=lambda x: x[1], reverse=True)
     top_for_gate = ranked[:10]
     gate_score = sum(s for _, s in top_for_gate) / len(top_for_gate)
-    top_chunks = [chunk_store[i] for i, _ in ranked[:TOP_K]]
+    top_chunks = []
+    source_counts = defaultdict(int)
+    for i, _ in ranked:
+        source = chunk_store[i].get("source", "")
+        if source_counts[source] >= PER_SOURCE_LIMIT:
+            continue
+        top_chunks.append(chunk_store[i])
+        source_counts[source] += 1
+        if len(top_chunks) >= TOP_K:
+            break
     return top_chunks, gate_score, expansion
 
 
@@ -278,8 +306,12 @@ def status():
     return jsonify({
         "chunks_loaded": len(chunk_store),
         "documents": docs,
+        "pdf_documents": corpus_stats["pdf_documents"],
+        "indexed_sources": corpus_stats["indexed_sources"],
+        "missing_pdf_sources": corpus_stats["missing_pdf_sources"],
         "vignettes": len(vignettes),
         "ready": len(chunk_store) > 0,
+        "runtime": "render-flask",
     })
 
 
@@ -356,8 +388,8 @@ def chat():
                       "what else", "more detail", "elaborate", "in depth", "give me more"]
     last_user = user_msgs[-1].lower() if user_msgs else ""
     wants_depth = any(kw in last_user for kw in depth_keywords)
-    model = "claude-sonnet-4-20250514" if wants_depth else "claude-haiku-4-5-20251001"
-    max_tokens = 1200 if wants_depth else 500
+    model = "claude-sonnet-4-20250514"
+    max_tokens = 1400 if wants_depth else 800
 
     try:
         response = client.messages.create(
@@ -371,6 +403,7 @@ def chat():
             "chunks_used": len(chunks),
             "scope": "in_scope" if gate_score >= SCOPE_GATE_WEAK else "weak_retrieval",
             "gate_score": round(gate_score, 4),
+            "sources_used": sorted(set(c.get("source", "") for c in chunks)),
         })
     except anthropic.AuthenticationError:
         return jsonify({"error": "Invalid API key on server."}), 401
