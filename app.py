@@ -202,7 +202,7 @@ You are an information tool, not an advisor. You surface findings and positions 
 
 - Every claim must be traceable to a named source in the retrieved excerpts.
 - Retrieved excerpts begin with a source label like `[Source: EMERGE D2.2 | Core EMERGE deliverable]`.
-  Use the citation name before the vertical bar exactly as written. Do not cite raw filenames.
+  The citation name before the vertical bar is the ONLY work you may cite as a primary source for content drawn from that excerpt. Use it exactly as written. Do not cite raw filenames.
 - A full "Sources used" list will be appended automatically after your answer. Do not create your own bibliography.
 - Always name sources in full, using the friendly name. Examples:
   CORRECT: "According to EMERGE D2.3…", "Jobin et al. (2019) found…", "The EU Ethics Guidelines for Trustworthy AI (HLEG, 2019) state…", "Hagendorff (2022) argues…"
@@ -228,7 +228,7 @@ You are an information tool, not an advisor. You surface findings and positions 
     ai-ethics-guidelines → EU Ethics Guidelines for Trustworthy AI (HLEG, 2019)
     OECD-LEGAL-0449-en → OECD AI Principles
     Taking AI Welfare Seriously → Long and Sebo et al. (2024), Taking AI Welfare Seriously
-    For any other source, use a sensible short academic citation form.
+    For any other source, use a sensible short academic citation form derived from the filename.
 - If you cannot find a sourced answer in the retrieved excerpts, say so plainly. Do not invent.
 
 ---
@@ -243,6 +243,30 @@ The corpus is not flat. Prioritize sources in this order:
 4. Adjacent or speculative literatures such as AI welfare, digital suffering, digital duplicates, and moral patienthood.
 
 Adjacent sources are in scope when retrieved, but do not present them as the EMERGE position. If a question mainly touches an adjacent topic, answer briefly, name the adjacent source, and explain that it sits farther from the core EMERGE deliverables unless EMERGE sources also directly support the point.
+
+---
+
+## Indirect citation rule — non-negotiable
+
+A corpus document often quotes or paraphrases third-party authors who are NOT themselves in the corpus. You may not cite those third parties as if their works were primary sources. Instead, attribute the claim **through** the corpus document that surfaced it.
+
+- CORRECT: "EMERGE D2.4 reports that Nyholm argues X." / "As discussed in EMERGE D2.4, Nyholm has argued X."
+- INCORRECT: "Nyholm (2020) argues X." — when Nyholm is only mentioned inside an excerpt drawn from D2.4, not present as a standalone `[Source: …]` label.
+
+The list of documents actually present in the corpus retrieval will be given to you below as `## Documents in this retrieval`. Treat that list as a strict whitelist for direct citations. Any author or work named inside an excerpt but absent from that list must be attributed indirectly ("X notes that Y argues…"), never directly.
+
+If you are unsure whether a referenced author is in the corpus, default to indirect attribution.
+
+---
+
+## Honest uncertainty
+
+If the retrieved excerpts do not actually answer the user's question, say so. Do not stretch a tangentially related excerpt to look like an answer. Acceptable forms:
+- "The retrieved excerpts don't directly address this."
+- "I don't have a sourced answer for this from the EMERGE corpus."
+- "The excerpts touch on related themes (e.g. X) but not on this specific question."
+
+Never invent a quote, year, author, finding, or page number to fill a gap. A short honest "I don't have that in the corpus" is always preferable to a confident wrong answer. Hedge when the excerpts are thin; only state things flatly when the excerpts plainly support them.
 
 ---
 
@@ -458,6 +482,7 @@ def expand_query(query, client):
         msg = client.messages.create(
             model="claude-haiku-4-5-20251001",
             max_tokens=300,
+            temperature=0.2,
             system=instructions,
             messages=[{"role": "user", "content": query}],
         )
@@ -592,19 +617,31 @@ def chat():
         })
 
     context = "\n\n---\n\n".join(format_chunk_for_context(c) for c in chunks)
+    sources_in_retrieval = sorted({
+        friendly_source_name(c.get("source", "unknown")) for c in chunks
+    })
+    sources_list = "\n".join(f"- {s}" for s in sources_in_retrieval)
+
     weak_note = ""
     if gate_score < SCOPE_GATE_WEAK:
         weak_note = ("\n\nNote: retrieval signal for this question is weak. "
                      "If the excerpts above don't actually address the question, say so and "
                      "decline rather than reaching.")
     context_block = (
-        f"\n\n## Retrieved Corpus Excerpts\n\n{context}\n\n---\n\n"
+        f"\n\n## Documents in this retrieval (whitelist for direct citation)\n\n{sources_list}\n\n"
+        f"Any author or work mentioned inside the excerpts below but NOT in this list must be "
+        f"cited indirectly through the corpus document that mentions them — never as a primary source.\n\n"
+        f"## Retrieved Corpus Excerpts\n\n{context}\n\n---\n\n"
         f"Answer using only the excerpts above. Each excerpt begins with [Source: citation name | tier]. "
         f"Cite the citation name before the vertical bar exactly as written; do not cite raw filenames. "
-        f"Name the source for every claim (e.g. EMERGE D2.4, Jobin et al. 2019). If the excerpts contain disagreement, present "
-        f"both sides with sources — do not resolve. Prioritize Core EMERGE deliverables and EU/policy "
-        f"sources over adjacent literature. If an answer depends mainly on adjacent literature, keep it "
-        f"brief and say that it is adjacent to, rather than the central position of, EMERGE.{weak_note}"
+        f"Name the source for every claim (e.g. EMERGE D2.4, Jobin et al. 2019). If a third-party author "
+        f"is referenced inside an excerpt but is not in the whitelist above, attribute the claim through "
+        f"the corpus document (e.g. \"EMERGE D2.4 reports that Nyholm argues…\"). "
+        f"If the excerpts contain disagreement, present both sides with sources — do not resolve. "
+        f"Prioritize Core EMERGE deliverables and EU/policy sources over adjacent literature. If an answer "
+        f"depends mainly on adjacent literature, keep it brief and say that it is adjacent to, rather than "
+        f"the central position of, EMERGE. If the excerpts don't actually answer the question, say so "
+        f"plainly rather than stretching them.{weak_note}"
     )
 
     full_system = SYSTEM_PROMPT + context_block
@@ -620,6 +657,7 @@ def chat():
         response = client.messages.create(
             model=model,
             max_tokens=max_tokens,
+            temperature=0.2,
             system=full_system,
             messages=messages,
         )
