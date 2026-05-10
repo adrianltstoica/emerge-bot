@@ -1,7 +1,7 @@
 """
 EMERGE AI Ethics Information Bot - Backend
 Pure-Python TF-IDF retrieval, Haiku-driven query expansion (paraphrase + counter-query
-for two-sided coverage), scope-gated refusals, vignette endpoints. No new deps.
+for two-sided coverage), scope-gated refusals. No new deps.
 """
 
 import os
@@ -18,7 +18,6 @@ app = Flask(__name__, static_folder="static")
 CORS(app)
 
 CHUNKS_FILE = Path("chunks.json")
-VIGNETTES_FILE = Path("vignettes.json")
 DOCUMENTS_DIR = Path("documents")
 TOP_K = 18
 PER_SOURCE_LIMIT = 3
@@ -38,7 +37,6 @@ chunk_tf = []     # list[dict[token, weight]]
 doc_norms = []    # list[float]
 idf = {}          # dict[token, idf weight]
 
-vignettes = []
 corpus_stats = {
     "pdf_documents": 0,
     "indexed_sources": 0,
@@ -358,17 +356,6 @@ def load_chunks():
         print(f"WARNING: {len(missing)} PDFs do not have an obvious source match in chunks.json")
 
 
-def load_vignettes():
-    global vignettes
-    if VIGNETTES_FILE.exists():
-        with open(VIGNETTES_FILE, encoding="utf-8") as f:
-            vignettes = json.load(f)
-        print(f"Loaded {len(vignettes)} vignettes")
-    else:
-        vignettes = []
-        print("No vignettes.json found.")
-
-
 def score_chunks(query):
     qtoks = tokenize(query)
     if not qtoks:
@@ -556,27 +543,9 @@ def status():
         "pdf_documents": corpus_stats["pdf_documents"],
         "indexed_sources": corpus_stats["indexed_sources"],
         "missing_pdf_sources": corpus_stats["missing_pdf_sources"],
-        "vignettes": len(vignettes),
         "ready": len(chunk_store) > 0,
         "runtime": "render-flask",
     })
-
-
-@app.route("/vignettes")
-def list_vignettes():
-    summaries = [
-        {"id": v["id"], "title": v["title"], "topic": v.get("topic", "")}
-        for v in vignettes
-    ]
-    return jsonify(summaries)
-
-
-@app.route("/vignettes/<vid>")
-def get_vignette(vid):
-    for v in vignettes:
-        if v["id"] == vid:
-            return jsonify(v)
-    return jsonify({"error": "Vignette not found"}), 404
 
 
 @app.route("/chat", methods=["POST"])
@@ -684,7 +653,6 @@ if __name__ == "__main__":
     if not ANTHROPIC_API_KEY:
         print("WARNING: ANTHROPIC_API_KEY not set!")
     load_chunks()
-    load_vignettes()
     port = int(os.environ.get("PORT", 5000))
     print(f"\nStarting at http://localhost:{port}\n")
     app.run(debug=False, host="0.0.0.0", port=port)

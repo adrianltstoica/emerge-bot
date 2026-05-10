@@ -4,7 +4,7 @@
 ---
 
 ## What this is
-A local web app that retrieves relevant excerpts from your EMERGE corpus and passes them to Claude with the bot's full system prompt and sourcing rules. Two ways to interact: type a free-form prompt, or pick a predefined vignette.
+A local web app that retrieves relevant excerpts from your EMERGE corpus and passes them to Claude with the bot's full system prompt and sourcing rules. Type a free-form prompt to explore the corpus.
 
 ---
 
