@@ -525,6 +525,57 @@ def retrieve(query, client):
     return top_chunks, gate_score, expansion
 
 
+def is_corpus_inventory_question(text):
+    text_l = text.lower()
+    inventory_markers = [
+        "how many corpus", "how many documents", "how many docs",
+        "what documents can", "which documents can", "what docs can",
+        "which docs can", "any other docs", "other documents",
+        "access to the corpus", "access to roughly", "access to rougly",
+        "corpus docs", "corpus documents", "documents can you access",
+        "docs can you access", "sources can you access",
+    ]
+    return any(marker in text_l for marker in inventory_markers)
+
+
+def corpus_inventory_reply():
+    docs = sorted(set(c["source"] for c in chunk_store))
+    tier_counts = Counter(source_tier(source) for source in docs)
+    missing = corpus_stats["missing_pdf_sources"]
+
+    lines = [
+        "I can search the indexed EMERGE corpus, not just the documents cited in a single answer.",
+        "",
+        f"Current index: {len(chunk_store)} text chunks from {len(docs)} indexed sources.",
+        f"PDFs in the documents folder: {corpus_stats['pdf_documents']}.",
+    ]
+    if missing:
+        lines.append(
+            "PDFs without an obvious matching source in the current chunk index: "
+            + ", ".join(missing)
+            + "."
+        )
+
+    if tier_counts:
+        lines.extend([
+            "",
+            "Indexed source tiers:",
+            f"- Core EMERGE deliverables: {tier_counts.get('Core EMERGE deliverable', 0)}",
+            f"- EU/policy sources: {tier_counts.get('EU/policy source', 0)}",
+            f"- Wider supporting literature: {tier_counts.get('Wider supporting literature', 0)}",
+            f"- Adjacent literature: {tier_counts.get('Adjacent literature', 0)}",
+        ])
+
+    lines.extend([
+        "",
+        "Why earlier answers named only 7 documents: each chat response receives a retrieved subset "
+        f"of up to {TOP_K} chunks, with at most {PER_SOURCE_LIMIT} chunks per source. The 7 core EMERGE "
+        "deliverables are deliberately weighted higher, so broad corpus questions can over-retrieve them. "
+        "That does not mean the other indexed sources are unavailable.",
+    ])
+    return "\n".join(lines)
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Routes
 # ─────────────────────────────────────────────────────────────────────────────
@@ -550,15 +601,26 @@ def status():
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    if not ANTHROPIC_API_KEY:
-        return jsonify({"error": "API key not configured on server."}), 500
-
     data = request.json or {}
     messages = data.get("messages", [])
     if not messages:
         return jsonify({"error": "No messages provided"}), 400
 
     user_msgs = [m["content"] for m in messages if m["role"] == "user"]
+    last_user = user_msgs[-1] if user_msgs else ""
+    if is_corpus_inventory_question(last_user):
+        docs = sorted(set(c["source"] for c in chunk_store))
+        return jsonify({
+            "reply": corpus_inventory_reply(),
+            "chunks_used": 0,
+            "scope": "corpus_inventory",
+            "gate_score": None,
+            "sources_used": [friendly_source_name(source) for source in docs],
+        })
+
+    if not ANTHROPIC_API_KEY:
+        return jsonify({"error": "API key not configured on server."}), 500
+
     retrieval_query = " ".join(user_msgs[-3:])
 
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
@@ -617,8 +679,8 @@ def chat():
 
     depth_keywords = ["go deeper", "expand", "tell me more", "explain further",
                       "what else", "more detail", "elaborate", "in depth", "give me more"]
-    last_user = user_msgs[-1].lower() if user_msgs else ""
-    wants_depth = any(kw in last_user for kw in depth_keywords)
+    last_user_l = last_user.lower()
+    wants_depth = any(kw in last_user_l for kw in depth_keywords)
     model = "claude-sonnet-4-20250514"
     max_tokens = 1400 if wants_depth else 800
 
