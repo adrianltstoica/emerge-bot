@@ -144,12 +144,12 @@ FRIENDLY_SOURCE_NAMES = {
     "s10676-020-09573-9": "Ethics and Information Technology article 09573-9",
     "s11623-019-1183-6": "AI & Society article 1183-6",
     "s11948-019-00146-8": "Science and Engineering Ethics article 00146-8",
-    "s13347-021-00454-7": "Philosophy & Technology article 00454-7",
+    "s13347-021-00454-7": "List (2021)",
     "s13347-024-00718-y": "Philosophy & Technology article 00718-y",
     "s41599-025-04532-5": "Humanities and Social Sciences Communications article 04532-5",
-    "s43681-022-00167-3": "AI and Ethics article 00167-3",
-    "s43681-024-00419-4": "AI and Ethics article 00419-4",
-    "s43681-025-00749-x": "AI and Ethics article 00749-x",
+    "s43681-022-00167-3": "Siebert et al. (2023)",
+    "s43681-024-00419-4": "Placani (2024)",
+    "s43681-025-00749-x": "Bolgouras et al. (2025)",
     "sniezek_vanSwol2001": "Sniezek and Van Swol (2001)",
     "understanding_artificial_intelligence_ethics_and_safety": "Leslie (2019), Understanding Artificial Intelligence Ethics and Safety",
     "《新一代人工智能伦理规范》发布-中华人民共和国科学技术部": "China Ministry of Science and Technology, New Generation AI Ethics Norms",
@@ -188,6 +188,10 @@ FULL_SOURCE_TITLES = {
     "doc_38": "What If Generative Artificial Intelligence Became Conscious?",
     "doc_42": "Should We Fear Artificial Intelligence?",
     "fu_ir8hyn25gaatz92": "Ethical Norms for New Generation Artificial Intelligence",
+    "s13347-021-00454-7": "Group Agency and Artificial Intelligence",
+    "s43681-022-00167-3": "Meaningful Human Control: Actionable Properties for AI System Development",
+    "s43681-024-00419-4": "Anthropomorphism in AI: Hype and Fallacy",
+    "s43681-025-00749-x": "EU Regulatory Ecosystem for Ethical AI",
 }
 
 ADJACENT_SOURCE_MARKERS = (
@@ -302,6 +306,7 @@ The corpus contains multiple positions on most ethical questions. Your job is to
 - Do not take a side, do not present synthesis as consensus, do not soften disagreement into agreement.
 - When the excerpts contain only one position on a clearly contested question, say so explicitly: "The retrieved excerpts present one position; this is a contested area in the broader literature."
 - Use language like "On one view… On another view…" or "X argues… Y, by contrast, argues…"
+- For multi-source answers, prefer short paragraphs or bullets with a blank line between distinct positions. Do not run separate sourced positions together in one dense paragraph.
 
 ---
 
@@ -427,7 +432,11 @@ def source_reference(source):
     tier = source_tier(source)
     if title == citation:
         return f"{citation} — {tier}"
-    return f"{citation} — {title} — {tier}"
+    if title in citation:
+        return f"{citation} — {tier}"
+    if citation in title:
+        return f"{title} — {tier}"
+    return f"{citation}, {title} — {tier}"
 
 
 def append_source_list(reply, chunks):
