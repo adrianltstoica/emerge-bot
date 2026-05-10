@@ -21,6 +21,32 @@ CHUNKS_FILE = Path("chunks.json")
 DOCUMENTS_DIR = Path("documents")
 TOP_K = 18
 PER_SOURCE_LIMIT = 3
+RETRIEVAL_PROFILES = {
+    "normal": {
+        "top_k": 18,
+        "per_source_limit": 3,
+        "max_tokens": 800,
+        "description": "balanced retrieval for focused questions",
+    },
+    "broad": {
+        "top_k": 36,
+        "per_source_limit": 2,
+        "max_tokens": 1300,
+        "description": "wider source coverage for overview and landscape questions",
+    },
+    "deep": {
+        "top_k": 32,
+        "per_source_limit": 6,
+        "max_tokens": 1700,
+        "description": "deeper per-source coverage for detailed follow-up questions",
+    },
+    "broad_deep": {
+        "top_k": 42,
+        "per_source_limit": 4,
+        "max_tokens": 1900,
+        "description": "larger mixed retrieval for comprehensive cross-corpus questions",
+    },
+}
 
 # Empirical thresholds on the *mean cosine of top-10 chunks* — a far cleaner signal
 # than max alone, because off-topic queries usually surface 1–2 lucky matches but the
@@ -485,7 +511,45 @@ def expand_query(query, client):
         return fallback
 
 
-def retrieve(query, client):
+def retrieval_profile(query):
+    query_l = query.lower()
+    broad_markers = [
+        "overview", "survey", "landscape", "map", "across the corpus",
+        "across corpus", "in the corpus", "all sources", "all documents",
+        "all docs", "main themes", "main positions", "what are the main",
+        "summarize", "compare", "contrast", "positions", "perspectives",
+        "debates", "risks and potentials", "benefits and risks",
+    ]
+    depth_markers = [
+        "go deeper", "deep dive", "in depth", "in-depth", "depth",
+        "detailed", "detail", "more detail", "elaborate", "expand",
+        "thorough", "comprehensive", "nuanced", "unpack", "explain further",
+        "tell me more", "what else",
+    ]
+    broad_score = sum(1 for marker in broad_markers if marker in query_l)
+    depth_score = sum(1 for marker in depth_markers if marker in query_l)
+
+    # Longer, multi-part prompts usually need more context even without explicit words.
+    if len(query.split()) >= 35:
+        depth_score += 1
+    if query.count("?") >= 2:
+        broad_score += 1
+
+    if broad_score and depth_score:
+        mode = "broad_deep"
+    elif broad_score:
+        mode = "broad"
+    elif depth_score:
+        mode = "deep"
+    else:
+        mode = "normal"
+
+    profile = dict(RETRIEVAL_PROFILES[mode])
+    profile["mode"] = mode
+    return profile
+
+
+def retrieve(query, client, top_k=TOP_K, per_source_limit=PER_SOURCE_LIMIT):
     """Three-pass retrieval: original + paraphrase + counter-query.
     Returns (top_chunks, gate_score, expansion_dict).
     gate_score is the mean cosine of the top-10 chunks — used for scope gating."""
@@ -516,11 +580,11 @@ def retrieve(query, client):
     source_counts = defaultdict(int)
     for i, _ in ranked:
         source = chunk_store[i].get("source", "")
-        if source_counts[source] >= PER_SOURCE_LIMIT:
+        if source_counts[source] >= per_source_limit:
             continue
         top_chunks.append(chunk_store[i])
         source_counts[source] += 1
-        if len(top_chunks) >= TOP_K:
+        if len(top_chunks) >= top_k:
             break
     return top_chunks, gate_score, expansion
 
@@ -568,10 +632,11 @@ def corpus_inventory_reply():
 
     lines.extend([
         "",
-        "Why earlier answers named only 7 documents: each chat response receives a retrieved subset "
-        f"of up to {TOP_K} chunks, with at most {PER_SOURCE_LIMIT} chunks per source. The 7 core EMERGE "
-        "deliverables are deliberately weighted higher, so broad corpus questions can over-retrieve them. "
-        "That does not mean the other indexed sources are unavailable.",
+        "Why earlier answers named only 7 documents: each chat response receives a retrieved subset, "
+        "not the entire corpus. The bot now adjusts that subset by question type: focused questions use "
+        "a smaller balanced retrieval; broad questions use more source diversity; deep questions use more "
+        "chunks per source. The 7 core EMERGE deliverables are deliberately weighted higher, so broad corpus "
+        "questions can over-retrieve them. That does not mean the other indexed sources are unavailable.",
     ])
     return "\n".join(lines)
 
@@ -622,11 +687,17 @@ def chat():
         return jsonify({"error": "API key not configured on server."}), 500
 
     retrieval_query = " ".join(user_msgs[-3:])
+    profile = retrieval_profile(retrieval_query)
 
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
     try:
-        chunks, gate_score, expansion = retrieve(retrieval_query, client)
+        chunks, gate_score, expansion = retrieve(
+            retrieval_query,
+            client,
+            top_k=profile["top_k"],
+            per_source_limit=profile["per_source_limit"],
+        )
     except anthropic.AuthenticationError:
         return jsonify({"error": "Invalid API key on server."}), 401
     except Exception as e:
@@ -659,6 +730,10 @@ def chat():
                      "If the excerpts above don't actually address the question, say so and "
                      "decline rather than reaching.")
     context_block = (
+        f"\n\n## Retrieval profile\n\n"
+        f"- Mode: {profile['mode']} ({profile['description']})\n"
+        f"- Retrieved chunks allowed: up to {profile['top_k']}\n"
+        f"- Per-source chunk cap: {profile['per_source_limit']}\n\n"
         f"\n\n## Documents in this retrieval (whitelist for direct citation)\n\n{sources_list}\n\n"
         f"Any author or work mentioned inside the excerpts below but NOT in this list must be "
         f"cited indirectly through the corpus document that mentions them — never as a primary source.\n\n"
@@ -677,12 +752,8 @@ def chat():
 
     full_system = SYSTEM_PROMPT + context_block
 
-    depth_keywords = ["go deeper", "expand", "tell me more", "explain further",
-                      "what else", "more detail", "elaborate", "in depth", "give me more"]
-    last_user_l = last_user.lower()
-    wants_depth = any(kw in last_user_l for kw in depth_keywords)
     model = "claude-sonnet-4-20250514"
-    max_tokens = 1400 if wants_depth else 800
+    max_tokens = profile["max_tokens"]
 
     try:
         response = client.messages.create(
@@ -698,6 +769,11 @@ def chat():
             "chunks_used": len(chunks),
             "scope": "in_scope" if gate_score >= SCOPE_GATE_WEAK else "weak_retrieval",
             "gate_score": round(gate_score, 4),
+            "retrieval_profile": {
+                "mode": profile["mode"],
+                "top_k": profile["top_k"],
+                "per_source_limit": profile["per_source_limit"],
+            },
             "sources_used": sorted(set(friendly_source_name(c.get("source", "")) for c in chunks)),
         })
     except anthropic.AuthenticationError:
