@@ -100,5 +100,5 @@ This system uses:
 
 ---
 
-EMERGE Project · WP2 Deliverable 2.6 · EU Horizon Europe Grant 101070918
+EMERGE Project · WP2 Deliverable 2.6
 Ludwig-Maximilians-Universität München
