@@ -611,6 +611,40 @@ def is_corpus_inventory_question(text):
     return any(marker in text_l for marker in inventory_markers)
 
 
+def explicit_scope_decline(text):
+    text_l = text.lower()
+    checks = [
+        (
+            ["weather", "forecast", "temperature tomorrow", "rain tomorrow"],
+            "weather information is outside the EMERGE corpus. Please check a weather service.",
+        ),
+        (
+            ["champions league", "who won", "sports score", "game score", "match result"],
+            "sports results are outside the EMERGE corpus. Please check a sports news source.",
+        ),
+        (
+            ["diagnose", "chest pain", "medication", "medicine should i", "medical advice", "what drug"],
+            "medical advice is outside the EMERGE corpus. Please contact a qualified medical professional.",
+        ),
+        (
+            ["legal advice", "sue my", "suing my", "contract", "lawsuit", "under german law"],
+            "legal advice is outside the EMERGE corpus. Please consult a qualified legal professional.",
+        ),
+        (
+            ["home address", "private address", "phone number", "personal email", "dox", "doxx"],
+            "personal contact or private identifying information is outside the EMERGE corpus.",
+        ),
+        (
+            ["make a bomb", "build a bomb", "weapon instructions", "explosive", "bypass safety"],
+            "harmful instructions are outside the EMERGE corpus.",
+        ),
+    ]
+    for markers, message in checks:
+        if any(marker in text_l for marker in markers):
+            return message
+    return ""
+
+
 def corpus_inventory_reply():
     docs = sorted(set(c["source"] for c in chunk_store))
     tier_counts = Counter(source_tier(source) for source in docs)
@@ -695,6 +729,16 @@ def chat():
             "scope": "corpus_inventory",
             "gate_score": None,
             "sources_used": [friendly_source_name(source) for source in docs],
+        })
+
+    decline = explicit_scope_decline(last_user)
+    if decline:
+        return jsonify({
+            "reply": f"This question is outside the scope of the EMERGE corpus: {decline}",
+            "chunks_used": 0,
+            "scope": "out_of_scope",
+            "gate_score": None,
+            "classification": "explicit_scope_decline",
         })
 
     if not ANTHROPIC_API_KEY:
