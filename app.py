@@ -444,13 +444,12 @@ def append_source_list(reply, chunks):
     seen = set()
     for chunk in chunks:
         source = chunk.get("source", "")
-        citation = friendly_source_name(source)
-        if source and source not in seen and citation in reply:
+        if source and source not in seen:
             seen.add(source)
             sources.append(source_reference(source))
     if not sources:
         return reply
-    source_block = "\n\nSources cited:\n" + "\n".join(f"- {source}" for source in sources)
+    source_block = "\n\nSources retrieved for this answer:\n" + "\n".join(f"- {source}" for source in sources)
     return reply.rstrip() + source_block
 
 

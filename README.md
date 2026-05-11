@@ -26,7 +26,7 @@ export ANTHROPIC_API_KEY=sk-ant-...
 **On Mac:** Double-click **START.command**
 - If Mac asks "are you sure?", click Open
 - The first run installs dependencies into `.venv/`
-- When you see `Running on http://localhost:5000`, the bot is ready
+- When you see `Running on http://localhost:5050`, the bot is ready
 
 ### Step 4 — Open your browser
 Go to: **http://localhost:5050**
@@ -37,7 +37,7 @@ Go to: **http://localhost:5050**
 
 ## Everyday use
 1. Double-click START.command
-2. Open http://localhost:5000 in your browser
+2. Open http://localhost:5050 in your browser
 3. Ask questions
 
 **To stop:** Press Ctrl+C in the Terminal window, or just close it.
@@ -97,6 +97,8 @@ This system uses:
 - **Scope gating:** mean cosine of top-10 chunks; below threshold, the system refuses and points to an external resource category
 - **Models:** Claude Haiku 4.5 for query expansion; Claude Sonnet 4 for user-facing answers
 - **System prompt:** sourcing rules, two-sidedness on contested questions, scope boundaries, friendly-name conventions
+
+For local development the app defaults to port `5050`. Hosted deployments may set a different `PORT` value through the hosting environment.
 
 ---
 

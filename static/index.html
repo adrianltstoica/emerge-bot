@@ -50,13 +50,20 @@ footer{padding:28px 52px;border-top:1px solid var(--g2);display:flex;align-items
 .wb-body{font-size:14px;color:var(--bk);line-height:1.78;margin-top:8px;}
 .wb-body p{margin-bottom:12px;}
 .wb-body p:last-child{margin-bottom:0;}
+.wiki-note{border-top:1px solid var(--g2);padding-top:28px;margin-top:18px;margin-bottom:52px;}
+.wiki-note h2{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--bk);margin-bottom:12px;}
+.wiki-note p{font-size:13px;line-height:1.78;color:var(--bk);margin-bottom:12px;}
+.wiki-note ul{list-style:none;display:grid;gap:8px;margin-top:14px;}
+.wiki-note li{font-size:12px;line-height:1.55;color:var(--g3);border-bottom:1px solid var(--g2);padding-bottom:8px;}
+.wiki-note strong{color:var(--bk);font-weight:700;}
 .cl-wrap{max-width:680px;margin:0 auto;padding:72px 52px;}
 .cl-intro{font-size:14px;color:var(--g3);line-height:1.75;margin-bottom:48px;max-width:520px;}
 .roles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:48px;}
 .rt{background:var(--wh);border:1.5px solid var(--g2);border-radius:10px;padding:20px 14px;cursor:pointer;text-align:left;font-family:var(--fn);transition:all .12s;}
 .rt:hover{border-color:var(--p);}
 .rt.on{border-color:var(--bk);background:var(--bk);}
-.rt-icon{font-size:20px;margin-bottom:10px;}
+.rt-icon{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--p);margin-bottom:10px;}
+.rt.on .rt-icon{color:var(--y);}
 .rt-name{font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--bk);margin-bottom:3px;}
 .rt.on .rt-name{color:var(--y);}
 .rt-desc{font-size:10px;color:var(--g3);line-height:1.3;}
@@ -198,15 +205,28 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
       <span class="wsb-a" onclick="wSel(this)">EU AI Act</span>
     </aside>
     <main class="wiki-main">
-      <div class="wb"><div class="wb-tag">EMERGE D1.1 · D1.2 · D1.3</div><div class="wb-h">Collaborative Awareness</div><div class="wb-body"><p>Collaborative awareness is understood as a capacity that emerges in systems composed of multiple agents, where relevant information about a situation is shared, filtered, and integrated for the purposes of communication, coordination, or cooperation. It is not modelled as a direct analogue of human consciousness, but as a dimensional and task-relative property of collective systems.</p><p>D1.1 establishes criteria for local awareness, D1.2 demarcates collaborative awareness from related concepts, and D1.3 develops a dimensional model through which capacities, tasks, and metrics can be related. The concept is therefore intended to support both conceptual clarification and subsequent operational assessment.</p></div><div class="wb-src">Sources: D1.1 · D1.2 · D1.3</div></div>
-      <div class="wb"><div class="wb-tag">EMERGE D2.4 · Vereschak et al.</div><div class="wb-h">Trust in Human–AI Systems</div><div class="wb-body"><p>Trust is treated as a relational and context-sensitive condition of human-AI interaction. The relevant objective is not the maximisation of trust, but the establishment of appropriate trust: reliance should correspond to the demonstrated capacities, limitations, and operating conditions of the system.</p><p>In this respect, trustworthy AI requires more than reliable performance. It also requires predictability, transparency, explainability, integrity, and governance arrangements that make it possible for users and overseers to understand when reliance is warranted and when it should be withheld.</p></div><div class="wb-src">Sources: EMERGE D2.4 · Vereschak et al.</div></div>
-      <div class="wb"><div class="wb-tag">EMERGE D2.4 · Vallor & Vierkant 2024</div><div class="wb-h">Benevolence & Alignment</div><div class="wb-body"><p>Benevolence is presented as a substantive ethical virtue rather than a merely functional design preference. It concerns the orientation of a system, and of the institutions responsible for it, toward the good of affected persons and groups.</p><p>Applied to AI alignment, this requires attention to the relation between technical objectives, organisational incentives, and human welfare. A system may satisfy a narrow task specification while nevertheless failing to support the broader ethical conditions under which its deployment is justified.</p></div><div class="wb-src">Sources: EMERGE D2.4 · Vallor & Vierkant (2024)</div></div>
-      <div class="wb"><div class="wb-tag">EMERGE D2.5</div><div class="wb-h">Ethical Resilience</div><div class="wb-body"><p>Ethical resilience refers to the capacity of AI systems, users, and organisations to preserve ethically acceptable functioning under conditions of uncertainty, novelty, and stress. It is therefore not reducible to initial compliance, but concerns the continuing ability to detect, interpret, and respond to ethically significant change.</p><p>For aware and collective AI, this requires procedures for monitoring, review, escalation, and correction. The emphasis is on forward-looking responsibility: systems should be designed and governed so that accountability remains operative even when agency is distributed across human and artificial components.</p></div><div class="wb-src">Sources: EMERGE D2.5</div></div>
-      <div class="wb"><div class="wb-tag">EMERGE D2.2 · D2.3</div><div class="wb-h">Risks of Aware AI</div><div class="wb-body"><p>The risks associated with aware AI concern both system behaviour and human interpretation of that behaviour. D2.2 examines risks in AI systems, including failures of awareness, insufficient transparency, and difficulties in communicating relevant system states. D2.3 examines risks and potentials for humans, including responsibility gaps, over-attribution, and changes in perceived agency.</p><p>A central concern is that awareness claims may affect how humans allocate trust, responsibility, and moral significance. The ethical assessment of aware AI must therefore consider not only what the system can do, but also how its capacities are represented, understood, and acted upon by human stakeholders.</p></div><div class="wb-src">Sources: EMERGE D2.2 · D2.3</div></div>
-      <div class="wb"><div class="wb-tag">EMERGE D2.4 · Lange et al. 2025</div><div class="wb-h">Explainability</div><div class="wb-body"><p>Explainability is treated as a condition for meaningful human understanding, oversight, and accountability. It is particularly significant where AI systems operate as collaborators, advisors, or components of a collective system, since the relevant object of explanation may be a single action, a system state, or an emergent collective pattern.</p><p>The adequacy of an explanation depends on the stakeholder and the purpose for which the explanation is required. In some contexts, highly detailed causal accounts may be less useful than explanations that identify relevant rules, constraints, responsibilities, or limits of competence.</p></div><div class="wb-src">Sources: EMERGE D2.4 · Lange et al. (2025)</div></div>
-      <div class="wb"><div class="wb-tag">EMERGE D2.3 · D2.5</div><div class="wb-h">Responsibility Gaps</div><div class="wb-body"><p>Responsibility gaps arise where an outcome calls for attribution of responsibility, but the distribution of agency across humans, AI systems, organisations, and collective processes makes such attribution difficult. This problem is intensified in collective AI, where the behaviour of the overall system may not be straightforwardly reducible to any single component.</p><p>The EMERGE approach does not resolve this difficulty by relocating moral responsibility to the machine. Rather, it points to the need for human-centric governance arrangements, traceable decision structures, and oversight mechanisms that preserve meaningful control and accountability across the socio-technical system.</p></div><div class="wb-src">Sources: EMERGE D2.3 · D2.5 · Nyholm (2023)</div></div>
-      <div class="wb"><div class="wb-tag">HLEG · Jobin et al. 2019 · Hagendorff 2022 · Correa et al. 2023</div><div class="wb-h">AI Ethics Guidelines Landscape</div><div class="wb-body"><p>The literature on AI ethics guidelines identifies a substantial degree of convergence around principles such as transparency, accountability, privacy, justice, non-maleficence, responsibility, and human oversight. The HLEG guidelines articulate trustworthy AI in terms of lawful, ethical, and robust systems, while comparative analyses map the recurrence and distribution of such principles across institutional documents.</p><p>At the same time, this literature identifies persistent limitations. Guidelines often remain non-binding, unevenly implemented, and insufficiently connected to technical and organisational practice. For EMERGE, these limitations motivate a more specific analysis of collective and aware AI, where general principle lists may not capture the relevant forms of distributed agency and awareness.</p></div><div class="wb-src">Sources: Jobin et al. (2019) · Hagendorff (2022) · Correa et al. (2023) · HLEG</div></div>
-      <div class="wb"><div class="wb-tag">OJ L 2024/1689</div><div class="wb-h">EU AI Act</div><div class="wb-body"><p>The EU AI Act establishes a risk-based regulatory framework for AI systems placed on, or used within, the Union market. It differentiates prohibited practices, high-risk AI systems, transparency obligations, and obligations for general-purpose AI models, with requirements calibrated to the type and intensity of risk.</p><p>Within the toolkit, the Act should be read as a legal and regulatory reference point, not as an exhaustive ethical account. It provides binding categories and obligations, while questions concerning collaborative awareness, trust, benevolence, moral significance, and ethical resilience require further conceptual and normative analysis.</p></div><div class="wb-src">Source: EU AI Act · OJ L 2024/1689</div></div>
+      <div class="wb"><div class="wb-tag">EMERGE D1.1 · D1.2 · D1.3</div><div class="wb-h">Collaborative Awareness</div><div class="wb-body"><p>Collaborative awareness is understood as a capacity that emerges in systems composed of multiple agents, where relevant information about a situation is shared, filtered, and integrated for the purposes of communication, coordination, or cooperation. It is not modelled as a direct analogue of human consciousness, but as a dimensional and task-relative property of collective systems.</p><p>D1.1 establishes criteria for local awareness, D1.2 demarcates collaborative awareness from related concepts, and D1.3 develops a dimensional model through which capacities, tasks, and metrics can be related. The concept is therefore intended to support both conceptual clarification and subsequent operational assessment.</p></div><div class="wb-src">Primary sources: EMERGE D1.1 Local Awareness Criteria; EMERGE D1.2 Demarcating Collaborative Awareness from Related Concepts; EMERGE D1.3 Dimensions of Collaborative Awareness.</div></div>
+      <div class="wb"><div class="wb-tag">EMERGE D2.4 · Vereschak et al.</div><div class="wb-h">Trust in Human–AI Systems</div><div class="wb-body"><p>Trust is treated as a relational and context-sensitive condition of human-AI interaction. The relevant objective is not the maximisation of trust, but the establishment of appropriate trust: reliance should correspond to the demonstrated capacities, limitations, and operating conditions of the system.</p><p>In this respect, trustworthy AI requires more than reliable performance. It also requires predictability, transparency, explainability, integrity, and governance arrangements that make it possible for users and overseers to understand when reliance is warranted and when it should be withheld.</p></div><div class="wb-src">Primary sources: EMERGE D2.4 Map of Ethical Virtues; Vereschak et al., work on appropriate trust and human-AI interaction.</div></div>
+      <div class="wb"><div class="wb-tag">EMERGE D2.4 · Vallor & Vierkant 2024</div><div class="wb-h">Benevolence & Alignment</div><div class="wb-body"><p>Benevolence is presented as a substantive ethical virtue rather than a merely functional design preference. It concerns the orientation of a system, and of the institutions responsible for it, toward the good of affected persons and groups.</p><p>Applied to AI alignment, this requires attention to the relation between technical objectives, organisational incentives, and human welfare. A system may satisfy a narrow task specification while nevertheless failing to support the broader ethical conditions under which its deployment is justified.</p></div><div class="wb-src">Primary sources: EMERGE D2.4 Map of Ethical Virtues; Vallor and Vierkant (2024).</div></div>
+      <div class="wb"><div class="wb-tag">EMERGE D2.5</div><div class="wb-h">Ethical Resilience</div><div class="wb-body"><p>Ethical resilience refers to the capacity of AI systems, users, and organisations to preserve ethically acceptable functioning under conditions of uncertainty, novelty, and stress. It is therefore not reducible to initial compliance, but concerns the continuing ability to detect, interpret, and respond to ethically significant change.</p><p>For aware and collective AI, this requires procedures for monitoring, review, escalation, and correction. The emphasis is on forward-looking responsibility: systems should be designed and governed so that accountability remains operative even when agency is distributed across human and artificial components.</p></div><div class="wb-src">Primary source: EMERGE D2.5 Ethical Resilience.</div></div>
+      <div class="wb"><div class="wb-tag">EMERGE D2.2 · D2.3</div><div class="wb-h">Risks of Aware AI</div><div class="wb-body"><p>The risks associated with aware AI concern both system behaviour and human interpretation of that behaviour. D2.2 examines risks in AI systems, including failures of awareness, insufficient transparency, and difficulties in communicating relevant system states. D2.3 examines risks and potentials for humans, including responsibility gaps, over-attribution, and changes in perceived agency.</p><p>A central concern is that awareness claims may affect how humans allocate trust, responsibility, and moral significance. The ethical assessment of aware AI must therefore consider not only what the system can do, but also how its capacities are represented, understood, and acted upon by human stakeholders.</p></div><div class="wb-src">Primary sources: EMERGE D2.2 Map of Risks in AI Systems; EMERGE D2.3 Map of Risks and Potentials for Humans.</div></div>
+      <div class="wb"><div class="wb-tag">EMERGE D2.4 · Lange et al. 2025</div><div class="wb-h">Explainability</div><div class="wb-body"><p>Explainability is treated as a condition for meaningful human understanding, oversight, and accountability. It is particularly significant where AI systems operate as collaborators, advisors, or components of a collective system, since the relevant object of explanation may be a single action, a system state, or an emergent collective pattern.</p><p>The adequacy of an explanation depends on the stakeholder and the purpose for which the explanation is required. In some contexts, highly detailed causal accounts may be less useful than explanations that identify relevant rules, constraints, responsibilities, or limits of competence.</p></div><div class="wb-src">Primary sources: EMERGE D2.4 Map of Ethical Virtues; Lange et al. (2025).</div></div>
+      <div class="wb"><div class="wb-tag">EMERGE D2.3 · D2.5</div><div class="wb-h">Responsibility Gaps</div><div class="wb-body"><p>Responsibility gaps arise where an outcome calls for attribution of responsibility, but the distribution of agency across humans, AI systems, organisations, and collective processes makes such attribution difficult. This problem is intensified in collective AI, where the behaviour of the overall system may not be straightforwardly reducible to any single component.</p><p>The EMERGE approach does not resolve this difficulty by relocating moral responsibility to the machine. Rather, it points to the need for human-centric governance arrangements, traceable decision structures, and oversight mechanisms that preserve meaningful control and accountability across the socio-technical system.</p></div><div class="wb-src">Primary sources: EMERGE D2.3 Map of Risks and Potentials for Humans; EMERGE D2.5 Ethical Resilience.</div></div>
+      <div class="wb"><div class="wb-tag">HLEG · Jobin et al. 2019 · Hagendorff 2022 · Correa et al. 2023</div><div class="wb-h">AI Ethics Guidelines Landscape</div><div class="wb-body"><p>The literature on AI ethics guidelines identifies a substantial degree of convergence around principles such as transparency, accountability, privacy, justice, non-maleficence, responsibility, and human oversight. The HLEG guidelines articulate trustworthy AI in terms of lawful, ethical, and robust systems, while comparative analyses map the recurrence and distribution of such principles across institutional documents.</p><p>At the same time, this literature identifies persistent limitations. Guidelines often remain non-binding, unevenly implemented, and insufficiently connected to technical and organisational practice. For EMERGE, these limitations motivate a more specific analysis of collective and aware AI, where general principle lists may not capture the relevant forms of distributed agency and awareness.</p></div><div class="wb-src">Primary sources: High-Level Expert Group on AI, Ethics Guidelines for Trustworthy AI; Jobin et al. (2019); Hagendorff (2022); Correa et al. (2023).</div></div>
+      <div class="wb"><div class="wb-tag">REGULATION (EU) 2024/1689</div><div class="wb-h">EU AI Act</div><div class="wb-body"><p>The EU AI Act establishes a risk-based regulatory framework for AI systems placed on, or used within, the Union market. It differentiates prohibited practices, high-risk AI systems, transparency obligations, and obligations for general-purpose AI models, with requirements calibrated to the type and intensity of risk.</p><p>Within the toolkit, the Act should be read as a legal and regulatory reference point, not as an exhaustive ethical account. It provides binding categories and obligations, while questions concerning collaborative awareness, trust, benevolence, moral significance, and ethical resilience require further conceptual and normative analysis.</p></div><div class="wb-src">Primary source: Regulation (EU) 2024/1689, Official Journal of the European Union.</div></div>
+      <section class="wiki-note">
+        <h2>Methodological Note</h2>
+        <p>The Wiki entries are concise syntheses of recurring claims in the indexed EMERGE corpus. They are intended as orientation texts, not as substitutes for the underlying deliverables or legal instruments.</p>
+        <p>Where an entry relies on third-party literature discussed in the corpus, the source line names the corpus source or indexed literature from which the claim is drawn. The chat bot applies stricter retrieval-time source controls and reports the documents retrieved for each answer.</p>
+      </section>
+      <section class="wiki-note">
+        <h2>Source Register</h2>
+        <ul>
+          <li><strong>Core EMERGE deliverables:</strong> D1.1 Local Awareness Criteria; D1.2 Demarcating Collaborative Awareness from Related Concepts; D1.3 Dimensions of Collaborative Awareness; D2.2 Map of Risks in AI Systems; D2.3 Map of Risks and Potentials for Humans; D2.4 Map of Ethical Virtues; D2.5 Ethical Resilience.</li>
+          <li><strong>Policy sources:</strong> High-Level Expert Group on AI, Ethics Guidelines for Trustworthy AI; Regulation (EU) 2024/1689, Artificial Intelligence Act; OECD AI Principles.</li>
+          <li><strong>Supporting literature:</strong> Jobin et al. (2019); Hagendorff (2022); Correa et al. (2023); Vereschak et al.; Vallor and Vierkant (2024); Lange et al. (2025), together with further indexed literature retrieved by the bot where relevant.</li>
+        </ul>
+      </section>
     </main>
   </div>
 </div>
@@ -215,10 +235,10 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
   <div class="cl-wrap">
     <p class="cl-intro">Select your role to load a checklist of ethics considerations grounded in EMERGE research findings.</p>
     <div class="roles">
-      <button class="rt" onclick="setRole(this,'reg')"><div class="rt-icon">🏛</div><div class="rt-name">Regulator</div><div class="rt-desc">Governance & oversight</div></button>
-      <button class="rt" onclick="setRole(this,'dev')"><div class="rt-icon">💻</div><div class="rt-name">Developer</div><div class="rt-desc">Building or deploying AI</div></button>
-      <button class="rt" onclick="setRole(this,'res')"><div class="rt-icon">🔬</div><div class="rt-name">Researcher</div><div class="rt-desc">Academic or industry AI</div></button>
-      <button class="rt" onclick="setRole(this,'usr')"><div class="rt-icon">👤</div><div class="rt-name">Product User</div><div class="rt-desc">Using AI products</div></button>
+      <button class="rt" onclick="setRole(this,'reg')"><div class="rt-icon">Policy</div><div class="rt-name">Regulator</div><div class="rt-desc">Governance & oversight</div></button>
+      <button class="rt" onclick="setRole(this,'dev')"><div class="rt-icon">Build</div><div class="rt-name">Developer</div><div class="rt-desc">Building or deploying AI</div></button>
+      <button class="rt" onclick="setRole(this,'res')"><div class="rt-icon">Study</div><div class="rt-name">Researcher</div><div class="rt-desc">Academic or industry AI</div></button>
+      <button class="rt" onclick="setRole(this,'usr')"><div class="rt-icon">Use</div><div class="rt-name">Product User</div><div class="rt-desc">Using AI products</div></button>
     </div>
     <div id="cpw" style="display:none"><div class="prog-label" id="cplbl">0 of 0 completed</div><div class="prog-track"><div class="prog-fill" id="cpbar"></div></div></div>
     <div id="clbody"><div class="cl-empty">Select your role above to load your checklist.</div></div>
@@ -241,7 +261,7 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
       </div>
       <div class="es-pills">
         <div class="pill-wrap">
-          <button class="es-pill" onclick="togglePill('reg')">🏛 Regulator</button>
+          <button class="es-pill" onclick="togglePill('reg')">Regulator</button>
           <div class="pill-dropdown" id="dd-reg">
             <div class="pd-header">Regulator questions</div>
             <div class="pd-item" onclick="usePill(this)">What does the EU AI Act say about high-risk systems?</div>
@@ -251,7 +271,7 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
           </div>
         </div>
         <div class="pill-wrap">
-          <button class="es-pill" onclick="togglePill('dev')">💻 Developer</button>
+          <button class="es-pill" onclick="togglePill('dev')">Developer</button>
           <div class="pill-dropdown" id="dd-dev">
             <div class="pd-header">Developer questions</div>
             <div class="pd-item" onclick="usePill(this)">What does appropriate trust mean when designing AI systems?</div>
@@ -261,7 +281,7 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
           </div>
         </div>
         <div class="pill-wrap">
-          <button class="es-pill" onclick="togglePill('res')">🔬 Researcher</button>
+          <button class="es-pill" onclick="togglePill('res')">Researcher</button>
           <div class="pill-dropdown" id="dd-res">
             <div class="pd-header">Researcher questions</div>
             <div class="pd-item" onclick="usePill(this)">What is collaborative awareness in AI?</div>
@@ -271,7 +291,7 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
           </div>
         </div>
         <div class="pill-wrap">
-          <button class="es-pill" onclick="togglePill('usr')">👤 Product User</button>
+          <button class="es-pill" onclick="togglePill('usr')">Product User</button>
           <div class="pill-dropdown" id="dd-usr">
             <div class="pd-header">Product user questions</div>
             <div class="pd-item" onclick="usePill(this)">What makes an AI system trustworthy?</div>
@@ -334,7 +354,7 @@ const CL = {
       { q: 'Are explainability requirements calibrated to context?', s: 'EMERGE D2.4 · Lange et al. 2025' }
     ]},
     { g: 'EU AI Act', i: [
-      { q: 'Have you mapped which systems fall under the EU AI Act high-risk category?', s: 'OJ L 2024/1689' },
+      { q: 'Have you mapped which systems fall under the EU AI Act high-risk category?', s: 'Regulation (EU) 2024/1689' },
       { q: 'Do your processes go beyond compliance to address ethical gaps?', s: 'Hagendorff (2022) · Correa et al. (2023)' }
     ]}
   ],
@@ -348,7 +368,7 @@ const CL = {
       { q: 'If marketed as "aware", have you considered how stakeholders may interpret that term?', s: 'EMERGE D2.3' }
     ]},
     { g: 'Ethics by Design', i: [
-      { q: 'Have you considered the HLEG seven requirements for trustworthy AI during design?', s: 'EU HLEG Ethics Guidelines' },
+      { q: 'Have you considered the HLEG seven requirements for trustworthy AI during design?', s: 'HLEG Ethics Guidelines for Trustworthy AI' },
       { q: 'Does your system maintain meaningful human control as automation increases?', s: 'EMERGE D2.5' }
     ]}
   ],
@@ -362,7 +382,7 @@ const CL = {
       { q: 'Does your research treat ethics as a design-phase concern, not post-hoc?', s: 'EMERGE D2.5' }
     ]},
     { g: 'Literature', i: [
-      { q: 'Have you engaged with the AI ethics guidelines landscape and its known gaps?', s: 'Jobin (2019) · Hagendorff (2022) · Correa (2023)' },
+      { q: 'Have you engaged with the AI ethics guidelines landscape and its known gaps?', s: 'Jobin et al. (2019) · Hagendorff (2022) · Correa et al. (2023)' },
       { q: 'Does your work address the gap in guidelines covering collective AI?', s: 'EMERGE D2.5' }
     ]}
   ],
@@ -376,8 +396,8 @@ const CL = {
       { q: 'When you receive an explanation, do you consider whether it is genuinely informative?', s: 'EMERGE D2.4' }
     ]},
     { g: 'Your Rights', i: [
-      { q: 'Are you aware of your transparency rights under the EU AI Act?', s: 'EU AI Act · OJ L 2024/1689' },
-      { q: 'Do you know how to report concerns if an AI system causes you harm?', s: 'EU HLEG Ethics Guidelines' }
+      { q: 'Are you aware of your transparency rights under the EU AI Act?', s: 'Regulation (EU) 2024/1689' },
+      { q: 'Do you know how to report concerns if an AI system causes you harm?', s: 'HLEG Ethics Guidelines for Trustworthy AI' }
     ]}
   ]
 };
