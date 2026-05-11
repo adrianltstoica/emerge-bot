@@ -659,6 +659,11 @@ def index():
     return send_from_directory("static", "index.html")
 
 
+@app.route("/assets/<path:filename>")
+def assets(filename):
+    return send_from_directory("static/assets", filename)
+
+
 @app.route("/status")
 def status():
     docs = sorted(set(c["source"] for c in chunk_store))
