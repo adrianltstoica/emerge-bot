@@ -13,6 +13,7 @@ import gzip
 import csv
 import html
 import io
+import secrets
 import sqlite3
 import time
 import uuid
@@ -22,7 +23,7 @@ import urllib.request
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
-from flask import Flask, Response, request, jsonify, send_from_directory
+from flask import Flask, Response, redirect, request, jsonify, send_from_directory, session
 from flask_cors import CORS
 import anthropic
 
@@ -35,7 +36,9 @@ DOCUMENTS_DIR = Path("documents")
 CHAT_LOG_DB = Path(os.environ.get("CHAT_LOG_DB", "chat_logs.db"))
 ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "")
+ADMIN_SESSION_SECRET = os.environ.get("ADMIN_SESSION_SECRET", ADMIN_PASSWORD or "emerge-admin-session-dev")
 LOG_CLIENT_IPS = os.environ.get("CHAT_LOG_IPS", "").lower() in {"1", "true", "yes", "on"}
+app.secret_key = ADMIN_SESSION_SECRET
 TOP_K = 18
 PER_SOURCE_LIMIT = 3
 RETRIEVAL_PROFILES = {
@@ -250,15 +253,22 @@ def require_admin_auth():
             503,
         )
 
-    auth = request.authorization
-    if auth and auth.username == ADMIN_USERNAME and auth.password == ADMIN_PASSWORD:
+    if session.get("admin_authenticated") is True:
         return None
 
-    return Response(
-        "Authentication required.",
-        401,
-        {"WWW-Authenticate": 'Basic realm="EMERGE chat logs"'},
-    )
+    auth = request.authorization
+    if (
+        auth
+        and secrets.compare_digest(auth.username or "", ADMIN_USERNAME)
+        and secrets.compare_digest(auth.password or "", ADMIN_PASSWORD)
+    ):
+        session["admin_authenticated"] = True
+        return None
+
+    next_url = request.path
+    if request.query_string:
+        next_url += "?" + request.query_string.decode("utf-8", errors="ignore")
+    return redirect("/admin/login?next=" + urllib.parse.quote(next_url))
 
 
 init_chat_log_db()
@@ -1066,6 +1076,81 @@ def fetch_chat_logs(limit=300, query=""):
         ).fetchall()
 
 
+def safe_admin_next(raw_next):
+    next_url = raw_next or "/admin/chats"
+    if not next_url.startswith("/admin/"):
+        return "/admin/chats"
+    if next_url.startswith("/admin/login"):
+        return "/admin/chats"
+    return next_url
+
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+    if not ADMIN_PASSWORD:
+        return Response(
+            "Admin chat logs are disabled. Set ADMIN_PASSWORD on the server to enable them.",
+            503,
+        )
+
+    next_url = safe_admin_next(request.args.get("next"))
+    error = ""
+    username = ""
+    if request.method == "POST":
+        username = request.form.get("username", "")
+        password = request.form.get("password", "")
+        next_url = safe_admin_next(request.form.get("next"))
+        if (
+            secrets.compare_digest(username, ADMIN_USERNAME)
+            and secrets.compare_digest(password, ADMIN_PASSWORD)
+        ):
+            session["admin_authenticated"] = True
+            return redirect(next_url)
+        error = "Wrong username or password."
+
+    error_html = f'<p class="error">{html.escape(error)}</p>' if error else ""
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EMERGE Admin Login</title>
+  <style>
+    :root {{ color-scheme: light; --line:#d9dee7; --ink:#172033; --muted:#667085; --bg:#f6f7f9; --panel:#fff; }}
+    body {{ min-height:100vh; margin:0; display:grid; place-items:center; font:14px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--ink); background:var(--bg); }}
+    main {{ width:min(420px, calc(100vw - 32px)); background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:24px; box-sizing:border-box; }}
+    h1 {{ margin:0 0 6px; font-size:24px; }}
+    p {{ margin:0 0 18px; color:var(--muted); }}
+    label {{ display:block; font-size:12px; font-weight:700; color:#344054; margin:14px 0 6px; }}
+    input {{ width:100%; box-sizing:border-box; padding:11px 12px; border:1px solid var(--line); border-radius:6px; font:inherit; }}
+    button {{ width:100%; margin-top:18px; padding:11px 12px; border:1px solid #172033; border-radius:6px; background:#172033; color:white; font:700 14px inherit; cursor:pointer; }}
+    .error {{ color:#b42318; background:#fff1f0; border:1px solid #ffdad6; border-radius:6px; padding:10px 12px; margin:12px 0 0; }}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Admin Login</h1>
+    <p>Use the admin username and the server's ADMIN_PASSWORD.</p>
+    {error_html}
+    <form method="post" action="/admin/login">
+      <input type="hidden" name="next" value="{html.escape(next_url)}">
+      <label for="username">Username</label>
+      <input id="username" name="username" value="{html.escape(username)}" autocomplete="username" autofocus>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password">
+      <button type="submit">Log In</button>
+    </form>
+  </main>
+</body>
+</html>"""
+
+
+@app.route("/admin/logout")
+def admin_logout():
+    session.pop("admin_authenticated", None)
+    return redirect("/admin/login")
+
+
 @app.route("/admin/chats")
 def admin_chats():
     auth_error = require_admin_auth()
@@ -1134,6 +1219,7 @@ def admin_chats():
     input {{ min-width:260px; padding:10px 12px; border:1px solid var(--line); border-radius:6px; background:white; }}
     button, a.button {{ padding:10px 12px; border:1px solid var(--line); border-radius:6px; background:#172033; color:white; text-decoration:none; cursor:pointer; }}
     a.button {{ display:inline-block; }}
+    a.secondary {{ background:white; color:#172033; }}
     .log {{ background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:16px; margin:12px 0; }}
     .log header {{ display:flex; justify-content:space-between; gap:12px; margin-bottom:8px; }}
     .log header span {{ color:var(--muted); }}
@@ -1156,6 +1242,7 @@ def admin_chats():
         <input name="q" value="{safe_query}" placeholder="Search chats">
         <button type="submit">Search</button>
         <a class="button" href="{html.escape(export_href)}">Export CSV</a>
+        <a class="button secondary" href="/admin/logout">Log Out</a>
       </form>
     </div>
     {content}
