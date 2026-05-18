@@ -1076,6 +1076,70 @@ def fetch_chat_logs(limit=300, query=""):
         ).fetchall()
 
 
+def fetch_chat_sessions(limit=100, query=""):
+    try:
+        limit = int(limit or 100)
+    except (TypeError, ValueError):
+        limit = 100
+    limit = max(1, min(limit, 500))
+
+    params = []
+    where = ""
+    if query:
+        where = """
+            WHERE user_message LIKE ?
+               OR assistant_reply LIKE ?
+               OR error LIKE ?
+               OR visitor_id LIKE ?
+               OR conversation_id LIKE ?
+               OR sources_used_json LIKE ?
+        """
+        like = f"%{query}%"
+        params.extend([like, like, like, like, like, like])
+
+    with sqlite3.connect(CHAT_LOG_DB) as conn:
+        conn.row_factory = sqlite3.Row
+        session_rows = conn.execute(
+            f"""
+            SELECT
+                COALESCE(NULLIF(conversation_id, ''), request_id) AS session_key,
+                MAX(id) AS latest_id
+            FROM chat_logs
+            {where}
+            GROUP BY session_key
+            ORDER BY latest_id DESC
+            LIMIT ?
+            """,
+            (*params, limit),
+        ).fetchall()
+
+        session_keys = [row["session_key"] for row in session_rows]
+        if not session_keys:
+            return []
+
+        placeholders = ",".join("?" for _ in session_keys)
+        rows = conn.execute(
+            f"""
+            SELECT *,
+                COALESCE(NULLIF(conversation_id, ''), request_id) AS session_key
+            FROM chat_logs
+            WHERE COALESCE(NULLIF(conversation_id, ''), request_id) IN ({placeholders})
+            ORDER BY session_key ASC, id ASC
+            """,
+            session_keys,
+        ).fetchall()
+
+    sessions = {key: [] for key in session_keys}
+    for row in rows:
+        sessions[row["session_key"]].append(row)
+
+    return [
+        {"session_key": key, "rows": sessions[key]}
+        for key in session_keys
+        if sessions[key]
+    ]
+
+
 def safe_admin_next(raw_next):
     next_url = raw_next or "/admin/chats"
     if not next_url.startswith("/admin/"):
@@ -1158,46 +1222,72 @@ def admin_chats():
         return auth_error
 
     query = request.args.get("q", "").strip()
-    limit = request.args.get("limit", "300")
-    rows = fetch_chat_logs(limit=limit, query=query)
+    limit = request.args.get("limit", "100")
+    chat_sessions = fetch_chat_sessions(limit=limit, query=query)
     safe_query = html.escape(query)
     export_href = "/admin/chats.csv"
     if query:
         export_href += f"?q={urllib.parse.quote(query)}"
+    sessions_export_href = "/admin/sessions.csv"
+    if query:
+        sessions_export_href += f"?q={urllib.parse.quote(query)}"
 
     items = []
-    for row in rows:
-        sources = ", ".join(json.loads(row["sources_used_json"] or "[]"))
-        status = row["error"] or row["scope"] or "unknown"
+    for chat_session in chat_sessions:
+        rows = chat_session["rows"]
+        first = rows[0]
+        last = rows[-1]
+        session_status = "has errors" if any(row["error"] for row in rows) else (last["scope"] or "unknown")
+        visitor_id = first["visitor_id"] or "unknown"
+        conversation_id = first["conversation_id"] or chat_session["session_key"]
+        turns = []
+
+        for row in rows:
+            sources = ", ".join(json.loads(row["sources_used_json"] or "[]"))
+            status = row["error"] or row["scope"] or "unknown"
+            turns.append(f"""
+                <section class="turn">
+                    <header>
+                        <strong>Turn #{row['id']} · {html.escape(row['created_at'])}</strong>
+                        <span>{html.escape(status)}</span>
+                    </header>
+                    <div class="meta">
+                        latency: {row['latency_ms'] or 0} ms ·
+                        chunks: {row['chunks_used'] or 0} ·
+                        mode: {html.escape(row['answer_mode'] or '')} ·
+                        temp: {row['answer_temperature'] if row['answer_temperature'] is not None else ''} ·
+                        gate: {row['gate_score'] if row['gate_score'] is not None else ''}
+                    </div>
+                    <h2>User</h2>
+                    <pre>{html.escape(row['user_message'] or '')}</pre>
+                    <h2>Bot</h2>
+                    <pre>{html.escape(row['assistant_reply'] or row['error'] or '')}</pre>
+                    <details>
+                        <summary>Turn context</summary>
+                        <p><b>Sources:</b> {html.escape(sources)}</p>
+                        <p><b>Retrieval:</b> {html.escape(row['retrieval_mode'] or '')} / {html.escape(row['retrieval_backend'] or '')}</p>
+                        <p><b>Classification:</b> {html.escape(row['classification'] or '')}</p>
+                        <p><b>User agent:</b> {html.escape(row['user_agent'] or '')}</p>
+                        <p><b>IP:</b> {html.escape(row['ip_address'] or '')}</p>
+                    </details>
+                </section>
+            """)
+
         items.append(f"""
-            <article class="log">
+            <article class="session-log">
                 <header>
-                    <strong>#{row['id']} · {html.escape(row['created_at'])}</strong>
-                    <span>{html.escape(status)}</span>
+                    <strong>Session · {html.escape(first['created_at'])} → {html.escape(last['created_at'])}</strong>
+                    <span>{len(rows)} turn{'s' if len(rows) != 1 else ''} · {html.escape(session_status)}</span>
                 </header>
                 <div class="meta">
-                    visitor: {html.escape(row['visitor_id'] or 'unknown')} ·
-                    conversation: {html.escape(row['conversation_id'] or 'unknown')} ·
-                    latency: {row['latency_ms'] or 0} ms ·
-                    chunks: {row['chunks_used'] or 0} ·
-                    mode: {html.escape(row['answer_mode'] or '')} ·
-                    temp: {row['answer_temperature'] if row['answer_temperature'] is not None else ''} ·
-                    gate: {row['gate_score'] if row['gate_score'] is not None else ''}
+                    visitor: {html.escape(visitor_id)} ·
+                    conversation: {html.escape(conversation_id)}
                 </div>
-                <h2>User</h2>
-                <pre>{html.escape(row['user_message'] or '')}</pre>
-                <h2>Bot</h2>
-                <pre>{html.escape(row['assistant_reply'] or row['error'] or '')}</pre>
                 <details>
-                    <summary>Context</summary>
-                    <p><b>Sources:</b> {html.escape(sources)}</p>
-                    <p><b>Retrieval:</b> {html.escape(row['retrieval_mode'] or '')} / {html.escape(row['retrieval_backend'] or '')}</p>
-                    <p><b>Classification:</b> {html.escape(row['classification'] or '')}</p>
-                    <p><b>User agent:</b> {html.escape(row['user_agent'] or '')}</p>
-                    <p><b>IP:</b> {html.escape(row['ip_address'] or '')}</p>
-                    <h2>Full Message History</h2>
-                    <pre>{html.escape(row['full_messages_json'] or '')}</pre>
+                    <summary>Full session message history from latest turn</summary>
+                    <pre>{html.escape(last['full_messages_json'] or '')}</pre>
                 </details>
+                {"".join(turns)}
             </article>
         """)
 
@@ -1220,9 +1310,12 @@ def admin_chats():
     button, a.button {{ padding:10px 12px; border:1px solid var(--line); border-radius:6px; background:#172033; color:white; text-decoration:none; cursor:pointer; }}
     a.button {{ display:inline-block; }}
     a.secondary {{ background:white; color:#172033; }}
-    .log {{ background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:16px; margin:12px 0; }}
-    .log header {{ display:flex; justify-content:space-between; gap:12px; margin-bottom:8px; }}
-    .log header span {{ color:var(--muted); }}
+    .session-log {{ background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:16px; margin:14px 0; }}
+    .session-log > header {{ display:flex; justify-content:space-between; gap:12px; margin-bottom:8px; }}
+    .session-log > header span {{ color:var(--muted); }}
+    .turn {{ border-top:1px solid var(--line); padding-top:14px; margin-top:14px; }}
+    .turn header {{ display:flex; justify-content:space-between; gap:12px; margin-bottom:8px; }}
+    .turn header span {{ color:var(--muted); }}
     .meta {{ color:var(--muted); font-size:12px; margin-bottom:12px; }}
     h2 {{ margin:12px 0 6px; font-size:13px; color:#344054; text-transform:uppercase; letter-spacing:.04em; }}
     pre {{ white-space:pre-wrap; word-break:break-word; background:#f9fafb; border:1px solid #eceff3; border-radius:6px; padding:10px; margin:0; }}
@@ -1236,12 +1329,13 @@ def admin_chats():
     <div class="top">
       <div>
         <h1>EMERGE Chat Logs</h1>
-        <p>Latest {len(rows)} exchanges. Search covers user text, bot text, errors, sessions, and sources.</p>
+        <p>Latest {len(chat_sessions)} chat sessions. Search covers user text, bot text, errors, sessions, and sources.</p>
       </div>
       <form method="get" action="/admin/chats">
         <input name="q" value="{safe_query}" placeholder="Search chats">
         <button type="submit">Search</button>
-        <a class="button" href="{html.escape(export_href)}">Export CSV</a>
+        <a class="button" href="{html.escape(sessions_export_href)}">Export Sessions CSV</a>
+        <a class="button secondary" href="{html.escape(export_href)}">Export Turns CSV</a>
         <a class="button secondary" href="/admin/logout">Log Out</a>
       </form>
     </div>
@@ -1276,6 +1370,54 @@ def admin_chats_csv():
         output.getvalue(),
         mimetype="text/csv",
         headers={"Content-Disposition": "attachment; filename=emerge-chat-logs.csv"},
+    )
+
+
+@app.route("/admin/sessions.csv")
+def admin_sessions_csv():
+    auth_error = require_admin_auth()
+    if auth_error:
+        return auth_error
+
+    query = request.args.get("q", "").strip()
+    chat_sessions = fetch_chat_sessions(limit=500, query=query)
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow([
+        "session_key", "visitor_id", "conversation_id", "started_at", "ended_at",
+        "turn_count", "has_errors", "transcript_json",
+    ])
+    for chat_session in chat_sessions:
+        rows = chat_session["rows"]
+        transcript = []
+        for row in rows:
+            transcript.append({
+                "turn_id": row["id"],
+                "created_at": row["created_at"],
+                "user": row["user_message"],
+                "assistant": row["assistant_reply"],
+                "error": row["error"],
+                "scope": row["scope"],
+                "gate_score": row["gate_score"],
+                "answer_mode": row["answer_mode"],
+                "answer_temperature": row["answer_temperature"],
+                "sources_used": json.loads(row["sources_used_json"] or "[]"),
+            })
+        writer.writerow([
+            chat_session["session_key"],
+            rows[0]["visitor_id"],
+            rows[0]["conversation_id"],
+            rows[0]["created_at"],
+            rows[-1]["created_at"],
+            len(rows),
+            any(row["error"] for row in rows),
+            json.dumps(transcript, ensure_ascii=False),
+        ])
+
+    return Response(
+        output.getvalue(),
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment; filename=emerge-chat-sessions.csv"},
     )
 
 

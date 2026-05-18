@@ -66,7 +66,7 @@ When `ADMIN_PASSWORD` is set, every chat exchange is stored in `chat_logs.db` fo
 http://localhost:5050/admin/login
 ```
 
-Log in with username `admin` and your `ADMIN_PASSWORD`. You can also open `/admin/chats` directly and the app will redirect you to the login page. The admin page supports search and CSV export. The log includes the user message, bot reply, anonymous visitor/session IDs, answer mode, temperature, sources used, retrieval mode, scope result, gate score, errors, and latency.
+Log in with username `admin` and your `ADMIN_PASSWORD`. You can also open `/admin/chats` directly and the app will redirect you to the login page. The admin page groups turns into full chat sessions, with each user prompt and bot answer shown chronologically. It supports search, session-level CSV export, and raw turn-level CSV export. The log includes the user message, bot reply, anonymous visitor/session IDs, answer mode, temperature, sources used, retrieval mode, scope result, gate score, errors, and latency.
 
 If the login page says admin logs are disabled, `ADMIN_PASSWORD` is not set on the running server. Set it in your local shell or hosting environment, then restart/redeploy the app.
 
