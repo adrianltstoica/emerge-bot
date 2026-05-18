@@ -20,6 +20,18 @@ Set the `ANTHROPIC_API_KEY` environment variable before starting the bot. The se
 export ANTHROPIC_API_KEY=sk-ant-...
 ```
 
+For vector retrieval, also set `OPENAI_API_KEY`. If a vector index or OpenAI key is missing, the app falls back to the older TF-IDF retriever.
+
+```bash
+export OPENAI_API_KEY=sk-...
+```
+
+To enable the password-protected chat log admin page, set `ADMIN_PASSWORD`:
+
+```bash
+export ADMIN_PASSWORD='choose-a-long-password'
+```
+
 (Add it to your shell profile if you want it set automatically.)
 
 ### Step 3 — Start the bot
@@ -42,6 +54,21 @@ Go to: **http://localhost:5050**
 
 **To stop:** Press Ctrl+C in the Terminal window, or just close it.
 
+## Admin chat logs
+When `ADMIN_PASSWORD` is set, every chat exchange is stored in `chat_logs.db` for later analysis. Open:
+
+```bash
+http://localhost:5050/admin/chats
+```
+
+Log in with username `admin` and your `ADMIN_PASSWORD`. The admin page supports search and CSV export. The log includes the user message, bot reply, anonymous visitor/session IDs, sources used, retrieval mode, scope result, gate score, errors, and latency.
+
+By default the app does not store client IP addresses. To include them, set:
+
+```bash
+export CHAT_LOG_IPS=true
+```
+
 ---
 
 ## Adding new documents
@@ -51,7 +78,11 @@ Go to: **http://localhost:5050**
 ```bash
 python scripts/build_chunks.py
 ```
-4. Commit the updated `documents/` and `chunks.json`, then redeploy/restart the bot.
+4. Rebuild the vector index:
+```bash
+python scripts/build_vector_index.py
+```
+5. Commit the updated `documents/`, `chunks.json`, and `vector_index.json.gz`, then redeploy/restart the bot.
 
 ---
 
@@ -67,6 +98,7 @@ python scripts/build_chunks.py
 → The bot answers from `chunks.json`, not live PDF reads. Run:
 ```bash
 python scripts/build_chunks.py
+python scripts/build_vector_index.py
 ```
 Then check `/status`; `missing_pdf_sources` should be empty or explain what still needs attention.
 
@@ -85,7 +117,7 @@ Then restart the bot.
 
 ## Cost estimate
 At ~100 questions/month: roughly $2–5/month in API costs.
-Claude Sonnet is used for all responses.
+Claude Sonnet is used for all responses. If vector retrieval is enabled, OpenAI embeddings are also used once when building the index and once per retrieval query at runtime.
 
 ---
 
@@ -93,9 +125,9 @@ Claude Sonnet is used for all responses.
 This system uses:
 - **PDF extraction:** pdfplumber (offline preprocessing into `chunks.json`)
 - **Chunking:** sliding window, 400 words per chunk, 80-word overlap
-- **Retrieval:** TF-IDF cosine over the chunk index, with three-pass retrieval (original query + LLM-generated paraphrase + LLM-generated counter-query), source diversity, and broader context windows to improve recall and surface contrasting positions
+- **Retrieval:** embedding cosine over `vector_index.json.gz` when available, with TF-IDF fallback; three-pass retrieval (original query + LLM-generated paraphrase + LLM-generated counter-query), source diversity, and broader context windows to improve recall and surface contrasting positions
 - **Scope gating:** mean cosine of top-10 chunks; below threshold, the system refuses and points to an external resource category
-- **Models:** Claude Haiku 4.5 for query expansion; Claude Sonnet 4 for user-facing answers
+- **Models:** OpenAI `text-embedding-3-small` for vector retrieval; Claude Haiku 4.5 for query expansion; Claude Sonnet 4 for user-facing answers
 - **System prompt:** sourcing rules, two-sidedness on contested questions, scope boundaries, friendly-name conventions
 
 For local development the app defaults to port `5050`. Hosted deployments may set a different `PORT` value through the hosting environment.

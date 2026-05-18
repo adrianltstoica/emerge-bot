@@ -41,6 +41,13 @@ if [ -z "$ANTHROPIC_API_KEY" ]; then
     echo ""
 fi
 
+if [ -z "$OPENAI_API_KEY" ]; then
+    echo ""
+    echo "NOTE: OPENAI_API_KEY is not set. The bot will use TF-IDF retrieval unless"
+    echo "you configure it and build vector_index.json.gz."
+    echo ""
+fi
+
 echo ""
 echo "Starting server..."
 echo "When you see 'Running on http://localhost:$PORT', open your browser"

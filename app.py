@@ -1,16 +1,28 @@
 """
 EMERGE AI Ethics Information Bot - Backend
-Pure-Python TF-IDF retrieval, Haiku-driven query expansion (paraphrase + counter-query
-for two-sided coverage), scope-gated refusals. No new deps.
+Hybrid RAG backend: OpenAI embedding vectors when a vector index is present,
+with pure-Python TF-IDF fallback. Haiku-driven query expansion (paraphrase +
+counter-query for two-sided coverage), scope-gated refusals.
 """
 
 import os
 import json
 import re
 import math
+import gzip
+import csv
+import html
+import io
+import sqlite3
+import time
+import uuid
+import urllib.error
+import urllib.parse
+import urllib.request
 from collections import Counter, defaultdict
+from datetime import datetime, timezone
 from pathlib import Path
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, Response, request, jsonify, send_from_directory
 from flask_cors import CORS
 import anthropic
 
@@ -18,7 +30,12 @@ app = Flask(__name__, static_folder="static")
 CORS(app)
 
 CHUNKS_FILE = Path("chunks.json")
+VECTOR_INDEX_FILE = Path(os.environ.get("VECTOR_INDEX_FILE", "vector_index.json.gz"))
 DOCUMENTS_DIR = Path("documents")
+CHAT_LOG_DB = Path(os.environ.get("CHAT_LOG_DB", "chat_logs.db"))
+ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "")
+LOG_CLIENT_IPS = os.environ.get("CHAT_LOG_IPS", "").lower() in {"1", "true", "yes", "on"}
 TOP_K = 18
 PER_SOURCE_LIMIT = 3
 RETRIEVAL_PROFILES = {
@@ -57,17 +74,146 @@ SCOPE_GATE_MIN = 0.07   # below this → hard refuse, return redirect
 SCOPE_GATE_WEAK = 0.10  # below this → tell the model retrieval is weak
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
+EMBEDDING_MODEL = os.environ.get("EMBEDDING_MODEL", "text-embedding-3-small")
 
 chunk_store = []
 chunk_tf = []     # list[dict[token, weight]]
 doc_norms = []    # list[float]
 idf = {}          # dict[token, idf weight]
+chunk_vectors = []  # list[list[float]], unit-normalized embedding vectors
+vector_index_meta = {}
+retrieval_backend = "tfidf"
 
 corpus_stats = {
     "pdf_documents": 0,
     "indexed_sources": 0,
     "missing_pdf_sources": [],
+    "vector_index": "missing",
+    "vector_model": None,
 }
+
+
+def utc_now_iso():
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
+
+def init_chat_log_db():
+    CHAT_LOG_DB.parent.mkdir(parents=True, exist_ok=True)
+    with sqlite3.connect(CHAT_LOG_DB) as conn:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS chat_logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                created_at TEXT NOT NULL,
+                visitor_id TEXT,
+                conversation_id TEXT,
+                request_id TEXT NOT NULL,
+                user_message TEXT NOT NULL,
+                assistant_reply TEXT,
+                full_messages_json TEXT,
+                scope TEXT,
+                gate_score REAL,
+                classification TEXT,
+                retrieval_mode TEXT,
+                retrieval_backend TEXT,
+                chunks_used INTEGER,
+                sources_used_json TEXT,
+                error TEXT,
+                latency_ms INTEGER,
+                user_agent TEXT,
+                ip_address TEXT
+            )
+        """)
+        conn.execute("""
+            CREATE INDEX IF NOT EXISTS idx_chat_logs_created_at
+            ON chat_logs(created_at)
+        """)
+        conn.execute("""
+            CREATE INDEX IF NOT EXISTS idx_chat_logs_conversation_id
+            ON chat_logs(conversation_id)
+        """)
+
+
+def log_chat_exchange(
+    *,
+    request_id,
+    messages,
+    user_message,
+    assistant_reply=None,
+    scope=None,
+    gate_score=None,
+    classification=None,
+    retrieval_mode=None,
+    retrieval_backend_name=None,
+    chunks_used=0,
+    sources_used=None,
+    error=None,
+    latency_ms=None,
+):
+    data = request.json or {}
+    visitor_id = str(data.get("visitor_id") or "")[:80]
+    conversation_id = str(data.get("conversation_id") or "")[:80]
+    ip_address = request.headers.get("X-Forwarded-For", request.remote_addr or "")
+    if ip_address and "," in ip_address:
+        ip_address = ip_address.split(",", 1)[0].strip()
+
+    try:
+        with sqlite3.connect(CHAT_LOG_DB) as conn:
+            conn.execute(
+                """
+                INSERT INTO chat_logs (
+                    created_at, visitor_id, conversation_id, request_id,
+                    user_message, assistant_reply, full_messages_json,
+                    scope, gate_score, classification, retrieval_mode,
+                    retrieval_backend, chunks_used, sources_used_json,
+                    error, latency_ms, user_agent, ip_address
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    utc_now_iso(),
+                    visitor_id,
+                    conversation_id,
+                    request_id,
+                    user_message,
+                    assistant_reply,
+                    json.dumps(messages, ensure_ascii=False),
+                    scope,
+                    gate_score,
+                    classification,
+                    retrieval_mode,
+                    retrieval_backend_name,
+                    chunks_used,
+                    json.dumps(sources_used or [], ensure_ascii=False),
+                    error,
+                    latency_ms,
+                    request.headers.get("User-Agent", ""),
+                    ip_address if LOG_CLIENT_IPS else "",
+                ),
+            )
+    except Exception as exc:
+        print(f"WARNING: could not write chat log: {exc}")
+
+
+def require_admin_auth():
+    if not ADMIN_PASSWORD:
+        return Response(
+            "Admin chat logs are disabled. Set ADMIN_PASSWORD on the server to enable them.",
+            503,
+        )
+
+    auth = request.authorization
+    if auth and auth.username == ADMIN_USERNAME and auth.password == ADMIN_PASSWORD:
+        return None
+
+    return Response(
+        "Authentication required.",
+        401,
+        {"WWW-Authenticate": 'Basic realm="EMERGE chat logs"'},
+    )
+
+
+init_chat_log_db()
 
 FRIENDLY_SOURCE_NAMES = {
     "D1.1 Local awareness  criteria": "EMERGE D1.1",
@@ -343,6 +489,69 @@ def tokenize(text):
     return [t for t in toks if t not in STOPWORDS and len(t) > 2]
 
 
+def l2_normalize(vec):
+    norm = math.sqrt(sum(float(v) * float(v) for v in vec)) or 1.0
+    return [float(v) / norm for v in vec]
+
+
+def embed_texts(texts, api_key=OPENAI_API_KEY, model=EMBEDDING_MODEL):
+    if not api_key:
+        raise RuntimeError("OPENAI_API_KEY is not configured")
+    payload = json.dumps({"model": model, "input": texts}).encode("utf-8")
+    req = urllib.request.Request(
+        "https://api.openai.com/v1/embeddings",
+        data=payload,
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=45) as resp:
+            body = resp.read().decode("utf-8")
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"Embedding request failed ({exc.code}): {detail}") from exc
+    data = json.loads(body)
+    return [item["embedding"] for item in sorted(data["data"], key=lambda x: x["index"])]
+
+
+def load_vector_index():
+    global chunk_vectors, vector_index_meta, retrieval_backend
+    chunk_vectors = []
+    vector_index_meta = {}
+    retrieval_backend = "tfidf"
+
+    if not VECTOR_INDEX_FILE.exists():
+        corpus_stats["vector_index"] = "missing"
+        return
+
+    opener = gzip.open if VECTOR_INDEX_FILE.suffix == ".gz" else open
+    with opener(VECTOR_INDEX_FILE, "rt", encoding="utf-8") as f:
+        index = json.load(f)
+
+    embeddings = index.get("embeddings", [])
+    if len(embeddings) != len(chunk_store):
+        corpus_stats["vector_index"] = "chunk_count_mismatch"
+        print(
+            "WARNING: vector index chunk count does not match chunks.json "
+            f"({len(embeddings)} vectors for {len(chunk_store)} chunks)"
+        )
+        return
+
+    chunk_vectors = [l2_normalize(vec) for vec in embeddings]
+    vector_index_meta = index.get("meta", {})
+    corpus_stats["vector_index"] = "loaded"
+    corpus_stats["vector_model"] = vector_index_meta.get("model")
+    if OPENAI_API_KEY:
+        retrieval_backend = "vector"
+    print(
+        f"Loaded vector index with {len(chunk_vectors)} embeddings "
+        f"({vector_index_meta.get('model', 'unknown model')})"
+    )
+
+
 def load_chunks():
     global chunk_store, chunk_tf, doc_norms, idf, corpus_stats
     if not CHUNKS_FILE.exists():
@@ -381,13 +590,16 @@ def load_chunks():
         "pdf_documents": len(pdf_stems),
         "indexed_sources": len(sources),
         "missing_pdf_sources": missing,
+        "vector_index": "missing",
+        "vector_model": None,
     }
     print(f"Loaded {len(chunk_store)} chunks from {len(sources)} sources; vocab={len(idf)}")
     if missing:
         print(f"WARNING: {len(missing)} PDFs do not have an obvious source match in chunks.json")
+    load_vector_index()
 
 
-def score_chunks(query):
+def score_chunks_tfidf(query):
     qtoks = tokenize(query)
     if not qtoks:
         return []
@@ -406,6 +618,19 @@ def score_chunks(query):
                 dot += w * cw
         if dot > 0:
             scored.append((dot / (qnorm * doc_norms[i]), i))
+    scored.sort(reverse=True)
+    return scored
+
+
+def score_chunks_vector(query):
+    if not chunk_vectors or not OPENAI_API_KEY:
+        return []
+    qvec = l2_normalize(embed_texts([query])[0])
+    scored = []
+    for i, cvec in enumerate(chunk_vectors):
+        sim = sum(q * c for q, c in zip(qvec, cvec))
+        if sim > 0:
+            scored.append((sim, i))
     scored.sort(reverse=True)
     return scored
 
@@ -571,12 +796,26 @@ def retrieve(query, client, top_k=TOP_K, per_source_limit=PER_SOURCE_LIMIT):
     if expansion.get("counter"):
         queries.append(expansion["counter"])
 
+    backend = "vector" if chunk_vectors and OPENAI_API_KEY else "tfidf"
+    scorer = score_chunks_vector if backend == "vector" else score_chunks_tfidf
     best_score = {}
-    for q in queries:
-        for sim, i in score_chunks(q):
-            weighted = sim * source_weight(chunk_store[i].get("source", ""), query)
-            if weighted > best_score.get(i, 0):
-                best_score[i] = weighted
+    try:
+        for q in queries:
+            for sim, i in scorer(q):
+                weighted = sim * source_weight(chunk_store[i].get("source", ""), query)
+                if weighted > best_score.get(i, 0):
+                    best_score[i] = weighted
+    except Exception as exc:
+        if backend != "vector":
+            raise
+        print(f"Vector retrieval failed, falling back to TF-IDF: {exc}")
+        backend = "tfidf"
+        best_score = {}
+        for q in queries:
+            for sim, i in score_chunks_tfidf(q):
+                weighted = sim * source_weight(chunk_store[i].get("source", ""), query)
+                if weighted > best_score.get(i, 0):
+                    best_score[i] = weighted
 
     if not best_score:
         return [], 0.0, expansion
@@ -590,7 +829,9 @@ def retrieve(query, client, top_k=TOP_K, per_source_limit=PER_SOURCE_LIMIT):
         source = chunk_store[i].get("source", "")
         if source_counts[source] >= per_source_limit:
             continue
-        top_chunks.append(chunk_store[i])
+        chunk = dict(chunk_store[i])
+        chunk["_retrieval_backend"] = backend
+        top_chunks.append(chunk)
         source_counts[source] += 1
         if len(top_chunks) >= top_k:
             break
@@ -707,12 +948,179 @@ def status():
         "indexed_sources": corpus_stats["indexed_sources"],
         "missing_pdf_sources": corpus_stats["missing_pdf_sources"],
         "ready": len(chunk_store) > 0,
+        "retrieval_backend": "vector" if chunk_vectors and OPENAI_API_KEY else "tfidf",
+        "vector_index": corpus_stats["vector_index"],
+        "vector_model": corpus_stats["vector_model"],
         "runtime": "render-flask",
     })
 
 
+def fetch_chat_logs(limit=300, query=""):
+    try:
+        limit = int(limit or 300)
+    except (TypeError, ValueError):
+        limit = 300
+    limit = max(1, min(limit, 2000))
+    params = []
+    where = ""
+    if query:
+        where = """
+            WHERE user_message LIKE ?
+               OR assistant_reply LIKE ?
+               OR error LIKE ?
+               OR visitor_id LIKE ?
+               OR conversation_id LIKE ?
+               OR sources_used_json LIKE ?
+        """
+        like = f"%{query}%"
+        params.extend([like, like, like, like, like, like])
+
+    with sqlite3.connect(CHAT_LOG_DB) as conn:
+        conn.row_factory = sqlite3.Row
+        return conn.execute(
+            f"""
+            SELECT *
+            FROM chat_logs
+            {where}
+            ORDER BY id DESC
+            LIMIT ?
+            """,
+            (*params, limit),
+        ).fetchall()
+
+
+@app.route("/admin/chats")
+def admin_chats():
+    auth_error = require_admin_auth()
+    if auth_error:
+        return auth_error
+
+    query = request.args.get("q", "").strip()
+    limit = request.args.get("limit", "300")
+    rows = fetch_chat_logs(limit=limit, query=query)
+    safe_query = html.escape(query)
+    export_href = "/admin/chats.csv"
+    if query:
+        export_href += f"?q={urllib.parse.quote(query)}"
+
+    items = []
+    for row in rows:
+        sources = ", ".join(json.loads(row["sources_used_json"] or "[]"))
+        status = row["error"] or row["scope"] or "unknown"
+        items.append(f"""
+            <article class="log">
+                <header>
+                    <strong>#{row['id']} · {html.escape(row['created_at'])}</strong>
+                    <span>{html.escape(status)}</span>
+                </header>
+                <div class="meta">
+                    visitor: {html.escape(row['visitor_id'] or 'unknown')} ·
+                    conversation: {html.escape(row['conversation_id'] or 'unknown')} ·
+                    latency: {row['latency_ms'] or 0} ms ·
+                    chunks: {row['chunks_used'] or 0} ·
+                    gate: {row['gate_score'] if row['gate_score'] is not None else ''}
+                </div>
+                <h2>User</h2>
+                <pre>{html.escape(row['user_message'] or '')}</pre>
+                <h2>Bot</h2>
+                <pre>{html.escape(row['assistant_reply'] or row['error'] or '')}</pre>
+                <details>
+                    <summary>Context</summary>
+                    <p><b>Sources:</b> {html.escape(sources)}</p>
+                    <p><b>Retrieval:</b> {html.escape(row['retrieval_mode'] or '')} / {html.escape(row['retrieval_backend'] or '')}</p>
+                    <p><b>Classification:</b> {html.escape(row['classification'] or '')}</p>
+                    <p><b>User agent:</b> {html.escape(row['user_agent'] or '')}</p>
+                    <p><b>IP:</b> {html.escape(row['ip_address'] or '')}</p>
+                    <h2>Full Message History</h2>
+                    <pre>{html.escape(row['full_messages_json'] or '')}</pre>
+                </details>
+            </article>
+        """)
+
+    content = "\n".join(items) or '<p class="empty">No chat logs found.</p>'
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EMERGE Chat Logs</title>
+  <style>
+    :root {{ color-scheme: light; --line:#d9dee7; --ink:#172033; --muted:#667085; --bg:#f6f7f9; --panel:#fff; }}
+    body {{ margin:0; font:14px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--ink); background:var(--bg); }}
+    main {{ max-width:1180px; margin:0 auto; padding:28px 18px 48px; }}
+    .top {{ display:flex; justify-content:space-between; gap:16px; align-items:flex-end; flex-wrap:wrap; margin-bottom:18px; }}
+    h1 {{ margin:0 0 6px; font-size:26px; }}
+    p {{ margin:0; color:var(--muted); }}
+    form {{ display:flex; gap:8px; align-items:center; }}
+    input {{ min-width:260px; padding:10px 12px; border:1px solid var(--line); border-radius:6px; background:white; }}
+    button, a.button {{ padding:10px 12px; border:1px solid var(--line); border-radius:6px; background:#172033; color:white; text-decoration:none; cursor:pointer; }}
+    a.button {{ display:inline-block; }}
+    .log {{ background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:16px; margin:12px 0; }}
+    .log header {{ display:flex; justify-content:space-between; gap:12px; margin-bottom:8px; }}
+    .log header span {{ color:var(--muted); }}
+    .meta {{ color:var(--muted); font-size:12px; margin-bottom:12px; }}
+    h2 {{ margin:12px 0 6px; font-size:13px; color:#344054; text-transform:uppercase; letter-spacing:.04em; }}
+    pre {{ white-space:pre-wrap; word-break:break-word; background:#f9fafb; border:1px solid #eceff3; border-radius:6px; padding:10px; margin:0; }}
+    details {{ margin-top:12px; }}
+    summary {{ cursor:pointer; color:#344054; }}
+    .empty {{ background:white; border:1px solid var(--line); border-radius:8px; padding:20px; }}
+  </style>
+</head>
+<body>
+  <main>
+    <div class="top">
+      <div>
+        <h1>EMERGE Chat Logs</h1>
+        <p>Latest {len(rows)} exchanges. Search covers user text, bot text, errors, sessions, and sources.</p>
+      </div>
+      <form method="get" action="/admin/chats">
+        <input name="q" value="{safe_query}" placeholder="Search chats">
+        <button type="submit">Search</button>
+        <a class="button" href="{html.escape(export_href)}">Export CSV</a>
+      </form>
+    </div>
+    {content}
+  </main>
+</body>
+</html>"""
+
+
+@app.route("/admin/chats.csv")
+def admin_chats_csv():
+    auth_error = require_admin_auth()
+    if auth_error:
+        return auth_error
+
+    query = request.args.get("q", "").strip()
+    rows = fetch_chat_logs(limit=2000, query=query)
+    output = io.StringIO()
+    writer = csv.writer(output)
+    columns = [
+        "id", "created_at", "visitor_id", "conversation_id", "request_id",
+        "user_message", "assistant_reply", "scope", "gate_score",
+        "classification", "retrieval_mode", "retrieval_backend", "chunks_used",
+        "sources_used_json", "error", "latency_ms", "user_agent", "ip_address",
+        "full_messages_json",
+    ]
+    writer.writerow(columns)
+    for row in rows:
+        writer.writerow([row[col] for col in columns])
+
+    return Response(
+        output.getvalue(),
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment; filename=emerge-chat-logs.csv"},
+    )
+
+
 @app.route("/chat", methods=["POST"])
 def chat():
+    request_id = str(uuid.uuid4())
+    started_at = time.monotonic()
+
+    def elapsed_ms():
+        return int((time.monotonic() - started_at) * 1000)
+
     data = request.json or {}
     messages = data.get("messages", [])
     if not messages:
@@ -722,18 +1130,41 @@ def chat():
     last_user = user_msgs[-1] if user_msgs else ""
     if is_corpus_inventory_question(last_user):
         docs = sorted(set(c["source"] for c in chunk_store))
+        reply = corpus_inventory_reply()
+        sources = [friendly_source_name(source) for source in docs]
+        log_chat_exchange(
+            request_id=request_id,
+            messages=messages,
+            user_message=last_user,
+            assistant_reply=reply,
+            scope="corpus_inventory",
+            chunks_used=0,
+            sources_used=sources,
+            latency_ms=elapsed_ms(),
+        )
         return jsonify({
-            "reply": corpus_inventory_reply(),
+            "reply": reply,
             "chunks_used": 0,
             "scope": "corpus_inventory",
             "gate_score": None,
-            "sources_used": [friendly_source_name(source) for source in docs],
+            "sources_used": sources,
         })
 
     decline = explicit_scope_decline(last_user)
     if decline:
+        reply = f"This question is outside the scope of the EMERGE corpus: {decline}"
+        log_chat_exchange(
+            request_id=request_id,
+            messages=messages,
+            user_message=last_user,
+            assistant_reply=reply,
+            scope="out_of_scope",
+            classification="explicit_scope_decline",
+            chunks_used=0,
+            latency_ms=elapsed_ms(),
+        )
         return jsonify({
-            "reply": f"This question is outside the scope of the EMERGE corpus: {decline}",
+            "reply": reply,
             "chunks_used": 0,
             "scope": "out_of_scope",
             "gate_score": None,
@@ -741,6 +1172,13 @@ def chat():
         })
 
     if not ANTHROPIC_API_KEY:
+        log_chat_exchange(
+            request_id=request_id,
+            messages=messages,
+            user_message=last_user,
+            error="API key not configured on server.",
+            latency_ms=elapsed_ms(),
+        )
         return jsonify({"error": "API key not configured on server."}), 500
 
     retrieval_query = " ".join(user_msgs[-3:])
@@ -756,8 +1194,24 @@ def chat():
             per_source_limit=profile["per_source_limit"],
         )
     except anthropic.AuthenticationError:
+        log_chat_exchange(
+            request_id=request_id,
+            messages=messages,
+            user_message=last_user,
+            error="Invalid API key on server.",
+            retrieval_mode=profile["mode"],
+            latency_ms=elapsed_ms(),
+        )
         return jsonify({"error": "Invalid API key on server."}), 401
     except Exception as e:
+        log_chat_exchange(
+            request_id=request_id,
+            messages=messages,
+            user_message=last_user,
+            error=f"Retrieval failed: {e}",
+            retrieval_mode=profile["mode"],
+            latency_ms=elapsed_ms(),
+        )
         return jsonify({"error": f"Retrieval failed: {e}"}), 500
 
     # Hard scope gate: top-10 chunks have weak coherent overlap with the query.
@@ -767,6 +1221,19 @@ def chat():
                "which focuses on AI ethics research findings and policy positions.")
         if redirect:
             msg += f" For this kind of question, {redirect}."
+        log_chat_exchange(
+            request_id=request_id,
+            messages=messages,
+            user_message=last_user,
+            assistant_reply=msg,
+            scope="out_of_scope",
+            gate_score=round(gate_score, 4),
+            classification=expansion.get("classification", "other"),
+            retrieval_mode=profile["mode"],
+            retrieval_backend_name=chunks[0].get("_retrieval_backend", "tfidf") if chunks else "none",
+            chunks_used=0,
+            latency_ms=elapsed_ms(),
+        )
         return jsonify({
             "reply": msg,
             "chunks_used": 0,
@@ -821,23 +1288,65 @@ def chat():
             messages=messages,
         )
         reply = append_source_list(response.content[0].text, chunks)
+        sources_used = sorted(set(friendly_source_name(c.get("source", "")) for c in chunks))
+        scope = "in_scope" if gate_score >= SCOPE_GATE_WEAK else "weak_retrieval"
+        backend_name = chunks[0].get("_retrieval_backend", "tfidf") if chunks else "none"
+        log_chat_exchange(
+            request_id=request_id,
+            messages=messages,
+            user_message=last_user,
+            assistant_reply=reply,
+            scope=scope,
+            gate_score=round(gate_score, 4),
+            classification=expansion.get("classification", ""),
+            retrieval_mode=profile["mode"],
+            retrieval_backend_name=backend_name,
+            chunks_used=len(chunks),
+            sources_used=sources_used,
+            latency_ms=elapsed_ms(),
+        )
         return jsonify({
             "reply": reply,
             "chunks_used": len(chunks),
-            "scope": "in_scope" if gate_score >= SCOPE_GATE_WEAK else "weak_retrieval",
+            "scope": scope,
             "gate_score": round(gate_score, 4),
             "retrieval_profile": {
                 "mode": profile["mode"],
                 "top_k": profile["top_k"],
                 "per_source_limit": profile["per_source_limit"],
+                "backend": backend_name,
             },
-            "sources_used": sorted(set(friendly_source_name(c.get("source", "")) for c in chunks)),
+            "sources_used": sources_used,
         })
     except anthropic.AuthenticationError:
+        log_chat_exchange(
+            request_id=request_id,
+            messages=messages,
+            user_message=last_user,
+            error="Invalid API key on server.",
+            retrieval_mode=profile["mode"],
+            latency_ms=elapsed_ms(),
+        )
         return jsonify({"error": "Invalid API key on server."}), 401
     except anthropic.RateLimitError:
+        log_chat_exchange(
+            request_id=request_id,
+            messages=messages,
+            user_message=last_user,
+            error="Rate limit reached. Please wait a moment.",
+            retrieval_mode=profile["mode"],
+            latency_ms=elapsed_ms(),
+        )
         return jsonify({"error": "Rate limit reached. Please wait a moment."}), 429
     except Exception as e:
+        log_chat_exchange(
+            request_id=request_id,
+            messages=messages,
+            user_message=last_user,
+            error=str(e),
+            retrieval_mode=profile["mode"],
+            latency_ms=elapsed_ms(),
+        )
         return jsonify({"error": str(e)}), 500
 
 

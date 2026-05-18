@@ -90,6 +90,7 @@ footer{padding:28px 52px;border-top:1px solid var(--g2);display:flex;align-items
 .es-logo-slot img{height:28px;width:auto;display:block;}
 .es-greeting{font-size:26px;font-weight:800;letter-spacing:-.4px;color:var(--bk);text-align:left;}
 .es-input-wrap{width:100%;max-width:640px;margin-bottom:14px;}
+.privacy-note{max-width:640px;text-align:center;font-size:11px;color:var(--g3);margin:-4px 0 14px;line-height:1.45;}
 .input-box{border:1px solid var(--g2);border-radius:12px;display:flex;align-items:center;overflow:hidden;background:var(--wh);transition:border-color .12s;}
 .input-box:focus-within{border-color:var(--p);}
 .bi{flex:1;border:none;font-size:14px;font-family:var(--fn);outline:none;color:var(--bk);background:transparent;padding:13px 16px;line-height:1.5;}
@@ -259,6 +260,7 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
           <button class="bs" onclick="sendMsg()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button>
         </div>
       </div>
+      <div class="privacy-note">Chats may be logged to improve the bot and analyze failures. Do not enter personal or sensitive information.</div>
       <div class="es-pills">
         <div class="pill-wrap">
           <button class="es-pill" onclick="togglePill('reg')">Regulator</button>
@@ -304,7 +306,7 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
     </div>
     <div class="msgs-area" id="msgs-area"><div class="msgs-inner" id="msgs"></div></div>
     <div class="bottom-bar" id="bottom-bar" style="display:none;">
-      <div class="disc">EMERGE corpus only — named sources, no recommendations, no legal advice.</div>
+      <div class="disc">EMERGE corpus only — named sources, no recommendations, no legal advice. Chats may be logged for analysis.</div>
       <div class="bottom-input-box">
         <input class="bi2" id="input-bottom" type="text" placeholder="Ask a follow-up..." onkeydown="if(event.key==='Enter')sendMsg()">
         <button class="bs2" onclick="sendMsg()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button>
@@ -439,6 +441,18 @@ let chatHistory = [];
 let currentStakeholder = null;
 let activePill = null;
 
+function getOrCreateId(key) {
+  let id = localStorage.getItem(key);
+  if (!id) {
+    id = (window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(16).slice(2));
+    localStorage.setItem(key, id);
+  }
+  return id;
+}
+
+const visitorId = getOrCreateId('emergeVisitorId');
+const conversationId = window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(16).slice(2);
+
 // ── Pill dropdowns ──
 function togglePill(id) {
   const dd = document.getElementById('dd-' + id);
@@ -546,7 +560,11 @@ async function sendMsg() {
     const res = await fetch('/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: chatHistory })
+      body: JSON.stringify({
+        messages: chatHistory,
+        visitor_id: visitorId,
+        conversation_id: conversationId
+      })
     });
 
     const data = await res.json().catch(function() { return {}; });
