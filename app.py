@@ -64,6 +64,40 @@ RETRIEVAL_PROFILES = {
         "description": "larger mixed retrieval for comprehensive cross-corpus questions",
     },
 }
+ANSWER_MODES = {
+    "accurate": {
+        "label": "Accurate",
+        "temperature": 0.0,
+        "top_k_cap": 10,
+        "per_source_limit_cap": 2,
+        "max_tokens_cap": 700,
+        "note": (
+            "Accuracy mode: prioritize tight retrieval, conservative wording, and explicit uncertainty. "
+            "Do not brainstorm beyond the retrieved excerpts."
+        ),
+    },
+    "balanced": {
+        "label": "Balanced",
+        "temperature": 0.2,
+        "top_k_cap": None,
+        "per_source_limit_cap": None,
+        "max_tokens_cap": None,
+        "note": (
+            "Balanced mode: answer from the retrieved excerpts with normal source-grounded synthesis."
+        ),
+    },
+    "brainstorm": {
+        "label": "Brainstorm",
+        "temperature": 0.45,
+        "top_k_floor": 36,
+        "per_source_limit_floor": 4,
+        "max_tokens_floor": 1500,
+        "note": (
+            "Brainstorm mode: help generate possibilities, framings, examples, or angles, but keep every "
+            "substantive claim grounded in the retrieved excerpts and clearly label speculative synthesis."
+        ),
+    },
+}
 
 # Empirical thresholds on the *mean cosine of top-10 chunks* — a far cleaner signal
 # than max alone, because off-topic queries usually surface 1–2 lucky matches but the
@@ -116,6 +150,8 @@ def init_chat_log_db():
                 classification TEXT,
                 retrieval_mode TEXT,
                 retrieval_backend TEXT,
+                answer_mode TEXT,
+                answer_temperature REAL,
                 chunks_used INTEGER,
                 sources_used_json TEXT,
                 error TEXT,
@@ -132,6 +168,13 @@ def init_chat_log_db():
             CREATE INDEX IF NOT EXISTS idx_chat_logs_conversation_id
             ON chat_logs(conversation_id)
         """)
+        existing_columns = {
+            row[1] for row in conn.execute("PRAGMA table_info(chat_logs)").fetchall()
+        }
+        if "answer_mode" not in existing_columns:
+            conn.execute("ALTER TABLE chat_logs ADD COLUMN answer_mode TEXT")
+        if "answer_temperature" not in existing_columns:
+            conn.execute("ALTER TABLE chat_logs ADD COLUMN answer_temperature REAL")
 
 
 def log_chat_exchange(
@@ -145,6 +188,8 @@ def log_chat_exchange(
     classification=None,
     retrieval_mode=None,
     retrieval_backend_name=None,
+    answer_mode=None,
+    answer_temperature=None,
     chunks_used=0,
     sources_used=None,
     error=None,
@@ -165,10 +210,11 @@ def log_chat_exchange(
                     created_at, visitor_id, conversation_id, request_id,
                     user_message, assistant_reply, full_messages_json,
                     scope, gate_score, classification, retrieval_mode,
-                    retrieval_backend, chunks_used, sources_used_json,
+                    retrieval_backend, answer_mode, answer_temperature,
+                    chunks_used, sources_used_json,
                     error, latency_ms, user_agent, ip_address
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     utc_now_iso(),
@@ -183,6 +229,8 @@ def log_chat_exchange(
                     classification,
                     retrieval_mode,
                     retrieval_backend_name,
+                    answer_mode,
+                    answer_temperature,
                     chunks_used,
                     json.dumps(sources_used or [], ensure_ascii=False),
                     error,
@@ -782,6 +830,35 @@ def retrieval_profile(query):
     return profile
 
 
+def normalize_answer_mode(raw_mode):
+    mode = str(raw_mode or "balanced").strip().lower()
+    return mode if mode in ANSWER_MODES else "balanced"
+
+
+def apply_answer_mode(profile, answer_mode):
+    tuned = dict(profile)
+    settings = ANSWER_MODES[answer_mode]
+    tuned["answer_mode"] = answer_mode
+    tuned["answer_mode_label"] = settings["label"]
+    tuned["temperature"] = settings["temperature"]
+    tuned["answer_mode_note"] = settings["note"]
+
+    if answer_mode == "accurate":
+        tuned["top_k"] = min(tuned["top_k"], settings["top_k_cap"])
+        tuned["per_source_limit"] = min(tuned["per_source_limit"], settings["per_source_limit_cap"])
+        tuned["max_tokens"] = min(tuned["max_tokens"], settings["max_tokens_cap"])
+        tuned["mode"] = f"{tuned['mode']}_accurate"
+        tuned["description"] = "tight retrieval for maximum source fidelity"
+    elif answer_mode == "brainstorm":
+        tuned["top_k"] = max(tuned["top_k"], settings["top_k_floor"])
+        tuned["per_source_limit"] = max(tuned["per_source_limit"], settings["per_source_limit_floor"])
+        tuned["max_tokens"] = max(tuned["max_tokens"], settings["max_tokens_floor"])
+        tuned["mode"] = f"{tuned['mode']}_brainstorm"
+        tuned["description"] = "wider retrieval for source-grounded ideation"
+
+    return tuned
+
+
 def retrieve(query, client, top_k=TOP_K, per_source_limit=PER_SOURCE_LIMIT):
     """Three-pass retrieval: original + paraphrase + counter-query.
     Returns (top_chunks, gate_score, expansion_dict).
@@ -1018,6 +1095,8 @@ def admin_chats():
                     conversation: {html.escape(row['conversation_id'] or 'unknown')} ·
                     latency: {row['latency_ms'] or 0} ms ·
                     chunks: {row['chunks_used'] or 0} ·
+                    mode: {html.escape(row['answer_mode'] or '')} ·
+                    temp: {row['answer_temperature'] if row['answer_temperature'] is not None else ''} ·
                     gate: {row['gate_score'] if row['gate_score'] is not None else ''}
                 </div>
                 <h2>User</h2>
@@ -1099,8 +1178,8 @@ def admin_chats_csv():
         "id", "created_at", "visitor_id", "conversation_id", "request_id",
         "user_message", "assistant_reply", "scope", "gate_score",
         "classification", "retrieval_mode", "retrieval_backend", "chunks_used",
-        "sources_used_json", "error", "latency_ms", "user_agent", "ip_address",
-        "full_messages_json",
+        "answer_mode", "answer_temperature", "sources_used_json", "error",
+        "latency_ms", "user_agent", "ip_address", "full_messages_json",
     ]
     writer.writerow(columns)
     for row in rows:
@@ -1123,6 +1202,8 @@ def chat():
 
     data = request.json or {}
     messages = data.get("messages", [])
+    answer_mode = normalize_answer_mode(data.get("answer_mode"))
+    answer_settings = ANSWER_MODES[answer_mode]
     if not messages:
         return jsonify({"error": "No messages provided"}), 400
 
@@ -1138,6 +1219,8 @@ def chat():
             user_message=last_user,
             assistant_reply=reply,
             scope="corpus_inventory",
+            answer_mode=answer_mode,
+            answer_temperature=answer_settings["temperature"],
             chunks_used=0,
             sources_used=sources,
             latency_ms=elapsed_ms(),
@@ -1148,6 +1231,7 @@ def chat():
             "scope": "corpus_inventory",
             "gate_score": None,
             "sources_used": sources,
+            "answer_mode": answer_mode,
         })
 
     decline = explicit_scope_decline(last_user)
@@ -1160,6 +1244,8 @@ def chat():
             assistant_reply=reply,
             scope="out_of_scope",
             classification="explicit_scope_decline",
+            answer_mode=answer_mode,
+            answer_temperature=answer_settings["temperature"],
             chunks_used=0,
             latency_ms=elapsed_ms(),
         )
@@ -1169,6 +1255,7 @@ def chat():
             "scope": "out_of_scope",
             "gate_score": None,
             "classification": "explicit_scope_decline",
+            "answer_mode": answer_mode,
         })
 
     if not ANTHROPIC_API_KEY:
@@ -1177,12 +1264,14 @@ def chat():
             messages=messages,
             user_message=last_user,
             error="API key not configured on server.",
+            answer_mode=answer_mode,
+            answer_temperature=answer_settings["temperature"],
             latency_ms=elapsed_ms(),
         )
         return jsonify({"error": "API key not configured on server."}), 500
 
     retrieval_query = " ".join(user_msgs[-3:])
-    profile = retrieval_profile(retrieval_query)
+    profile = apply_answer_mode(retrieval_profile(retrieval_query), answer_mode)
 
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
@@ -1200,6 +1289,8 @@ def chat():
             user_message=last_user,
             error="Invalid API key on server.",
             retrieval_mode=profile["mode"],
+            answer_mode=answer_mode,
+            answer_temperature=profile["temperature"],
             latency_ms=elapsed_ms(),
         )
         return jsonify({"error": "Invalid API key on server."}), 401
@@ -1210,6 +1301,8 @@ def chat():
             user_message=last_user,
             error=f"Retrieval failed: {e}",
             retrieval_mode=profile["mode"],
+            answer_mode=answer_mode,
+            answer_temperature=profile["temperature"],
             latency_ms=elapsed_ms(),
         )
         return jsonify({"error": f"Retrieval failed: {e}"}), 500
@@ -1231,6 +1324,8 @@ def chat():
             classification=expansion.get("classification", "other"),
             retrieval_mode=profile["mode"],
             retrieval_backend_name=chunks[0].get("_retrieval_backend", "tfidf") if chunks else "none",
+            answer_mode=answer_mode,
+            answer_temperature=profile["temperature"],
             chunks_used=0,
             latency_ms=elapsed_ms(),
         )
@@ -1240,6 +1335,7 @@ def chat():
             "scope": "out_of_scope",
             "gate_score": round(gate_score, 4),
             "classification": expansion.get("classification", "other"),
+            "answer_mode": answer_mode,
         })
 
     context = "\n\n---\n\n".join(format_chunk_for_context(c) for c in chunks)
@@ -1256,6 +1352,7 @@ def chat():
     context_block = (
         f"\n\n## Retrieval profile\n\n"
         f"- Mode: {profile['mode']} ({profile['description']})\n"
+        f"- Answer mode: {profile['answer_mode_label']}\n"
         f"- Retrieved chunks allowed: up to {profile['top_k']}\n"
         f"- Per-source chunk cap: {profile['per_source_limit']}\n\n"
         f"\n\n## Documents in this retrieval (whitelist for direct citation)\n\n{sources_list}\n\n"
@@ -1271,19 +1368,20 @@ def chat():
         f"Prioritize Core EMERGE deliverables and EU/policy sources over adjacent literature. If an answer "
         f"depends mainly on adjacent literature, keep it brief and say that it is adjacent to, rather than "
         f"the central position of, EMERGE. If the excerpts don't actually answer the question, say so "
-        f"plainly rather than stretching them.{weak_note}"
+        f"plainly rather than stretching them.\n\n{profile['answer_mode_note']}{weak_note}"
     )
 
     full_system = SYSTEM_PROMPT + context_block
 
     model = "claude-sonnet-4-20250514"
     max_tokens = profile["max_tokens"]
+    temperature = profile["temperature"]
 
     try:
         response = client.messages.create(
             model=model,
             max_tokens=max_tokens,
-            temperature=0.2,
+            temperature=temperature,
             system=full_system,
             messages=messages,
         )
@@ -1301,6 +1399,8 @@ def chat():
             classification=expansion.get("classification", ""),
             retrieval_mode=profile["mode"],
             retrieval_backend_name=backend_name,
+            answer_mode=answer_mode,
+            answer_temperature=temperature,
             chunks_used=len(chunks),
             sources_used=sources_used,
             latency_ms=elapsed_ms(),
@@ -1315,8 +1415,11 @@ def chat():
                 "top_k": profile["top_k"],
                 "per_source_limit": profile["per_source_limit"],
                 "backend": backend_name,
+                "answer_mode": answer_mode,
+                "temperature": temperature,
             },
             "sources_used": sources_used,
+            "answer_mode": answer_mode,
         })
     except anthropic.AuthenticationError:
         log_chat_exchange(
@@ -1325,6 +1428,8 @@ def chat():
             user_message=last_user,
             error="Invalid API key on server.",
             retrieval_mode=profile["mode"],
+            answer_mode=answer_mode,
+            answer_temperature=profile["temperature"],
             latency_ms=elapsed_ms(),
         )
         return jsonify({"error": "Invalid API key on server."}), 401
@@ -1335,6 +1440,8 @@ def chat():
             user_message=last_user,
             error="Rate limit reached. Please wait a moment.",
             retrieval_mode=profile["mode"],
+            answer_mode=answer_mode,
+            answer_temperature=profile["temperature"],
             latency_ms=elapsed_ms(),
         )
         return jsonify({"error": "Rate limit reached. Please wait a moment."}), 429
@@ -1345,6 +1452,8 @@ def chat():
             user_message=last_user,
             error=str(e),
             retrieval_mode=profile["mode"],
+            answer_mode=answer_mode,
+            answer_temperature=profile["temperature"],
             latency_ms=elapsed_ms(),
         )
         return jsonify({"error": str(e)}), 500

@@ -91,6 +91,13 @@ footer{padding:28px 52px;border-top:1px solid var(--g2);display:flex;align-items
 .es-greeting{font-size:26px;font-weight:800;letter-spacing:-.4px;color:var(--bk);text-align:left;}
 .es-input-wrap{width:100%;max-width:640px;margin-bottom:14px;}
 .privacy-note{max-width:640px;text-align:center;font-size:11px;color:var(--g3);margin:-4px 0 14px;line-height:1.45;}
+.mode-control{display:flex;align-items:center;justify-content:center;gap:8px;max-width:640px;margin:0 0 14px;flex-wrap:wrap;}
+.mode-label{font-size:11px;color:var(--g3);font-weight:700;}
+.mode-toggle{display:flex;border:1px solid var(--g2);border-radius:8px;overflow:hidden;background:var(--wh);}
+.mode-btn{border:0;border-right:1px solid var(--g2);background:transparent;color:var(--bk);font:700 12px var(--fn);padding:8px 11px;cursor:pointer;min-width:86px;}
+.mode-btn:last-child{border-right:0;}
+.mode-btn.active{background:var(--p);color:var(--wh);}
+.mode-hint{font-size:11px;color:var(--g3);text-align:center;line-height:1.4;max-width:640px;margin:-6px 0 14px;}
 .input-box{border:1px solid var(--g2);border-radius:12px;display:flex;align-items:center;overflow:hidden;background:var(--wh);transition:border-color .12s;}
 .input-box:focus-within{border-color:var(--p);}
 .bi{flex:1;border:none;font-size:14px;font-family:var(--fn);outline:none;color:var(--bk);background:transparent;padding:13px 16px;line-height:1.5;}
@@ -117,6 +124,8 @@ footer{padding:28px 52px;border-top:1px solid var(--g2);display:flex;align-items
 .msg-bub{font-size:14px;line-height:1.8;color:var(--bk);padding-top:2px;}
 .bottom-bar{padding:12px 24px 18px;border-top:1px solid var(--g2);}
 .disc{font-size:11px;color:var(--g3);text-align:center;margin-bottom:10px;max-width:640px;margin-left:auto;margin-right:auto;}
+.bottom-bar .mode-control{margin:0 auto 8px;}
+.bottom-bar .mode-hint{margin:-2px auto 10px;}
 .bottom-input-box{max-width:640px;margin:0 auto;border:1px solid var(--g2);border-radius:12px;display:flex;align-items:center;overflow:hidden;transition:border-color .12s;}
 .bottom-input-box:focus-within{border-color:var(--p);}
 .bi2{flex:1;border:none;font-size:14px;font-family:var(--fn);outline:none;color:var(--bk);background:transparent;padding:12px 16px;}
@@ -261,6 +270,15 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
         </div>
       </div>
       <div class="privacy-note">Chats may be logged to improve the bot and analyze failures. Do not enter personal or sensitive information.</div>
+      <div class="mode-control" aria-label="Answer mode">
+        <span class="mode-label">Mode</span>
+        <div class="mode-toggle">
+          <button class="mode-btn" type="button" data-mode="accurate" onclick="setAnswerMode('accurate')">Accurate</button>
+          <button class="mode-btn active" type="button" data-mode="balanced" onclick="setAnswerMode('balanced')">Balanced</button>
+          <button class="mode-btn" type="button" data-mode="brainstorm" onclick="setAnswerMode('brainstorm')">Brainstorm</button>
+        </div>
+      </div>
+      <div class="mode-hint" id="mode-hint-empty">Balanced source-grounded answers with normal retrieval.</div>
       <div class="es-pills">
         <div class="pill-wrap">
           <button class="es-pill" onclick="togglePill('reg')">Regulator</button>
@@ -307,6 +325,15 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
     <div class="msgs-area" id="msgs-area"><div class="msgs-inner" id="msgs"></div></div>
     <div class="bottom-bar" id="bottom-bar" style="display:none;">
       <div class="disc">EMERGE corpus only — named sources, no recommendations, no legal advice. Chats may be logged for analysis.</div>
+      <div class="mode-control" aria-label="Answer mode">
+        <span class="mode-label">Mode</span>
+        <div class="mode-toggle">
+          <button class="mode-btn" type="button" data-mode="accurate" onclick="setAnswerMode('accurate')">Accurate</button>
+          <button class="mode-btn active" type="button" data-mode="balanced" onclick="setAnswerMode('balanced')">Balanced</button>
+          <button class="mode-btn" type="button" data-mode="brainstorm" onclick="setAnswerMode('brainstorm')">Brainstorm</button>
+        </div>
+      </div>
+      <div class="mode-hint" id="mode-hint-bottom">Balanced source-grounded answers with normal retrieval.</div>
       <div class="bottom-input-box">
         <input class="bi2" id="input-bottom" type="text" placeholder="Ask a follow-up..." onkeydown="if(event.key==='Enter')sendMsg()">
         <button class="bs2" onclick="sendMsg()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button>
@@ -440,6 +467,13 @@ let isLoading = false;
 let chatHistory = [];
 let currentStakeholder = null;
 let activePill = null;
+let answerMode = localStorage.getItem('emergeAnswerMode') || 'balanced';
+
+const answerModeHints = {
+  accurate: 'Tight retrieval and temperature 0 for maximum source fidelity.',
+  balanced: 'Balanced source-grounded answers with normal retrieval.',
+  brainstorm: 'Wider retrieval and a warmer style for source-grounded ideation.'
+};
 
 function getOrCreateId(key) {
   let id = localStorage.getItem(key);
@@ -452,6 +486,20 @@ function getOrCreateId(key) {
 
 const visitorId = getOrCreateId('emergeVisitorId');
 const conversationId = window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(16).slice(2);
+
+function setAnswerMode(mode) {
+  if (!answerModeHints[mode]) mode = 'balanced';
+  answerMode = mode;
+  localStorage.setItem('emergeAnswerMode', mode);
+  document.querySelectorAll('.mode-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-mode') === mode);
+  });
+  document.querySelectorAll('.mode-hint').forEach(function(el) {
+    el.textContent = answerModeHints[mode];
+  });
+}
+
+setAnswerMode(answerMode);
 
 // ── Pill dropdowns ──
 function togglePill(id) {
@@ -563,7 +611,8 @@ async function sendMsg() {
       body: JSON.stringify({
         messages: chatHistory,
         visitor_id: visitorId,
-        conversation_id: conversationId
+        conversation_id: conversationId,
+        answer_mode: answerMode
       })
     });
 

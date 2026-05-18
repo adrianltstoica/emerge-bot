@@ -52,6 +52,11 @@ Go to: **http://localhost:5050**
 2. Open http://localhost:5050 in your browser
 3. Ask questions
 
+The chat has three answer modes:
+- **Accurate:** tight retrieval, lower context count, and temperature `0.0` for maximum source fidelity.
+- **Balanced:** default source-grounded answers with normal retrieval and temperature `0.2`.
+- **Brainstorm:** wider retrieval and temperature `0.45` for source-grounded ideation.
+
 **To stop:** Press Ctrl+C in the Terminal window, or just close it.
 
 ## Admin chat logs
@@ -61,7 +66,7 @@ When `ADMIN_PASSWORD` is set, every chat exchange is stored in `chat_logs.db` fo
 http://localhost:5050/admin/chats
 ```
 
-Log in with username `admin` and your `ADMIN_PASSWORD`. The admin page supports search and CSV export. The log includes the user message, bot reply, anonymous visitor/session IDs, sources used, retrieval mode, scope result, gate score, errors, and latency.
+Log in with username `admin` and your `ADMIN_PASSWORD`. The admin page supports search and CSV export. The log includes the user message, bot reply, anonymous visitor/session IDs, answer mode, temperature, sources used, retrieval mode, scope result, gate score, errors, and latency.
 
 By default the app does not store client IP addresses. To include them, set:
 
