@@ -97,7 +97,7 @@ python scripts/build_vector_index.py
 ```bash
 python scripts/build_source_metadata.py
 ```
-6. For a private deployment, make sure the updated corpus artifacts are available to the server, then redeploy/restart the bot. For a public academic repository, do not commit `documents/`, `chunks.json`, or `vector_index.json.gz` unless redistribution rights are explicit.
+6. Commit the updated `documents/`, `chunks.json`, and `source_metadata.json`, then redeploy/restart the bot. `vector_index.json.gz` can be generated during deployment when `OPENAI_API_KEY` is configured.
 
 ---
 
@@ -152,13 +152,11 @@ For local development the app defaults to port `5050`. Hosted deployments may se
 
 For production deployment the Render configuration runs the Flask app through Gunicorn (`gunicorn app:app`). The corpus is loaded when the app module is imported, so both local `python app.py` and Gunicorn deployments use the same indexed chunks.
 
-For a public academic release, keep secrets and corpus-derived artifacts out of git:
+For a public academic release, keep secrets and runtime/private artifacts out of git:
 - Never commit `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `.env`, or Render secret values.
 - Do not commit `chat_logs.db`; logs can contain user prompts and failure details.
-- Do not commit `documents/` or `vector_index.json.gz` unless the PDFs and derived data are cleared for redistribution.
-- If the public Render service deploys directly from this repository, `chunks.json` must be present or supplied by another private build step. Without it, the app will refuse chat requests because it has no retrievable corpus.
-- It is acceptable to publish `source_metadata.json` when bibliography-level source labels and document metadata are cleared. Review it before release, especially DOI/URL/author fields.
-- Publish the code, setup instructions, methodology, source metadata, and rebuild scripts instead. Use a private deployment source or institutional storage for the actual corpus artifacts.
+- The corpus PDFs, `chunks.json`, and `source_metadata.json` are included here because redistribution has been cleared for this project.
+- Do not commit `vector_index.json.gz` unless you explicitly want to publish derived embedding data. Render can regenerate it from `chunks.json` using the secret `OPENAI_API_KEY`.
 
 Render can still use the secret `OPENAI_API_KEY` to build `vector_index.json.gz` during deployment when `chunks.json` is present in the private deployment source.
 

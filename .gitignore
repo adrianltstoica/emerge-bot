@@ -7,10 +7,6 @@ __pycache__/
 chat_logs.db
 *.db
 
-# Corpus and generated retrieval artifacts.
-# Keep these out of public academic repositories unless redistribution rights
-# for the full corpus and derived data are explicitly cleared.
-documents/
-chunks.json
+# Generated retrieval artifacts.
 vector_index.json.gz
 vector_index.json
