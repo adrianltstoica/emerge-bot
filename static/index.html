@@ -98,6 +98,10 @@ footer{padding:28px 52px;border-top:1px solid var(--g2);display:flex;align-items
 .mode-btn:last-child{border-right:0;}
 .mode-btn.active{background:var(--p);color:var(--wh);}
 .mode-hint{font-size:11px;color:var(--g3);text-align:center;line-height:1.4;max-width:640px;margin:-6px 0 14px;}
+.corpus-status{max-width:640px;margin:-4px 0 14px;padding:9px 12px;border:1px solid var(--g2);border-radius:8px;font-size:11px;color:var(--g3);line-height:1.45;text-align:center;background:var(--wh);}
+.corpus-status.ok{border-color:rgba(135,137,192,.35);color:var(--bk);}
+.corpus-status.warn{border-color:#d8b15c;color:#7a5a11;background:#fffaf0;}
+.corpus-status.err{border-color:#d66;color:#9b1c1c;background:#fff6f6;}
 .input-box{border:1px solid var(--g2);border-radius:12px;display:flex;align-items:center;overflow:hidden;background:var(--wh);transition:border-color .12s;}
 .input-box:focus-within{border-color:var(--p);}
 .bi{flex:1;border:none;font-size:14px;font-family:var(--fn);outline:none;color:var(--bk);background:transparent;padding:13px 16px;line-height:1.5;}
@@ -195,7 +199,7 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
     <div class="tool" onclick="show('checklist')"><div class="tool-left"><div class="tool-n">02 — Checklist</div><div class="tool-title">Stakeholder Checklist</div><div class="tool-desc">Ethics self-assessment for regulators, developers, researchers, and product users. Grounded in EMERGE findings.</div></div><div class="tool-arrow">→</div></div>
     <div class="tool" onclick="show('bot')"><div class="tool-left"><div class="tool-n">03 — Bot</div><div class="tool-title">Ethics Bot</div><div class="tool-desc">Ask questions in natural language. Draws from the EMERGE corpus only — always named sources, no legal advice.</div></div><div class="tool-arrow">→</div></div>
   </div>
-  <footer><span>© 2025 MI3 · LMU München</span><div class="f-links"><span class="f-link">About EMERGE</span><span class="f-link">mi3.info ↗</span><span class="f-link">eic-emerge.eu ↗</span></div></footer>
+  <footer><span>© 2025 MI3 · LMU München</span><div class="f-links"><a class="f-link" href="https://eic-emerge.eu/" target="_blank" rel="noopener">About EMERGE</a><a class="f-link" href="https://www.mi3.info/" target="_blank" rel="noopener">mi3.info ↗</a><a class="f-link" href="https://eic-emerge.eu/" target="_blank" rel="noopener">eic-emerge.eu ↗</a></div></footer>
 </div>
 
 <div id="pg-wiki" class="pg wiki-pg">
@@ -253,7 +257,7 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
     <div id="cpw" style="display:none"><div class="prog-label" id="cplbl">0 of 0 completed</div><div class="prog-track"><div class="prog-fill" id="cpbar"></div></div></div>
     <div id="clbody"><div class="cl-empty">Select your role above to load your checklist.</div></div>
   </div>
-  <footer><span>© 2025 MI3 · LMU München</span><div class="f-links"><span class="f-link">About EMERGE</span><span class="f-link">mi3.info ↗</span></div></footer>
+  <footer><span>© 2025 MI3 · LMU München</span><div class="f-links"><a class="f-link" href="https://eic-emerge.eu/" target="_blank" rel="noopener">About EMERGE</a><a class="f-link" href="https://www.mi3.info/" target="_blank" rel="noopener">mi3.info ↗</a></div></footer>
 </div>
 
 <div id="pg-bot" class="pg">
@@ -279,6 +283,7 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
         </div>
       </div>
       <div class="mode-hint" id="mode-hint-empty">Balanced source-grounded answers with normal retrieval.</div>
+      <div class="corpus-status" id="corpus-status">Checking corpus status...</div>
       <div class="es-pills">
         <div class="pill-wrap">
           <button class="es-pill" onclick="togglePill('reg')">Regulator</button>
@@ -500,6 +505,42 @@ function setAnswerMode(mode) {
 }
 
 setAnswerMode(answerMode);
+
+function setCorpusStatus(text, state) {
+  const el = document.getElementById('corpus-status');
+  if (!el) return;
+  el.textContent = text;
+  el.className = 'corpus-status ' + (state || '');
+}
+
+async function refreshCorpusStatus() {
+  try {
+    const res = await fetch('/status');
+    const data = await res.json().catch(function() { return {}; });
+    if (!res.ok || !data.ready) {
+      setCorpusStatus('Corpus unavailable. Start the server and rebuild chunks.json if needed.', 'err');
+      return;
+    }
+    const backend = data.retrieval_backend === 'vector'
+      ? 'vector retrieval'
+      : 'TF-IDF fallback';
+    const bits = [
+      data.chunks_loaded + ' chunks',
+      data.indexed_sources + ' sources',
+      backend
+    ];
+    if (data.vector_index !== 'loaded') bits.push('vector index ' + data.vector_index);
+    if (data.missing_pdf_sources && data.missing_pdf_sources.length) {
+      bits.push(data.missing_pdf_sources.length + ' PDFs need re-indexing');
+    }
+    const state = data.vector_index === 'loaded' && !(data.missing_pdf_sources || []).length ? 'ok' : 'warn';
+    setCorpusStatus('Corpus ready: ' + bits.join(' · '), state);
+  } catch (err) {
+    setCorpusStatus('Server not reachable. Start the Python server first.', 'err');
+  }
+}
+
+refreshCorpusStatus();
 
 // ── Pill dropdowns ──
 function togglePill(id) {

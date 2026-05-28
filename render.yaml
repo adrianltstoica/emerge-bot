@@ -2,8 +2,8 @@ services:
   - type: web
     name: emerge-ethics-bot
     runtime: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: python app.py
+    buildCommand: pip install -r requirements.txt && if [ -n "$OPENAI_API_KEY" ] && [ -f chunks.json ]; then python scripts/build_vector_index.py; fi
+    startCommand: gunicorn app:app
     envVars:
       - key: PORT
         value: 5000
@@ -13,3 +13,5 @@ services:
         sync: false
       - key: ADMIN_PASSWORD
         sync: false
+      - key: ADMIN_SESSION_SECRET
+        generateValue: true

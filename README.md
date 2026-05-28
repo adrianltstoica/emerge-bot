@@ -57,6 +57,10 @@ The chat has three answer modes:
 - **Balanced:** default source-grounded answers with normal retrieval and temperature `0.2`.
 - **Brainstorm:** wider retrieval and temperature `0.45` for source-grounded ideation.
 
+Before retrieval, the bot also runs a lightweight triage. Greetings, very vague prompts, and broad technical implementation requests are answered with a clarifying question instead of searching the corpus.
+
+The bot page includes a corpus status bar showing whether chunks are loaded, how many sources are indexed, which retrieval backend is active, and whether the vector index is missing or stale.
+
 **To stop:** Press Ctrl+C in the Terminal window, or just close it.
 
 ## Admin chat logs
@@ -89,7 +93,7 @@ python scripts/build_chunks.py
 ```bash
 python scripts/build_vector_index.py
 ```
-5. Commit the updated `documents/`, `chunks.json`, and `vector_index.json.gz`, then redeploy/restart the bot.
+5. For a private deployment, make sure the updated corpus artifacts are available to the server, then redeploy/restart the bot. For a public academic repository, do not commit `documents/`, `chunks.json`, or `vector_index.json.gz` unless redistribution rights are explicit.
 
 ---
 
@@ -108,6 +112,8 @@ python scripts/build_chunks.py
 python scripts/build_vector_index.py
 ```
 Then check `/status`; `missing_pdf_sources` should be empty or explain what still needs attention.
+
+If a PDF still appears in `missing_pdf_sources` after rebuilding, it may be scanned or image-only. Convert it to a text-readable/OCR PDF, then rerun both build commands.
 
 **"Invalid API key"** or **"API key not configured on server"**
 → The server reads the key from the `ANTHROPIC_API_KEY` environment variable. Set it before starting:
@@ -138,6 +144,16 @@ This system uses:
 - **System prompt:** sourcing rules, two-sidedness on contested questions, scope boundaries, friendly-name conventions
 
 For local development the app defaults to port `5050`. Hosted deployments may set a different `PORT` value through the hosting environment.
+
+For production deployment the Render configuration runs the Flask app through Gunicorn (`gunicorn app:app`). The corpus is loaded when the app module is imported, so both local `python app.py` and Gunicorn deployments use the same indexed chunks.
+
+For a public academic release, keep secrets and corpus-derived artifacts out of git:
+- Never commit `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `.env`, or Render secret values.
+- Do not commit `chat_logs.db`; logs can contain user prompts and failure details.
+- Do not commit `documents/`, `chunks.json`, or `vector_index.json.gz` unless the PDFs and derived data are cleared for redistribution.
+- Publish the code, setup instructions, methodology, and rebuild scripts instead. Use a private deployment source or institutional storage for the actual corpus artifacts.
+
+Render can still use the secret `OPENAI_API_KEY` to build `vector_index.json.gz` during deployment when `chunks.json` is present in the private deployment source.
 
 ---
 

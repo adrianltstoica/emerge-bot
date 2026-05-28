@@ -30,13 +30,20 @@ import anthropic
 app = Flask(__name__, static_folder="static")
 CORS(app)
 
-CHUNKS_FILE = Path("chunks.json")
+CHUNKS_FILE = Path(os.environ.get("CHUNKS_FILE", "chunks.json"))
 VECTOR_INDEX_FILE = Path(os.environ.get("VECTOR_INDEX_FILE", "vector_index.json.gz"))
-DOCUMENTS_DIR = Path("documents")
+DOCUMENTS_DIR = Path(os.environ.get("DOCUMENTS_DIR", "documents"))
 CHAT_LOG_DB = Path(os.environ.get("CHAT_LOG_DB", "chat_logs.db"))
 ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "")
-ADMIN_SESSION_SECRET = os.environ.get("ADMIN_SESSION_SECRET", ADMIN_PASSWORD or "emerge-admin-session-dev")
+ADMIN_SESSION_SECRET = os.environ.get("ADMIN_SESSION_SECRET", "")
+if not ADMIN_SESSION_SECRET:
+    ADMIN_SESSION_SECRET = secrets.token_hex(32)
+    if ADMIN_PASSWORD:
+        print(
+            "WARNING: ADMIN_PASSWORD is set but ADMIN_SESSION_SECRET is missing. "
+            "Using a temporary session secret; admin sessions will reset on restart."
+        )
 LOG_CLIENT_IPS = os.environ.get("CHAT_LOG_IPS", "").lower() in {"1", "true", "yes", "on"}
 app.secret_key = ADMIN_SESSION_SECRET
 TOP_K = 18
@@ -972,6 +979,81 @@ def explicit_scope_decline(text):
     return ""
 
 
+def pre_retrieval_triage(text):
+    """Return a lightweight response when the prompt is too vague for corpus retrieval."""
+    text_l = text.lower().strip()
+    cleaned = re.sub(r"[^a-z0-9\s]", " ", text_l)
+    words = [w for w in cleaned.split() if w]
+
+    greeting_words = {"hi", "hello", "hey", "hiya", "hallo"}
+    if words and len(words) <= 3 and any(word in greeting_words for word in words):
+        return {
+            "reply": (
+                "Hello. I can answer questions about AI ethics findings and policy positions "
+                "from the EMERGE corpus. What would you like to examine?"
+            ),
+            "classification": "greeting",
+        }
+
+    corpus_markers = [
+        "emerge", "corpus", "source", "sources", "document", "documents",
+        "according to", "based on", "what does", "what do the guidelines",
+        "eu ai act", "hleg", "trustworthy ai", "ai ethics", "ethical",
+        "ethics", "governance", "accountability", "transparency", "risk",
+        "risks", "human oversight", "responsibility", "fairness", "bias",
+        "collaborative awareness", "collective ai", "machine awareness",
+        "ethical resilience",
+    ]
+    if any(marker in text_l for marker in corpus_markers):
+        return None
+
+    vague_build_markers = [
+        "build an ai", "build a ai", "make an ai", "make a ai",
+        "create an ai", "develop an ai", "design an ai", "launch an ai",
+        "build ai system", "build an ai system", "building an ai system",
+        "ai system", "ai app", "chatbot", "bot", "agent",
+    ]
+    intent_markers = [
+        "i want", "i need", "i am trying", "i'm trying", "i would like",
+        "can you help", "help me", "how do i", "how can i",
+    ]
+    technical_markers = [
+        "code", "api", "python", "javascript", "react", "database",
+        "deploy", "server", "frontend", "backend", "architecture",
+        "implementation", "fine tune", "fine-tune", "train a model",
+    ]
+
+    is_vague_build = (
+        any(marker in text_l for marker in vague_build_markers)
+        and (
+            any(marker in text_l for marker in intent_markers)
+            or len(words) <= 12
+            or any(marker in text_l for marker in technical_markers)
+        )
+    )
+    if is_vague_build:
+        return {
+            "reply": (
+                "I can help with that from the EMERGE corpus, but your question is still too broad "
+                "for a sourced answer. Do you want the ethics/governance angle, such as trustworthiness, "
+                "risk classification, transparency, accountability, human oversight, or user rights? "
+                "If you mean technical implementation, that sits outside this corpus."
+            ),
+            "classification": "needs_clarification",
+        }
+
+    if len(words) <= 5 and not text_l.endswith("?"):
+        return {
+            "reply": (
+                "Could you turn that into a specific question about AI ethics, governance, trust, "
+                "risk, accountability, transparency, or another EMERGE corpus topic?"
+            ),
+            "classification": "needs_clarification",
+        }
+
+    return None
+
+
 def corpus_inventory_reply():
     docs = sorted(set(c["source"] for c in chunk_store))
     tier_counts = Counter(source_tier(source) for source in docs)
@@ -1487,6 +1569,41 @@ def chat():
             "answer_mode": answer_mode,
         })
 
+    triage = pre_retrieval_triage(last_user)
+    if triage:
+        reply = triage["reply"]
+        log_chat_exchange(
+            request_id=request_id,
+            messages=messages,
+            user_message=last_user,
+            assistant_reply=reply,
+            scope="needs_clarification",
+            classification=triage["classification"],
+            retrieval_mode="pre_retrieval_triage",
+            retrieval_backend_name="none",
+            answer_mode=answer_mode,
+            answer_temperature=answer_settings["temperature"],
+            chunks_used=0,
+            latency_ms=elapsed_ms(),
+        )
+        return jsonify({
+            "reply": reply,
+            "chunks_used": 0,
+            "scope": "needs_clarification",
+            "gate_score": None,
+            "classification": triage["classification"],
+            "retrieval_profile": {
+                "mode": "pre_retrieval_triage",
+                "top_k": 0,
+                "per_source_limit": 0,
+                "backend": "none",
+                "answer_mode": answer_mode,
+                "temperature": answer_settings["temperature"],
+            },
+            "sources_used": [],
+            "answer_mode": answer_mode,
+        })
+
     if not ANTHROPIC_API_KEY:
         log_chat_exchange(
             request_id=request_id,
@@ -1687,6 +1804,8 @@ def chat():
         )
         return jsonify({"error": str(e)}), 500
 
+load_chunks()
+
 
 if __name__ == "__main__":
     print("=" * 50)
@@ -1694,7 +1813,6 @@ if __name__ == "__main__":
     print("=" * 50)
     if not ANTHROPIC_API_KEY:
         print("WARNING: ANTHROPIC_API_KEY not set!")
-    load_chunks()
     port = int(os.environ.get("PORT", 5000))
     print(f"\nStarting at http://localhost:{port}\n")
     app.run(debug=False, host="0.0.0.0", port=port)

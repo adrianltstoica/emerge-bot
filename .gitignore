@@ -5,3 +5,12 @@ __pycache__/
 .env
 .env.local
 chat_logs.db
+*.db
+
+# Corpus and generated retrieval artifacts.
+# Keep these out of public academic repositories unless redistribution rights
+# for the full corpus and derived data are explicitly cleared.
+documents/
+chunks.json
+vector_index.json.gz
+vector_index.json
