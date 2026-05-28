@@ -93,7 +93,11 @@ python scripts/build_chunks.py
 ```bash
 python scripts/build_vector_index.py
 ```
-5. For a private deployment, make sure the updated corpus artifacts are available to the server, then redeploy/restart the bot. For a public academic repository, do not commit `documents/`, `chunks.json`, or `vector_index.json.gz` unless redistribution rights are explicit.
+5. Rebuild the source metadata:
+```bash
+python scripts/build_source_metadata.py
+```
+6. For a private deployment, make sure the updated corpus artifacts are available to the server, then redeploy/restart the bot. For a public academic repository, do not commit `documents/`, `chunks.json`, or `vector_index.json.gz` unless redistribution rights are explicit.
 
 ---
 
@@ -140,6 +144,7 @@ This system uses:
 - **Chunking:** sliding window, 400 words per chunk, 80-word overlap
 - **Retrieval:** embedding cosine over `vector_index.json.gz` when available, with TF-IDF fallback; three-pass retrieval (original query + LLM-generated paraphrase + LLM-generated counter-query), source diversity, and broader context windows to improve recall and surface contrasting positions
 - **Scope gating:** mean cosine of top-10 chunks; below threshold, the system refuses and points to an external resource category
+- **Source metadata:** `source_metadata.json` contains bibliography/source records for the corpus without document text, chunks, embeddings, or chat logs. The `/sources` route exposes the same records at runtime.
 - **Models:** OpenAI `text-embedding-3-small` for vector retrieval; Claude Haiku 4.5 for query expansion; Claude Sonnet 4 for user-facing answers
 - **System prompt:** sourcing rules, two-sidedness on contested questions, scope boundaries, friendly-name conventions
 
@@ -151,7 +156,8 @@ For a public academic release, keep secrets and corpus-derived artifacts out of 
 - Never commit `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `.env`, or Render secret values.
 - Do not commit `chat_logs.db`; logs can contain user prompts and failure details.
 - Do not commit `documents/`, `chunks.json`, or `vector_index.json.gz` unless the PDFs and derived data are cleared for redistribution.
-- Publish the code, setup instructions, methodology, and rebuild scripts instead. Use a private deployment source or institutional storage for the actual corpus artifacts.
+- It is acceptable to publish `source_metadata.json` when bibliography-level source labels and document metadata are cleared. Review it before release, especially DOI/URL/author fields.
+- Publish the code, setup instructions, methodology, source metadata, and rebuild scripts instead. Use a private deployment source or institutional storage for the actual corpus artifacts.
 
 Render can still use the secret `OPENAI_API_KEY` to build `vector_index.json.gz` during deployment when `chunks.json` is present in the private deployment source.
 

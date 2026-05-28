@@ -25,9 +25,28 @@ def import_test_app(monkeypatch, tmp_path):
     )
     documents_dir = tmp_path / "documents"
     documents_dir.mkdir()
+    source_metadata_file = tmp_path / "source_metadata.json"
+    source_metadata_file.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "sources": [
+                    {
+                        "source_id": "EMERGE Test",
+                        "citation": "EMERGE Test Source",
+                        "title": "EMERGE Test Source Title",
+                        "year": "2026",
+                        "source_tier": "Core EMERGE deliverable",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
     monkeypatch.setenv("CHUNKS_FILE", str(chunks_file))
     monkeypatch.setenv("DOCUMENTS_DIR", str(documents_dir))
     monkeypatch.setenv("VECTOR_INDEX_FILE", str(tmp_path / "vector_index.json.gz"))
+    monkeypatch.setenv("SOURCE_METADATA_FILE", str(source_metadata_file))
     monkeypatch.setenv("CHAT_LOG_DB", str(tmp_path / "chat_logs.db"))
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
@@ -50,6 +69,23 @@ def test_status_reports_loaded_corpus_and_tfidf_fallback(monkeypatch, tmp_path):
     assert data["indexed_sources"] > 0
     assert data["retrieval_backend"] == "tfidf"
     assert data["vector_index"] in {"missing", "chunk_count_mismatch", "loaded"}
+    assert data["source_metadata"] == "loaded"
+    assert data["source_metadata_count"] == 1
+
+
+def test_sources_endpoint_uses_metadata(monkeypatch, tmp_path):
+    app_module = import_test_app(monkeypatch, tmp_path)
+    client = app_module.app.test_client()
+
+    response = client.get("/sources")
+
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data["metadata_loaded"] is True
+    source = next(item for item in data["sources"] if item["source_id"] == "EMERGE Test")
+    assert source["citation"] == "EMERGE Test Source"
+    assert source["title"] == "EMERGE Test Source Title"
+    assert source["chunk_count"] == 1
 
 
 def test_empty_chat_request_returns_400(monkeypatch, tmp_path):
@@ -104,9 +140,12 @@ def test_admin_basic_auth_with_password(monkeypatch, tmp_path):
     )
     documents_dir = tmp_path / "documents"
     documents_dir.mkdir()
+    source_metadata_file = tmp_path / "source_metadata.json"
+    source_metadata_file.write_text(json.dumps({"schema_version": 1, "sources": []}), encoding="utf-8")
     monkeypatch.setenv("CHUNKS_FILE", str(chunks_file))
     monkeypatch.setenv("DOCUMENTS_DIR", str(documents_dir))
     monkeypatch.setenv("VECTOR_INDEX_FILE", str(tmp_path / "vector_index.json.gz"))
+    monkeypatch.setenv("SOURCE_METADATA_FILE", str(source_metadata_file))
     monkeypatch.setenv("CHAT_LOG_DB", str(tmp_path / "chat_logs.db"))
     monkeypatch.setenv("ADMIN_PASSWORD", "secret")
     monkeypatch.setenv("ADMIN_SESSION_SECRET", "test-secret")

@@ -32,6 +32,7 @@ CORS(app)
 
 CHUNKS_FILE = Path(os.environ.get("CHUNKS_FILE", "chunks.json"))
 VECTOR_INDEX_FILE = Path(os.environ.get("VECTOR_INDEX_FILE", "vector_index.json.gz"))
+SOURCE_METADATA_FILE = Path(os.environ.get("SOURCE_METADATA_FILE", "source_metadata.json"))
 DOCUMENTS_DIR = Path(os.environ.get("DOCUMENTS_DIR", "documents"))
 CHAT_LOG_DB = Path(os.environ.get("CHAT_LOG_DB", "chat_logs.db"))
 ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
@@ -128,6 +129,7 @@ idf = {}          # dict[token, idf weight]
 chunk_vectors = []  # list[list[float]], unit-normalized embedding vectors
 vector_index_meta = {}
 retrieval_backend = "tfidf"
+source_metadata = {}
 
 corpus_stats = {
     "pdf_documents": 0,
@@ -135,6 +137,8 @@ corpus_stats = {
     "missing_pdf_sources": [],
     "vector_index": "missing",
     "vector_model": None,
+    "source_metadata": "missing",
+    "source_metadata_count": 0,
 }
 
 
@@ -617,8 +621,35 @@ def load_vector_index():
     )
 
 
+def load_source_metadata():
+    global source_metadata
+    source_metadata = {}
+    corpus_stats["source_metadata"] = "missing"
+    corpus_stats["source_metadata_count"] = 0
+
+    if not SOURCE_METADATA_FILE.exists():
+        return
+
+    try:
+        with SOURCE_METADATA_FILE.open(encoding="utf-8") as f:
+            payload = json.load(f)
+        entries = payload.get("sources", payload if isinstance(payload, list) else [])
+        source_metadata = {
+            entry.get("source_id"): entry
+            for entry in entries
+            if isinstance(entry, dict) and entry.get("source_id")
+        }
+        corpus_stats["source_metadata"] = "loaded"
+        corpus_stats["source_metadata_count"] = len(source_metadata)
+        print(f"Loaded metadata for {len(source_metadata)} sources")
+    except Exception as exc:
+        corpus_stats["source_metadata"] = "error"
+        print(f"WARNING: could not load source metadata: {exc}")
+
+
 def load_chunks():
     global chunk_store, chunk_tf, doc_norms, idf, corpus_stats
+    load_source_metadata()
     if not CHUNKS_FILE.exists():
         print("WARNING: chunks.json not found.")
         return
@@ -657,6 +688,8 @@ def load_chunks():
         "missing_pdf_sources": missing,
         "vector_index": "missing",
         "vector_model": None,
+        "source_metadata": corpus_stats.get("source_metadata", "missing"),
+        "source_metadata_count": corpus_stats.get("source_metadata_count", 0),
     }
     print(f"Loaded {len(chunk_store)} chunks from {len(sources)} sources; vocab={len(idf)}")
     if missing:
@@ -701,6 +734,9 @@ def score_chunks_vector(query):
 
 
 def friendly_source_name(source):
+    metadata = source_metadata.get(source, {})
+    if metadata.get("citation"):
+        return metadata["citation"]
     if source in FRIENDLY_SOURCE_NAMES:
         return FRIENDLY_SOURCE_NAMES[source]
     cleaned = re.sub(r"[_-]+", " ", source)
@@ -710,6 +746,9 @@ def friendly_source_name(source):
 
 
 def full_source_title(source):
+    metadata = source_metadata.get(source, {})
+    if metadata.get("title"):
+        return metadata["title"]
     if source in FULL_SOURCE_TITLES:
         return FULL_SOURCE_TITLES[source]
     friendly = friendly_source_name(source)
@@ -717,16 +756,19 @@ def full_source_title(source):
 
 
 def source_reference(source):
+    metadata = source_metadata.get(source, {})
     citation = friendly_source_name(source)
     title = full_source_title(source)
-    tier = source_tier(source)
+    tier = metadata.get("source_tier") or source_tier(source)
+    year = metadata.get("year")
+    year_part = f" ({year})" if year and str(year) not in citation else ""
     if title == citation:
-        return f"{citation} — {tier}"
+        return f"{citation}{year_part} — {tier}"
     if title in citation:
         return f"{citation} — {tier}"
     if citation in title:
         return f"{title} — {tier}"
-    return f"{citation}, {title} — {tier}"
+    return f"{citation}{year_part}, {title} — {tier}"
 
 
 def append_source_list(reply, chunks):
@@ -744,6 +786,9 @@ def append_source_list(reply, chunks):
 
 
 def source_tier(source):
+    metadata_tier = source_metadata.get(source, {}).get("source_tier")
+    if metadata_tier:
+        return metadata_tier
     source_l = source.lower()
     if re.match(r"^d[12]\.", source_l):
         return "Core EMERGE deliverable"
@@ -1120,7 +1165,31 @@ def status():
         "retrieval_backend": "vector" if chunk_vectors and OPENAI_API_KEY else "tfidf",
         "vector_index": corpus_stats["vector_index"],
         "vector_model": corpus_stats["vector_model"],
+        "source_metadata": corpus_stats["source_metadata"],
+        "source_metadata_count": corpus_stats["source_metadata_count"],
         "runtime": "render-flask",
+    })
+
+
+@app.route("/sources")
+def sources():
+    docs = sorted(set(c["source"] for c in chunk_store) | set(source_metadata))
+    records = []
+    for source in docs:
+        metadata = dict(source_metadata.get(source, {}))
+        metadata.setdefault("source_id", source)
+        metadata.setdefault("citation", friendly_source_name(source))
+        metadata.setdefault("title", full_source_title(source))
+        metadata.setdefault("source_tier", source_tier(source))
+        metadata.setdefault(
+            "chunk_count",
+            sum(1 for chunk in chunk_store if chunk.get("source") == source),
+        )
+        records.append(metadata)
+    return jsonify({
+        "source_count": len(records),
+        "metadata_loaded": corpus_stats["source_metadata"] == "loaded",
+        "sources": records,
     })
 
 

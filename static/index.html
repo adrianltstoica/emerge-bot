@@ -530,6 +530,7 @@ async function refreshCorpusStatus() {
       backend
     ];
     if (data.vector_index !== 'loaded') bits.push('vector index ' + data.vector_index);
+    if (data.source_metadata === 'loaded') bits.push(data.source_metadata_count + ' bibliography records');
     if (data.missing_pdf_sources && data.missing_pdf_sources.length) {
       bits.push(data.missing_pdf_sources.length + ' PDFs need re-indexing');
     }
