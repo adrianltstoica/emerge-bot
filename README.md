@@ -155,7 +155,8 @@ For production deployment the Render configuration runs the Flask app through Gu
 For a public academic release, keep secrets and corpus-derived artifacts out of git:
 - Never commit `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `.env`, or Render secret values.
 - Do not commit `chat_logs.db`; logs can contain user prompts and failure details.
-- Do not commit `documents/`, `chunks.json`, or `vector_index.json.gz` unless the PDFs and derived data are cleared for redistribution.
+- Do not commit `documents/` or `vector_index.json.gz` unless the PDFs and derived data are cleared for redistribution.
+- If the public Render service deploys directly from this repository, `chunks.json` must be present or supplied by another private build step. Without it, the app will refuse chat requests because it has no retrievable corpus.
 - It is acceptable to publish `source_metadata.json` when bibliography-level source labels and document metadata are cleared. Review it before release, especially DOI/URL/author fields.
 - Publish the code, setup instructions, methodology, source metadata, and rebuild scripts instead. Use a private deployment source or institutional storage for the actual corpus artifacts.
 

@@ -1589,6 +1589,34 @@ def chat():
 
     user_msgs = [m["content"] for m in messages if m["role"] == "user"]
     last_user = user_msgs[-1] if user_msgs else ""
+    if not chunk_store:
+        reply = (
+            "The EMERGE corpus index is not loaded on this server, so I cannot give a sourced answer yet. "
+            "Please redeploy with `chunks.json` present or rebuild it from the private `documents/` corpus."
+        )
+        log_chat_exchange(
+            request_id=request_id,
+            messages=messages,
+            user_message=last_user,
+            assistant_reply=reply,
+            scope="corpus_unavailable",
+            classification="missing_corpus_index",
+            retrieval_backend_name="none",
+            answer_mode=answer_mode,
+            answer_temperature=answer_settings["temperature"],
+            chunks_used=0,
+            latency_ms=elapsed_ms(),
+        )
+        return jsonify({
+            "reply": reply,
+            "chunks_used": 0,
+            "scope": "corpus_unavailable",
+            "gate_score": None,
+            "classification": "missing_corpus_index",
+            "sources_used": [],
+            "answer_mode": answer_mode,
+        }), 503
+
     if is_corpus_inventory_question(last_user):
         docs = sorted(set(c["source"] for c in chunk_store))
         reply = corpus_inventory_reply()
