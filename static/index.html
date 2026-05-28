@@ -56,6 +56,23 @@ footer{padding:28px 52px;border-top:1px solid var(--g2);display:flex;align-items
 .wiki-note ul{list-style:none;display:grid;gap:8px;margin-top:14px;}
 .wiki-note li{font-size:12px;line-height:1.55;color:var(--g3);border-bottom:1px solid var(--g2);padding-bottom:8px;}
 .wiki-note strong{color:var(--bk);font-weight:700;}
+.src-wrap{max-width:960px;margin:0 auto;padding:56px 52px;}
+.src-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:22px;}
+.src-title{font-size:28px;font-weight:800;letter-spacing:-.4px;color:var(--bk);}
+.src-sub{font-size:13px;line-height:1.65;color:var(--g3);max-width:560px;margin-top:8px;}
+.src-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.src-search{border:1px solid var(--g2);border-radius:8px;padding:9px 11px;font:500 13px var(--fn);min-width:240px;outline:none;}
+.src-search:focus{border-color:var(--p);}
+.src-download{border:1px solid var(--g2);border-radius:8px;padding:9px 11px;color:var(--bk);font:700 12px var(--fn);text-decoration:none;background:var(--wh);}
+.src-meta{font-size:11px;color:var(--g3);font-weight:700;margin-bottom:14px;}
+.src-list{display:grid;gap:8px;}
+.src-card{border-top:1px solid var(--g2);padding:14px 0;}
+.src-card:last-child{border-bottom:1px solid var(--g2);}
+.src-citation{font-size:14px;font-weight:800;color:var(--bk);line-height:1.45;margin-bottom:4px;}
+.src-bib{font-size:12px;color:var(--bk);line-height:1.6;margin-bottom:7px;}
+.src-fields{display:flex;gap:8px;flex-wrap:wrap;font-size:10px;color:var(--g3);font-weight:700;}
+.src-chip{border:1px solid var(--g2);border-radius:999px;padding:4px 7px;background:var(--g1);}
+.src-empty{padding:36px 0;color:var(--g3);font-size:13px;text-align:center;}
 .cl-wrap{max-width:680px;margin:0 auto;padding:72px 52px;}
 .cl-intro{font-size:14px;color:var(--g3);line-height:1.75;margin-bottom:48px;max-width:520px;}
 .roles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:48px;}
@@ -152,6 +169,10 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
 .wsb-a{white-space:nowrap;border:1px solid var(--g2);border-radius:40px;padding:7px 12px;font-size:12px;}
 .wiki-main{padding:34px 24px;max-width:none;}
 .wb{margin-bottom:38px;}
+.src-wrap{padding:34px 24px;}
+.src-head{display:block;}
+.src-actions{margin-top:18px;}
+.src-search{width:100%;min-width:0;}
 .cl-wrap{padding:44px 24px;}
 .roles{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:36px;}
 .rt{padding:16px 12px;}
@@ -184,6 +205,7 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
   <img class="logo-img" src="/assets/mi3-logo.png?v=3" onclick="show('home')" alt="MI3">
   <div class="nav-links">
     <button class="nl" onclick="show('wiki')">Wiki</button>
+    <button class="nl" onclick="show('sources')">Sources</button>
     <button class="nl" onclick="show('checklist')">Checklist</button>
     <button class="nl" onclick="show('bot')">Ask the Bot ↗</button>
   </div>
@@ -196,8 +218,9 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
   </div>
   <div class="home-tools">
     <div class="tool" onclick="show('wiki')"><div class="tool-left"><div class="tool-n">01 — Wiki</div><div class="tool-title">Ethics Wiki</div><div class="tool-desc">Structured findings on trust, benevolence, ethical resilience, and collective AI risks. Every claim traced to a named source.</div></div><div class="tool-arrow">→</div></div>
-    <div class="tool" onclick="show('checklist')"><div class="tool-left"><div class="tool-n">02 — Checklist</div><div class="tool-title">Stakeholder Checklist</div><div class="tool-desc">Ethics self-assessment for regulators, developers, researchers, and product users. Grounded in EMERGE findings.</div></div><div class="tool-arrow">→</div></div>
-    <div class="tool" onclick="show('bot')"><div class="tool-left"><div class="tool-n">03 — Bot</div><div class="tool-title">Ethics Bot</div><div class="tool-desc">Ask questions in natural language. Draws from the EMERGE corpus only — always named sources, no legal advice.</div></div><div class="tool-arrow">→</div></div>
+    <div class="tool" onclick="show('sources')"><div class="tool-left"><div class="tool-n">02 — Sources</div><div class="tool-title">Bibliography Register</div><div class="tool-desc">Full corpus source metadata with citations, document tiers, DOI links where available, page counts, and chunk counts.</div></div><div class="tool-arrow">→</div></div>
+    <div class="tool" onclick="show('checklist')"><div class="tool-left"><div class="tool-n">03 — Checklist</div><div class="tool-title">Stakeholder Checklist</div><div class="tool-desc">Ethics self-assessment for regulators, developers, researchers, and product users. Grounded in EMERGE findings.</div></div><div class="tool-arrow">→</div></div>
+    <div class="tool" onclick="show('bot')"><div class="tool-left"><div class="tool-n">04 — Bot</div><div class="tool-title">Ethics Bot</div><div class="tool-desc">Ask questions in natural language. Draws from the EMERGE corpus only — always named sources, no legal advice.</div></div><div class="tool-arrow">→</div></div>
   </div>
   <footer><span>© 2025 MI3 · LMU München</span><div class="f-links"><a class="f-link" href="https://eic-emerge.eu/" target="_blank" rel="noopener">About EMERGE</a><a class="f-link" href="https://www.mi3.info/" target="_blank" rel="noopener">mi3.info ↗</a><a class="f-link" href="https://eic-emerge.eu/" target="_blank" rel="noopener">eic-emerge.eu ↗</a></div></footer>
 </div>
@@ -243,6 +266,24 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
       </section>
     </main>
   </div>
+</div>
+
+<div id="pg-sources" class="pg">
+  <div class="src-wrap">
+    <div class="src-head">
+      <div>
+        <h1 class="src-title">Source Register</h1>
+        <p class="src-sub">Bibliography and corpus metadata for the indexed EMERGE bot sources. Records include source tier, citation label, DOI or stable URL where available, PDF page count, and retrieval chunk count.</p>
+      </div>
+      <div class="src-actions">
+        <input class="src-search" id="source-search" type="search" placeholder="Search sources..." oninput="renderSources()">
+        <a class="src-download" href="/sources.csv">Download CSV</a>
+      </div>
+    </div>
+    <div class="src-meta" id="source-meta">Loading source metadata...</div>
+    <div class="src-list" id="source-list"></div>
+  </div>
+  <footer><span>© 2025 MI3 · LMU München</span><div class="f-links"><a class="f-link" href="/sources.csv">Download source CSV</a><a class="f-link" href="https://www.mi3.info/" target="_blank" rel="noopener">mi3.info ↗</a></div></footer>
 </div>
 
 <div id="pg-checklist" class="pg">
@@ -360,13 +401,14 @@ function show(p) {
   document.querySelectorAll('.pg').forEach(x => x.classList.remove('on'));
   document.getElementById('pg-' + p).classList.add('on');
   document.querySelectorAll('.nl').forEach(x => x.classList.remove('on'));
-  const m = { wiki: 0, checklist: 1, bot: 2 };
+  const m = { wiki: 0, sources: 1, checklist: 2, bot: 3 };
   if (m[p] !== undefined) document.querySelectorAll('.nl')[m[p]].classList.add('on');
   window.scrollTo(0, 0);
   if (p === 'bot') {
     const focusTarget = started ? document.getElementById('input-bottom') : document.getElementById('input-empty');
     setTimeout(function() { if (focusTarget) focusTarget.focus(); }, 50);
   }
+  if (p === 'sources') loadSources();
 }
 
 // ── Wiki sidebar ──
@@ -464,6 +506,72 @@ function upd() {
   const done = document.querySelectorAll('#clbody .cl-row.done').length;
   document.getElementById('cplbl').textContent = done + ' of ' + all + ' completed';
   document.getElementById('cpbar').style.width = all ? Math.round(done / all * 100) + '%' : '0%';
+}
+
+// ── Sources ──
+let sourceRecords = [];
+let sourcesLoaded = false;
+
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+async function loadSources() {
+  if (sourcesLoaded) return;
+  const meta = document.getElementById('source-meta');
+  const list = document.getElementById('source-list');
+  try {
+    const res = await fetch('/sources');
+    const data = await res.json();
+    if (!res.ok) throw new Error('Server error ' + res.status);
+    sourceRecords = data.sources || [];
+    sourcesLoaded = true;
+    if (meta) meta.textContent = sourceRecords.length + ' source records loaded.';
+    renderSources();
+  } catch (err) {
+    if (meta) meta.textContent = 'Could not load source metadata.';
+    if (list) list.innerHTML = '<div class="src-empty">' + esc(err.message) + '</div>';
+  }
+}
+
+function renderSources() {
+  const list = document.getElementById('source-list');
+  const meta = document.getElementById('source-meta');
+  if (!list) return;
+  const q = (document.getElementById('source-search')?.value || '').toLowerCase().trim();
+  const filtered = sourceRecords.filter(function(src) {
+    const hay = [
+      src.citation, src.title, src.year, (src.authors || []).join(' '),
+      src.source_tier, src.pdf_filename, src.doi, src.url, src.bibliography_entry
+    ].join(' ').toLowerCase();
+    return !q || hay.includes(q);
+  });
+  if (meta) meta.textContent = filtered.length + ' of ' + sourceRecords.length + ' source records shown.';
+  if (!filtered.length) {
+    list.innerHTML = '<div class="src-empty">No matching sources.</div>';
+    return;
+  }
+  list.innerHTML = filtered.map(function(src) {
+    const chips = [
+      src.source_tier,
+      src.year,
+      src.page_count ? src.page_count + ' pages' : '',
+      src.chunk_count != null ? src.chunk_count + ' chunks' : '',
+      src.doi ? 'DOI' : '',
+      src.text_extractable === false ? 'needs OCR' : ''
+    ].filter(Boolean).map(x => '<span class="src-chip">' + esc(x) + '</span>').join('');
+    const link = src.url ? '<a href="' + esc(src.url) + '" target="_blank" rel="noopener">' + esc(src.url) + '</a>' : '';
+    return '<article class="src-card">' +
+      '<div class="src-citation">' + esc(src.citation || src.source_id) + '</div>' +
+      '<div class="src-bib">' + esc(src.bibliography_entry || src.title || '') + '</div>' +
+      (link ? '<div class="src-bib">' + link + '</div>' : '') +
+      '<div class="src-fields">' + chips + '</div>' +
+      '</article>';
+  }).join('');
 }
 
 // ── Bot state ──

@@ -1193,6 +1193,36 @@ def sources():
     })
 
 
+@app.route("/sources.csv")
+def sources_csv():
+    docs = sorted(set(c["source"] for c in chunk_store) | set(source_metadata))
+    columns = [
+        "source_id", "citation", "title", "year", "authors",
+        "publisher_or_institution", "venue_or_series", "doi", "url",
+        "source_tier", "document_type", "pdf_filename", "page_count",
+        "text_extractable", "chunk_count", "metadata_completeness",
+        "bibliography_entry", "redistribution_status", "notes",
+    ]
+    output = io.StringIO()
+    writer = csv.DictWriter(output, fieldnames=columns)
+    writer.writeheader()
+    chunk_counts = Counter(c.get("source", "") for c in chunk_store)
+    for source in docs:
+        metadata = dict(source_metadata.get(source, {}))
+        metadata.setdefault("source_id", source)
+        metadata.setdefault("citation", friendly_source_name(source))
+        metadata.setdefault("title", full_source_title(source))
+        metadata.setdefault("source_tier", source_tier(source))
+        metadata.setdefault("chunk_count", chunk_counts.get(source, 0))
+        metadata["authors"] = "; ".join(metadata.get("authors") or [])
+        writer.writerow({col: metadata.get(col) for col in columns})
+    return Response(
+        output.getvalue(),
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment; filename=emerge-source-metadata.csv"},
+    )
+
+
 def fetch_chat_logs(limit=300, query=""):
     try:
         limit = int(limit or 300)

@@ -145,6 +145,7 @@ This system uses:
 - **Retrieval:** embedding cosine over `vector_index.json.gz` when available, with TF-IDF fallback; three-pass retrieval (original query + LLM-generated paraphrase + LLM-generated counter-query), source diversity, and broader context windows to improve recall and surface contrasting positions
 - **Scope gating:** mean cosine of top-10 chunks; below threshold, the system refuses and points to an external resource category
 - **Source metadata:** `source_metadata.json` contains bibliography/source records for the corpus without document text, chunks, embeddings, or chat logs. The `/sources` route exposes the same records at runtime.
+- **Source register export:** `source_metadata.csv` and `/sources.csv` provide a spreadsheet-ready bibliography register with citation labels, titles, DOI/URL fields, source tiers, PDF page counts, and chunk counts.
 - **Models:** OpenAI `text-embedding-3-small` for vector retrieval; Claude Haiku 4.5 for query expansion; Claude Sonnet 4 for user-facing answers
 - **System prompt:** sourcing rules, two-sidedness on contested questions, scope boundaries, friendly-name conventions
 

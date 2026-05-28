@@ -12,15 +12,17 @@
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": "10.1016/j.obhdp.2006.07.001",
-      "url": null,
+      "url": "https://doi.org/10.1016/j.obhdp.2006.07.001",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "1-s2.0-S0749597806000719-main.pdf",
       "page_count": 25,
       "text_extractable": true,
       "chunk_count": 69,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Bonaccio and Dalal (2006). https://doi.org/10.1016/j.obhdp.2006.07.001.",
+      "metadata_completeness": 0.77
     },
     {
       "source_id": "1416674-EN",
@@ -38,8 +40,10 @@
       "page_count": 44,
       "text_extractable": true,
       "chunk_count": 46,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "UNESCO (2022), Recommendation on the Ethics of Artificial Intelligence. Recommendation on the Ethics of Artificial Intelligence.",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "1802.07228v2",
@@ -50,15 +54,17 @@
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": null,
-      "url": null,
+      "url": "https://arxiv.org/abs/1802.07228",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "1802.07228v2.pdf",
       "page_count": 101,
       "text_extractable": true,
       "chunk_count": 111,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Brundage et al. (2018). https://arxiv.org/abs/1802.07228.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "31720-Article Text-35784-1-2-20241016",
@@ -81,8 +87,10 @@
       "page_count": 12,
       "text_extractable": true,
       "chunk_count": 30,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Roberta Rocca, Giada Pistilli, Kritika Maheshwari, Riccardo Fusaroli (2024). Rocca et al. (2024), ELLIPS.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "4. Book_on_Computational_Awareness-9",
@@ -100,8 +108,10 @@
       "page_count": 29,
       "text_extractable": true,
       "chunk_count": 41,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Book on Computational Awareness.",
+      "metadata_completeness": 0.54
     },
     {
       "source_id": "716110",
@@ -121,14 +131,16 @@
       "page_count": 112,
       "text_extractable": true,
       "chunk_count": 105,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "U.S. Government Accountability Office (2021). Artificial Intelligence: An Accountability Framework for Federal Agencies and Other Entities.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "AI_Engagement_within_Sony_Group",
       "citation": "Sony Group, AI Engagement Principles",
       "title": "AI Engagement Within Sony Group",
-      "year": null,
+      "year": "2021",
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
@@ -140,8 +152,10 @@
       "page_count": 3,
       "text_extractable": true,
       "chunk_count": 3,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Sony Group, AI Engagement Principles (2021). AI Engagement Within Sony Group.",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "ASEAN-Guide-on-AI-Governance-and-Ethics_beautified_201223_v2",
@@ -159,29 +173,33 @@
       "page_count": 87,
       "text_extractable": true,
       "chunk_count": 90,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "ASEAN Guide on AI Governance and Ethics.",
+      "metadata_completeness": 0.54
     },
     {
       "source_id": "Adaptable robots, ethics, and trust- a qualitative and philosophical exploration of the individual experience of trustworthy AI",
       "citation": "Adaptable Robots, Ethics, and Trust",
       "title": "Adaptable Robots, Ethics, and Trust",
-      "year": null,
+      "year": "2022",
       "authors": [
         "Stephanie Sheir"
       ],
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": "10.1007/s00146-024-01938-8",
-      "url": null,
+      "url": "https://doi.org/10.1007/s00146-024-01938-8",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "Adaptable robots, ethics, and trust- a qualitative and philosophical exploration of the individual experience of trustworthy AI.pdf",
       "page_count": 14,
       "text_extractable": true,
       "chunk_count": 36,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Stephanie Sheir (2022). Adaptable Robots, Ethics, and Trust. https://doi.org/10.1007/s00146-024-01938-8.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "BMI25020-leitlinien-ki-bundesverwaltung",
@@ -199,14 +217,16 @@
       "page_count": 32,
       "text_extractable": true,
       "chunk_count": 31,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "German Federal Administration AI Guidelines.",
+      "metadata_completeness": 0.54
     },
     {
       "source_id": "Benchmarking Retrieval-Augmented Generation for Medicine",
       "citation": "Benchmarking Retrieval-Augmented Generation for Medicine",
       "title": "Benchmarking Retrieval-Augmented Generation for Medicine",
-      "year": null,
+      "year": "2023",
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
@@ -218,14 +238,16 @@
       "page_count": 19,
       "text_extractable": true,
       "chunk_count": 35,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Benchmarking Retrieval-Augmented Generation for Medicine (2023).",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "Characterizing AI Agents for Alignment and Governance",
       "citation": "Characterizing AI Agents for Alignment and Governance",
       "title": "Characterizing AI Agents for Alignment and Governance",
-      "year": null,
+      "year": "2024",
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
@@ -237,8 +259,10 @@
       "page_count": 29,
       "text_extractable": true,
       "chunk_count": 38,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Characterizing AI Agents for Alignment and Governance (2024).",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "Charter voor verantwoord gebruik van ai in overheidsdiensten_0",
@@ -256,8 +280,10 @@
       "page_count": 8,
       "text_extractable": true,
       "chunk_count": 6,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Charter for Responsible Use of AI in Public Services.",
+      "metadata_completeness": 0.54
     },
     {
       "source_id": "Correa_etal2023",
@@ -270,21 +296,23 @@
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": "10.1016/j.patter.2023.100857",
-      "url": null,
+      "url": "https://doi.org/10.1016/j.patter.2023.100857",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "Correa_etal2023.pdf",
       "page_count": 15,
       "text_extractable": true,
       "chunk_count": 36,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Nicholas Kluge Corrêa (2023). Correa et al. (2023). https://doi.org/10.1016/j.patter.2023.100857.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "D1.1 Local awareness  criteria",
       "citation": "EMERGE D1.1",
       "title": "D1.1 Local Awareness Criteria",
-      "year": null,
+      "year": "2023",
       "authors": [
         "renan"
       ],
@@ -298,14 +326,16 @@
       "page_count": 26,
       "text_extractable": true,
       "chunk_count": 35,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "renan (2023). D1.1 Local Awareness Criteria.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "D1.2 Demarcating collaborative awareness from related concepts",
       "citation": "EMERGE D1.2",
       "title": "D1.2 Demarcating Collaborative Awareness from Related Concepts",
-      "year": null,
+      "year": "2024",
       "authors": [
         "Renan Picoreti"
       ],
@@ -319,14 +349,16 @@
       "page_count": 30,
       "text_extractable": true,
       "chunk_count": 43,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Renan Picoreti (2024). D1.2 Demarcating Collaborative Awareness from Related Concepts.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "D1.3 Dimensions of collaborative awareness",
       "citation": "EMERGE D1.3",
       "title": "D1.3 Dimensions of Collaborative Awareness",
-      "year": null,
+      "year": "2024",
       "authors": [
         "Renan Picoreti"
       ],
@@ -340,14 +372,16 @@
       "page_count": 42,
       "text_extractable": true,
       "chunk_count": 62,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Renan Picoreti (2024). D1.3 Dimensions of Collaborative Awareness.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "D2.2 Map of risks in AI- systems",
       "citation": "EMERGE D2.2",
       "title": "D2.2 Map of Risks in AI Systems",
-      "year": null,
+      "year": "2023",
       "authors": [
         "Renan Picoreti"
       ],
@@ -361,14 +395,16 @@
       "page_count": 29,
       "text_extractable": true,
       "chunk_count": 42,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Renan Picoreti (2023). D2.2 Map of Risks in AI Systems.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "D2.3 Map of risks and potentials for humans",
       "citation": "EMERGE D2.3",
       "title": "D2.3 Map of Risks and Potentials for Humans",
-      "year": null,
+      "year": "2024",
       "authors": [
         "Renan Picoreti"
       ],
@@ -382,14 +418,16 @@
       "page_count": 29,
       "text_extractable": true,
       "chunk_count": 39,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Renan Picoreti (2024). D2.3 Map of Risks and Potentials for Humans.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "D2.4 Map of Ethical Virtues",
       "citation": "EMERGE D2.4",
       "title": "D2.4 Map of Ethical Virtues",
-      "year": null,
+      "year": "2025",
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
@@ -401,14 +439,16 @@
       "page_count": 55,
       "text_extractable": true,
       "chunk_count": 68,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "EMERGE D2.4 (2025). D2.4 Map of Ethical Virtues.",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "D2.5_Ethical_Resilience",
       "citation": "EMERGE D2.5",
       "title": "D2.5 Ethical Resilience",
-      "year": null,
+      "year": "2025",
       "authors": [
         "Renan Picoreti"
       ],
@@ -422,8 +462,10 @@
       "page_count": 23,
       "text_extractable": true,
       "chunk_count": 26,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Renan Picoreti (2025). D2.5 Ethical Resilience.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "Danaher and Nyholm - 2025 - The ethics of personalised digital duplicates a minimally viable permissibility principle",
@@ -433,37 +475,41 @@
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
-      "doi": null,
-      "url": null,
+      "doi": "10.1007/s43681-024-00513-7",
+      "url": "https://doi.org/10.1007/s43681-024-00513-7",
       "source_tier": "Adjacent literature",
       "document_type": "corpus PDF",
       "pdf_filename": "Danaher and Nyholm - 2025 - The ethics of personalised digital duplicates a minimally viable permissibility principle.pdf",
       "page_count": 16,
       "text_extractable": true,
       "chunk_count": 46,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Danaher and Nyholm (2025). The Ethics of Personalised Digital Duplicates: A Minimally Viable Permissibility Principle. https://doi.org/10.1007/s43681-024-00513-7.",
+      "metadata_completeness": 0.77
     },
     {
       "source_id": "Digital suffering  why it s a problem and how to prevent it",
       "citation": "Digital Suffering",
       "title": "Digital Suffering: Why It Is a Problem and How to Prevent It",
-      "year": null,
+      "year": "1965",
       "authors": [
         "Bradford Saad"
       ],
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": "10.1080/0020174X.2022.2144442",
-      "url": null,
+      "url": "https://doi.org/10.1080/0020174X.2022.2144442",
       "source_tier": "Adjacent literature",
       "document_type": "corpus PDF",
       "pdf_filename": "Digital suffering  why it s a problem and how to prevent it.pdf",
       "page_count": 37,
       "text_extractable": true,
       "chunk_count": 48,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Bradford Saad (1965). Digital Suffering: Why It Is a Problem and How to Prevent It. https://doi.org/10.1080/0020174X.2022.2144442.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "EPRS_BRI(2019)640163_EN",
@@ -483,8 +529,10 @@
       "page_count": 13,
       "text_extractable": true,
       "chunk_count": 22,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "MADIEGA Tambiama (2019). European Parliament Research Service (2019).",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "ESCAP-2023-PB-Ethics-AI-revised",
@@ -502,8 +550,10 @@
       "page_count": 11,
       "text_extractable": true,
       "chunk_count": 11,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "UN ESCAP (2023), Ethics of AI Policy Brief. Ethics of Artificial Intelligence: Policy Brief.",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "ESCAP-2023-WP-Ethics-AI",
@@ -523,14 +573,16 @@
       "page_count": 136,
       "text_extractable": true,
       "chunk_count": 157,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "MYHome (2023). Ethics of Artificial Intelligence: Working Paper.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "Ethics and Governance of SentientAI",
       "citation": "Ethics and Governance of Sentient AI",
       "title": "Ethics and Governance of Sentient AI",
-      "year": null,
+      "year": "1956",
       "authors": [
         "Ebrar Gultekin"
       ],
@@ -544,14 +596,16 @@
       "page_count": 24,
       "text_extractable": true,
       "chunk_count": 36,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Ebrar Gultekin (1956). Ethics and Governance of Sentient AI.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "Future-of-the-corporation-Trust-trustworthiness-transparency",
       "citation": "British Academy, Trust, Trustworthiness and Transparency",
       "title": "British Academy, Trust, Trustworthiness and Transparency",
-      "year": null,
+      "year": "2015",
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
@@ -563,8 +617,10 @@
       "page_count": 4,
       "text_extractable": true,
       "chunk_count": 9,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "British Academy, Trust, Trustworthiness and Transparency (2015).",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "Haas_etal_nature2026",
@@ -577,15 +633,17 @@
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": "10.1038/s41586-025-10021-1",
-      "url": null,
+      "url": "https://doi.org/10.1038/s41586-025-10021-1",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "Haas_etal_nature2026.pdf",
       "page_count": 9,
       "text_extractable": true,
       "chunk_count": 31,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Julia Haas (2026). Haas et al. (2026). https://doi.org/10.1038/s41586-025-10021-1.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "Hagendorff2022",
@@ -598,21 +656,23 @@
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": "10.1007/s43681-021-00122-8",
-      "url": null,
+      "url": "https://doi.org/10.1007/s43681-021-00122-8",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "Hagendorff2022.pdf",
       "page_count": 17,
       "text_extractable": true,
       "chunk_count": 49,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Thilo Hagendorff (2022). Hagendorff (2022). https://doi.org/10.1007/s43681-021-00122-8.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "IEEE ETHICALLY ALIGNED DESIGN_v2",
       "citation": "IEEE, Ethically Aligned Design",
       "title": "Ethically Aligned Design: A Vision for Prioritizing Human Well-being with Autonomous and Intelligent Systems",
-      "year": null,
+      "year": "2019",
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
@@ -624,8 +684,10 @@
       "page_count": 266,
       "text_extractable": true,
       "chunk_count": 292,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "IEEE, Ethically Aligned Design (2019). Ethically Aligned Design: A Vision for Prioritizing Human Well-being with Autonomous and Intelligent Systems.",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "Jobin_etal2019",
@@ -638,15 +700,17 @@
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": "10.1038/s42256-019-0088-2",
-      "url": null,
+      "url": "https://doi.org/10.1038/s42256-019-0088-2",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "Jobin_etal2019.pdf",
       "page_count": 11,
       "text_extractable": true,
       "chunk_count": 30,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Anna Jobin (2019). Jobin et al. (2019). https://doi.org/10.1038/s42256-019-0088-2.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "Lange_etal_NPJCommunication_2025",
@@ -659,21 +723,23 @@
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": "10.1038/s44387-025-00041-7",
-      "url": null,
+      "url": "https://doi.org/10.1038/s44387-025-00041-7",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "Lange_etal_NPJCommunication_2025.pdf",
       "page_count": 3,
       "text_extractable": true,
       "chunk_count": 9,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Benjamin Lange (2025). Lange et al. (2025). https://doi.org/10.1038/s44387-025-00041-7.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "Microsoft-Responsible-AI-Standard-General-Requirements",
       "citation": "Microsoft Responsible AI Standard",
       "title": "Responsible AI Standard: General Requirements",
-      "year": null,
+      "year": "2022",
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
@@ -685,8 +751,10 @@
       "page_count": 27,
       "text_extractable": true,
       "chunk_count": 21,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Microsoft Responsible AI Standard (2022). Responsible AI Standard: General Requirements.",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "Munn2023",
@@ -699,21 +767,23 @@
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": "10.1007/s43681-022-00209-w",
-      "url": null,
+      "url": "https://doi.org/10.1007/s43681-022-00209-w",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "Munn2023.pdf",
       "page_count": 9,
       "text_extractable": true,
       "chunk_count": 25,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Luke Munn (2023). Munn (2023). https://doi.org/10.1007/s43681-022-00209-w.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "NASA-TM-20210012886",
       "citation": "NASA Technical Memorandum 20210012886",
       "title": "NASA Technical Memorandum 20210012886",
-      "year": null,
+      "year": "2021",
       "authors": [
         "wbaize"
       ],
@@ -727,30 +797,34 @@
       "page_count": 35,
       "text_extractable": true,
       "chunk_count": 44,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "wbaize (2021). NASA Technical Memorandum 20210012886.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "NIST.AI.100-1",
       "citation": "NIST AI Risk Management Framework",
       "title": "Artificial Intelligence Risk Management Framework (AI RMF 1.0)",
-      "year": null,
+      "year": "2028",
       "authors": [
         "National Institute of Standards",
         "Technology"
       ],
       "publisher_or_institution": null,
       "venue_or_series": null,
-      "doi": null,
-      "url": null,
+      "doi": "10.6028/NIST.AI.100-1",
+      "url": "https://doi.org/10.6028/NIST.AI.100-1",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "NIST.AI.100-1.pdf",
       "page_count": 48,
       "text_extractable": true,
       "chunk_count": 50,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "National Institute of Standards, Technology (2028). Artificial Intelligence Risk Management Framework (AI RMF 1.0). https://doi.org/10.6028/NIST.AI.100-1.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "National-Strategy-for-Artificial-Intelligence",
@@ -770,14 +844,16 @@
       "page_count": 114,
       "text_extractable": true,
       "chunk_count": 139,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Arnab Kumar. National Strategy for Artificial Intelligence.",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "OECD-LEGAL-0449-en",
       "citation": "OECD AI Principles",
       "title": "Recommendation of the Council on Artificial Intelligence",
-      "year": null,
+      "year": "2019",
       "authors": [
         "Kemal ERDOGAN"
       ],
@@ -791,8 +867,10 @@
       "page_count": 12,
       "text_extractable": true,
       "chunk_count": 15,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Kemal ERDOGAN (2019). Recommendation of the Council on Artificial Intelligence.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "OJ_L_202401689_EN_TXT",
@@ -812,8 +890,10 @@
       "page_count": 144,
       "text_extractable": true,
       "chunk_count": 286,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Publications Office of the European Union L-2985 Luxembourg LUXEMBOURG (2024). Regulation (EU) 2024/1689, the EU Artificial Intelligence Act.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "PIIS1364661325002864",
@@ -826,15 +906,17 @@
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": "10.1016/j.tics.2025.10.011",
-      "url": null,
+      "url": "https://doi.org/10.1016/j.tics.2025.10.011",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "PIIS1364661325002864.pdf",
       "page_count": 14,
       "text_extractable": true,
       "chunk_count": 32,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Patrick Butlin (2025). Trends in Cognitive Sciences article (2025). https://doi.org/10.1016/j.tics.2025.10.011.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "Psychology of Women Quarterly - December 1980 - Spence - Masculine Instrumentality and Feminine Expressiveness  Their",
@@ -844,16 +926,18 @@
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
-      "doi": null,
-      "url": null,
+      "doi": "10.1111/j.1471-6402.1980.tb00951.x",
+      "url": "https://doi.org/10.1111/j.1471-6402.1980.tb00951.x",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "Psychology of Women Quarterly - December 1980 - Spence - Masculine Instrumentality and Feminine Expressiveness  Their.pdf",
       "page_count": 17,
       "text_extractable": true,
       "chunk_count": 24,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Spence (1980). https://doi.org/10.1111/j.1471-6402.1980.tb00951.x.",
+      "metadata_completeness": 0.77
     },
     {
       "source_id": "Resource Guide on AI Strategies_June 2021",
@@ -873,27 +957,31 @@
       "page_count": 120,
       "text_extractable": true,
       "chunk_count": 131,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Adi Ziona Adamit (2021). Resource Guide on Artificial Intelligence Strategies.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "Scientists on ‘urgent’ quest to explain consciousness as AI gathers pace _ERC",
       "citation": "European Research Council, Scientists on Consciousness and AI",
       "title": "European Research Council, Scientists on Consciousness and AI",
-      "year": null,
+      "year": "2025",
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
-      "doi": null,
-      "url": null,
+      "doi": "10.3389/fsci.2025.1546279/full",
+      "url": "https://doi.org/10.3389/fsci.2025.1546279/full",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "Scientists on ‘urgent’ quest to explain consciousness as AI gathers pace _ERC.pdf",
       "page_count": 5,
       "text_extractable": true,
       "chunk_count": 5,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "European Research Council, Scientists on Consciousness and AI (2025). https://doi.org/10.3389/fsci.2025.1546279/full.",
+      "metadata_completeness": 0.77
     },
     {
       "source_id": "Taking AI Welfare Seriously",
@@ -911,14 +999,16 @@
       "page_count": 62,
       "text_extractable": true,
       "chunk_count": 100,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Long and Sebo et al. (2024), Taking AI Welfare Seriously. Taking AI Welfare Seriously.",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "Telia Company Guiding Principles on Trusted AI ethics (1)",
       "citation": "Telia Company, Guiding Principles on Trusted AI Ethics",
       "title": "Guiding Principles on Trusted AI Ethics",
-      "year": null,
+      "year": "2023",
       "authors": [
         "Grudén",
         "Annika"
@@ -933,14 +1023,16 @@
       "page_count": 3,
       "text_extractable": true,
       "chunk_count": 3,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Grudén, Annika (2023). Guiding Principles on Trusted AI Ethics.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "The AI Agent Index",
       "citation": "The AI Agent Index",
       "title": "The AI Agent Index",
-      "year": null,
+      "year": "2024",
       "authors": [
         "Stephen Casper",
         "Luke Bailey",
@@ -968,14 +1060,16 @@
       "page_count": 15,
       "text_extractable": true,
       "chunk_count": 28,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Stephen Casper, Luke Bailey, Rosco Hunter, Carson Ezell, Emma Cabalé, Michael Gerovitch, Stewart Slocum, Kevin Wei, Nikola Jurkovic, Ariba Khan, Phillip Christoffersen, A. Pinar Ozisik, Rakshit Trivedi, Dylan Hadfield-Menell, Noam Kolt (2024). The AI Agent Index.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "The Ethics of Advanced AI Assistants",
       "citation": "The Ethics of Advanced AI Assistants",
       "title": "The Ethics of Advanced AI Assistants",
-      "year": null,
+      "year": "2024",
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
@@ -987,35 +1081,39 @@
       "page_count": 273,
       "text_extractable": true,
       "chunk_count": 540,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "The Ethics of Advanced AI Assistants (2024).",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "The Moral Consideration of Artificial Entities- A Literature",
       "citation": "The Moral Consideration of Artificial Entities",
       "title": "The Moral Consideration of Artificial Entities: A Literature Review",
-      "year": null,
+      "year": "2020",
       "authors": [
         "Jamie Harris"
       ],
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": "10.1007/s11948-021-00331-8",
-      "url": null,
+      "url": "https://doi.org/10.1007/s11948-021-00331-8",
       "source_tier": "Adjacent literature",
       "document_type": "corpus PDF",
       "pdf_filename": "The Moral Consideration of Artificial Entities- A Literature.pdf",
       "page_count": 95,
       "text_extractable": true,
       "chunk_count": 136,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Jamie Harris (2020). The Moral Consideration of Artificial Entities: A Literature Review. https://doi.org/10.1007/s11948-021-00331-8.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "The ethics of aware and collective artificial intelligence systems",
       "citation": "The Ethics of Aware and Collective Artificial Intelligence Systems",
       "title": "The Ethics of Aware and Collective Artificial Intelligence Systems",
-      "year": null,
+      "year": "2016",
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
@@ -1027,14 +1125,16 @@
       "page_count": 9,
       "text_extractable": true,
       "chunk_count": 9,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "The Ethics of Aware and Collective Artificial Intelligence Systems (2016).",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "Translation_ Chinese AI Alliance Drafts Self-Discipline 'Joint Pledge' - New America",
       "citation": "New America translation, Chinese AI Alliance Joint Pledge",
       "title": "New America translation, Chinese AI Alliance Joint Pledge",
-      "year": null,
+      "year": "2017",
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
@@ -1046,14 +1146,16 @@
       "page_count": 4,
       "text_extractable": true,
       "chunk_count": 5,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "New America translation, Chinese AI Alliance Joint Pledge (2017).",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "Translation_ Chinese Expert Group Offers 'Governance Principles' for 'Responsible AI' - New America",
       "citation": "New America translation, Chinese Responsible AI Governance Principles",
       "title": "New America translation, Chinese Responsible AI Governance Principles",
-      "year": null,
+      "year": "2026",
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
@@ -1065,8 +1167,10 @@
       "page_count": 3,
       "text_extractable": true,
       "chunk_count": 4,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "New America translation, Chinese Responsible AI Governance Principles (2026).",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "Ukraine Voluntary CoC",
@@ -1086,8 +1190,10 @@
       "page_count": 17,
       "text_extractable": true,
       "chunk_count": 11,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Анастасія Бистрицька. Ukraine Voluntary Code of Conduct on AI.",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "VallorVierkant2024",
@@ -1097,39 +1203,42 @@
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
-      "doi": null,
-      "url": null,
+      "doi": "10.1007/s11023-024-09674-0",
+      "url": "https://doi.org/10.1007/s11023-024-09674-0",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "VallorVierkant2024.pdf",
       "page_count": 23,
       "text_extractable": true,
       "chunk_count": 40,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Vallor and Vierkant (2024). https://doi.org/10.1007/s11023-024-09674-0.",
+      "metadata_completeness": 0.77
     },
     {
       "source_id": "Vereschak",
       "citation": "Vereschak et al.",
       "title": "Vereschak et al.",
-      "year": null,
+      "year": "2021",
       "authors": [
-        "Oleksandra Vereschak",
-        "Gilles Bailly",
+        "Oleksandra Vereschak, Gilles Bailly,",
         "Baptiste Caramiaux"
       ],
       "publisher_or_institution": null,
       "venue_or_series": null,
-      "doi": null,
-      "url": null,
+      "doi": "10.1145/3476068",
+      "url": "https://doi.org/10.1145/3476068",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "Vereschak.pdf",
       "page_count": 39,
       "text_extractable": true,
       "chunk_count": 75,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Oleksandra Vereschak, Gilles Bailly,, Baptiste Caramiaux (2021). Vereschak et al. https://doi.org/10.1145/3476068.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "ai-ethics-guidelines",
@@ -1149,14 +1258,16 @@
       "page_count": 41,
       "text_extractable": true,
       "chunk_count": 73,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "AEPD (2019). Ethics Guidelines for Trustworthy AI.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "ai-report",
       "citation": "AI Report",
       "title": "AI Report",
-      "year": null,
+      "year": "2023",
       "authors": [
         "U.S. Department of Education"
       ],
@@ -1170,14 +1281,16 @@
       "page_count": 71,
       "text_extractable": true,
       "chunk_count": 91,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "U.S. Department of Education (2023). AI Report.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "artificial-suffering-an-argument-for-a-global-moratorium-on-synthetic-phenomenology",
       "citation": "Artificial Suffering and Synthetic Phenomenology",
       "title": "Artificial Suffering and Synthetic Phenomenology",
-      "year": null,
+      "year": "2009",
       "authors": [
         "Thomas Metzinger (1Philosophisches Seminar",
         "Johannes Gutenberg-Universität Mainz",
@@ -1186,22 +1299,24 @@
       ],
       "publisher_or_institution": null,
       "venue_or_series": null,
-      "doi": null,
-      "url": null,
+      "doi": "10.1142/S270507852150003X",
+      "url": "https://doi.org/10.1142/S270507852150003X",
       "source_tier": "Adjacent literature",
       "document_type": "corpus PDF",
       "pdf_filename": "artificial-suffering-an-argument-for-a-global-moratorium-on-synthetic-phenomenology.pdf",
       "page_count": 24,
       "text_extractable": true,
       "chunk_count": 39,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Thomas Metzinger (1Philosophisches Seminar, Johannes Gutenberg-Universität Mainz, D-55099 Mainz, Germany) (2009). Artificial Suffering and Synthetic Phenomenology. https://doi.org/10.1142/S270507852150003X.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "doc_38",
       "citation": "European Parliament, What If Generative AI Became Conscious?",
       "title": "What If Generative Artificial Intelligence Became Conscious?",
-      "year": null,
+      "year": "2023",
       "authors": [
         "ERBACH Gregor"
       ],
@@ -1215,14 +1330,16 @@
       "page_count": 2,
       "text_extractable": true,
       "chunk_count": 5,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "ERBACH Gregor (2023). What If Generative Artificial Intelligence Became Conscious?.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "doc_42",
       "citation": "Should We Fear Artificial Intelligence?",
       "title": "Should We Fear Artificial Intelligence?",
-      "year": null,
+      "year": "2018",
       "authors": [
         "MANIRAMBONA Rachel"
       ],
@@ -1236,8 +1353,10 @@
       "page_count": 40,
       "text_extractable": true,
       "chunk_count": 58,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "MANIRAMBONA Rachel (2018). Should We Fear Artificial Intelligence?.",
+      "metadata_completeness": 0.69
     },
     {
       "source_id": "dubai ai-ethics",
@@ -1255,14 +1374,16 @@
       "page_count": 35,
       "text_extractable": true,
       "chunk_count": 26,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Dubai AI Ethics Principles and Guidelines.",
+      "metadata_completeness": 0.54
     },
     {
       "source_id": "everydayethics",
       "citation": "Everyday Ethics for Artificial Intelligence",
       "title": "Everyday Ethics for Artificial Intelligence",
-      "year": null,
+      "year": "2022",
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
@@ -1274,8 +1395,10 @@
       "page_count": 27,
       "text_extractable": true,
       "chunk_count": 15,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Everyday Ethics for Artificial Intelligence (2022).",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "floridi_etal2018",
@@ -1288,42 +1411,46 @@
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": "10.1007/s11023-018-9482-5",
-      "url": null,
+      "url": "https://doi.org/10.1007/s11023-018-9482-5",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "floridi_etal2018.pdf",
       "page_count": 19,
       "text_extractable": true,
       "chunk_count": 28,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Luciano Floridi (2018). Floridi et al. (2018). https://doi.org/10.1007/s11023-018-9482-5.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "frai-06-1020592",
       "citation": "Frontiers in Robotics and AI article 1020592",
       "title": "Frontiers in Robotics and AI article 1020592",
-      "year": null,
+      "year": "2020",
       "authors": [
         "Charles Radclyffe"
       ],
       "publisher_or_institution": null,
       "venue_or_series": null,
-      "doi": null,
-      "url": null,
+      "doi": "10.3389/frai.2023.1020592",
+      "url": "https://doi.org/10.3389/frai.2023.1020592",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "frai-06-1020592.pdf",
       "page_count": 10,
       "text_extractable": true,
       "chunk_count": 27,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Charles Radclyffe (2020). Frontiers in Robotics and AI article 1020592. https://doi.org/10.3389/frai.2023.1020592.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "fu_ir8hyn25gaatz92",
       "citation": "China MOST, Ethical Norms for New Generation Artificial Intelligence",
       "title": "Ethical Norms for New Generation Artificial Intelligence",
-      "year": null,
+      "year": "2017",
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
@@ -1335,8 +1462,10 @@
       "page_count": 6,
       "text_extractable": true,
       "chunk_count": 7,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "China MOST, Ethical Norms for New Generation Artificial Intelligence (2017). Ethical Norms for New Generation Artificial Intelligence.",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "gino_etal_2009",
@@ -1350,16 +1479,18 @@
       ],
       "publisher_or_institution": null,
       "venue_or_series": null,
-      "doi": null,
-      "url": null,
+      "doi": "10.1016/j.obhdp.2008.08.002",
+      "url": "https://doi.org/10.1016/j.obhdp.2008.08.002",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "gino_etal_2009.pdf",
       "page_count": 16,
       "text_extractable": true,
       "chunk_count": 48,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "\"Francesca Gino, Jen Shang, Rachel Croson\" (2009). Gino et al. (2009). https://doi.org/10.1016/j.obhdp.2008.08.002.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "hagendorf2019",
@@ -1372,21 +1503,23 @@
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": "10.1007/s11023-020-09517-8",
-      "url": null,
+      "url": "https://doi.org/10.1007/s11023-020-09517-8",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "hagendorf2019.pdf",
       "page_count": 22,
       "text_extractable": true,
       "chunk_count": 42,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Thilo Hagendorff (2019). Hagendorff (2019). https://doi.org/10.1007/s11023-020-09517-8.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "robots-should-be-slaves",
       "citation": "Bryson, Robots Should Be Slaves",
       "title": "Bryson, Robots Should Be Slaves",
-      "year": null,
+      "year": "1997",
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
@@ -1398,29 +1531,33 @@
       "page_count": 12,
       "text_extractable": true,
       "chunk_count": 18,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Bryson, Robots Should Be Slaves (1997).",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "robustness and explainability of artificial intelligence-KJNA30040ENN",
       "citation": "Robustness and Explainability of Artificial Intelligence",
       "title": "Robustness and Explainability of Artificial Intelligence",
-      "year": null,
+      "year": "2020",
       "authors": [
         "BAILEY Gianluca (JRC-ISPRA)"
       ],
       "publisher_or_institution": null,
       "venue_or_series": null,
-      "doi": null,
-      "url": null,
+      "doi": "10.2760/57493",
+      "url": "https://doi.org/10.2760/57493",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "robustness and explainability of artificial intelligence-KJNA30040ENN.pdf",
       "page_count": 40,
       "text_extractable": true,
       "chunk_count": 58,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "BAILEY Gianluca (JRC-ISPRA) (2020). Robustness and Explainability of Artificial Intelligence. https://doi.org/10.2760/57493.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "rsta.2018.0085",
@@ -1430,43 +1567,47 @@
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
-      "doi": null,
-      "url": null,
+      "doi": "10.1098/rsta.2018.0085",
+      "url": "https://doi.org/10.1098/rsta.2018.0085",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "rsta.2018.0085.pdf",
       "page_count": 13,
       "text_extractable": true,
       "chunk_count": 23,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Philosophical Transactions A article 2018.0085. https://doi.org/10.1098/rsta.2018.0085.",
+      "metadata_completeness": 0.77
     },
     {
       "source_id": "s10676-020-09573-9",
       "citation": "Ethics and Information Technology article 09573-9",
       "title": "Ethics and Information Technology article 09573-9",
-      "year": null,
+      "year": "2018",
       "authors": [
         "Amanda Sharkey"
       ],
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": "10.1007/s10676-020-09573-9",
-      "url": null,
+      "url": "https://doi.org/10.1007/s10676-020-09573-9",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "s10676-020-09573-9.pdf",
       "page_count": 8,
       "text_extractable": true,
       "chunk_count": 23,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Amanda Sharkey (2018). Ethics and Information Technology article 09573-9. https://doi.org/10.1007/s10676-020-09573-9.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "s11623-019-1183-6",
       "citation": "AI & Society article 1183-6",
       "title": "AI & Society article 1183-6",
-      "year": null,
+      "year": "2019",
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
@@ -1478,29 +1619,33 @@
       "page_count": 1,
       "text_extractable": true,
       "chunk_count": 3,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "AI & Society article 1183-6 (2019).",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "s11948-019-00146-8",
       "citation": "Science and Engineering Ethics article 00146-8",
       "title": "Science and Engineering Ethics article 00146-8",
-      "year": null,
+      "year": "2018",
       "authors": [
         "Mark Coeckelbergh"
       ],
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": "10.1007/s11948-019-00146-8",
-      "url": null,
+      "url": "https://doi.org/10.1007/s11948-019-00146-8",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "s11948-019-00146-8.pdf",
       "page_count": 18,
       "text_extractable": true,
       "chunk_count": 30,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Mark Coeckelbergh (2018). Science and Engineering Ethics article 00146-8. https://doi.org/10.1007/s11948-019-00146-8.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "s13347-021-00454-7",
@@ -1513,57 +1658,63 @@
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": "10.1007/s13347-021-00454-7",
-      "url": null,
+      "url": "https://doi.org/10.1007/s13347-021-00454-7",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "s13347-021-00454-7.pdf",
       "page_count": 30,
       "text_extractable": true,
       "chunk_count": 51,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Christian List (2021). Group Agency and Artificial Intelligence. https://doi.org/10.1007/s13347-021-00454-7.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "s13347-024-00718-y",
       "citation": "Philosophy & Technology article 00718-y",
       "title": "Philosophy & Technology article 00718-y",
-      "year": null,
+      "year": "2021",
       "authors": [
         "Isaac Taylor"
       ],
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": "10.1007/s13347-024-00718-y",
-      "url": null,
+      "url": "https://doi.org/10.1007/s13347-024-00718-y",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "s13347-024-00718-y.pdf",
       "page_count": 18,
       "text_extractable": true,
       "chunk_count": 31,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Isaac Taylor (2021). Philosophy & Technology article 00718-y. https://doi.org/10.1007/s13347-024-00718-y.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "s41599-025-04532-5",
       "citation": "Humanities and Social Sciences Communications article 04532-5",
       "title": "Humanities and Social Sciences Communications article 04532-5",
-      "year": null,
+      "year": "2025",
       "authors": [
         "Hannah Rose Kirk"
       ],
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": "10.1057/s41599-025-04532-5",
-      "url": null,
+      "url": "https://doi.org/10.1057/s41599-025-04532-5",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "s41599-025-04532-5.pdf",
       "page_count": 9,
       "text_extractable": true,
       "chunk_count": 32,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Hannah Rose Kirk (2025). Humanities and Social Sciences Communications article 04532-5. https://doi.org/10.1057/s41599-025-04532-5.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "s43681-022-00167-3",
@@ -1576,15 +1727,17 @@
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": "10.1007/s43681-022-00167-3",
-      "url": null,
+      "url": "https://doi.org/10.1007/s43681-022-00167-3",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "s43681-022-00167-3.pdf",
       "page_count": 15,
       "text_extractable": true,
       "chunk_count": 40,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Luciano Cavalcante Siebert (2023). Meaningful Human Control: Actionable Properties for AI System Development. https://doi.org/10.1007/s43681-022-00167-3.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "s43681-024-00419-4",
@@ -1597,15 +1750,17 @@
       "publisher_or_institution": null,
       "venue_or_series": null,
       "doi": "10.1007/s43681-024-00419-4",
-      "url": null,
+      "url": "https://doi.org/10.1007/s43681-024-00419-4",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "s43681-024-00419-4.pdf",
       "page_count": 8,
       "text_extractable": true,
       "chunk_count": 22,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Adriana Placani (2024). Anthropomorphism in AI: Hype and Fallacy. https://doi.org/10.1007/s43681-024-00419-4.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "s43681-025-00749-x",
@@ -1615,16 +1770,18 @@
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
-      "doi": null,
-      "url": null,
+      "doi": "10.1007/s43681-025-00749-x",
+      "url": "https://doi.org/10.1007/s43681-025-00749-x",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "s43681-025-00749-x.pdf",
       "page_count": 18,
       "text_extractable": true,
       "chunk_count": 40,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Bolgouras et al. (2025). EU Regulatory Ecosystem for Ethical AI. https://doi.org/10.1007/s43681-025-00749-x.",
+      "metadata_completeness": 0.77
     },
     {
       "source_id": "sniezekBuckly1995",
@@ -1642,8 +1799,10 @@
       "page_count": 16,
       "text_extractable": false,
       "chunk_count": 0,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "SniezekBuckly1995 (1999).",
+      "metadata_completeness": 0.62
     },
     {
       "source_id": "sniezek_vanSwol2001",
@@ -1656,16 +1815,18 @@
       ],
       "publisher_or_institution": null,
       "venue_or_series": null,
-      "doi": null,
-      "url": null,
+      "doi": "10.1006/obhd.2000.2926",
+      "url": "https://doi.org/10.1006/obhd.2000.2926",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "sniezek_vanSwol2001.pdf",
       "page_count": 20,
       "text_extractable": true,
       "chunk_count": 28,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Janet A. Sniezek, Lyn M. Van Swol (2001). Sniezek and Van Swol (2001). https://doi.org/10.1006/obhd.2000.2926.",
+      "metadata_completeness": 0.85
     },
     {
       "source_id": "understanding_artificial_intelligence_ethics_and_safety",
@@ -1675,16 +1836,18 @@
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
-      "doi": null,
-      "url": null,
+      "doi": "10.5281/zenodo.3240529",
+      "url": "https://doi.org/10.5281/zenodo.3240529",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "understanding_artificial_intelligence_ethics_and_safety.pdf",
       "page_count": 97,
       "text_extractable": true,
       "chunk_count": 132,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Leslie (2019), Understanding Artificial Intelligence Ethics and Safety. https://doi.org/10.5281/zenodo.3240529.",
+      "metadata_completeness": 0.77
     },
     {
       "source_id": "winfield-et-al-2025",
@@ -1694,22 +1857,24 @@
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
-      "doi": null,
-      "url": null,
+      "doi": "10.1098/rsta.2024.0142",
+      "url": "https://doi.org/10.1098/rsta.2024.0142",
       "source_tier": "Wider supporting literature",
       "document_type": "corpus PDF",
       "pdf_filename": "winfield-et-al-2025.pdf",
       "page_count": 24,
       "text_extractable": true,
       "chunk_count": 40,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "Winfield et al. (2025). https://doi.org/10.1098/rsta.2024.0142.",
+      "metadata_completeness": 0.77
     },
     {
       "source_id": "《新一代人工智能伦理规范》发布-中华人民共和国科学技术部",
       "citation": "China Ministry of Science and Technology, New Generation AI Ethics Norms",
       "title": "China Ministry of Science and Technology, New Generation AI Ethics Norms",
-      "year": null,
+      "year": "2026",
       "authors": [],
       "publisher_or_institution": null,
       "venue_or_series": null,
@@ -1721,8 +1886,10 @@
       "page_count": 4,
       "text_extractable": true,
       "chunk_count": 1,
-      "redistribution_status": "not included in public repository",
-      "notes": ""
+      "redistribution_status": "included in repository with project clearance",
+      "notes": "",
+      "bibliography_entry": "China Ministry of Science and Technology, New Generation AI Ethics Norms (2026).",
+      "metadata_completeness": 0.62
     }
   ]
 }

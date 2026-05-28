@@ -88,6 +88,19 @@ def test_sources_endpoint_uses_metadata(monkeypatch, tmp_path):
     assert source["chunk_count"] == 1
 
 
+def test_sources_csv_endpoint(monkeypatch, tmp_path):
+    app_module = import_test_app(monkeypatch, tmp_path)
+    client = app_module.app.test_client()
+
+    response = client.get("/sources.csv")
+
+    assert response.status_code == 200
+    assert response.mimetype == "text/csv"
+    body = response.data.decode("utf-8")
+    assert "source_id,citation,title" in body
+    assert "EMERGE Test Source" in body
+
+
 def test_empty_chat_request_returns_400(monkeypatch, tmp_path):
     app_module = import_test_app(monkeypatch, tmp_path)
     client = app_module.app.test_client()
