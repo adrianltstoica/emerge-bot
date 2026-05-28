@@ -73,6 +73,13 @@ footer{padding:28px 52px;border-top:1px solid var(--g2);display:flex;align-items
 .src-fields{display:flex;gap:8px;flex-wrap:wrap;font-size:10px;color:var(--g3);font-weight:700;}
 .src-chip{border:1px solid var(--g2);border-radius:999px;padding:4px 7px;background:var(--g1);}
 .src-empty{padding:36px 0;color:var(--g3);font-size:13px;text-align:center;}
+.method-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;margin-top:26px;}
+.method-block{border-top:1px solid var(--g2);padding-top:18px;}
+.method-block h2{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--bk);margin-bottom:10px;}
+.method-block p{font-size:13px;line-height:1.75;color:var(--bk);margin-bottom:10px;}
+.method-block ul{display:grid;gap:8px;list-style:none;}
+.method-block li{font-size:12px;line-height:1.6;color:var(--g3);border-bottom:1px solid var(--g2);padding-bottom:8px;}
+.method-block strong{color:var(--bk);font-weight:700;}
 .cl-wrap{max-width:680px;margin:0 auto;padding:72px 52px;}
 .cl-intro{font-size:14px;color:var(--g3);line-height:1.75;margin-bottom:48px;max-width:520px;}
 .roles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:48px;}
@@ -173,6 +180,7 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
 .src-head{display:block;}
 .src-actions{margin-top:18px;}
 .src-search{width:100%;min-width:0;}
+.method-grid{grid-template-columns:1fr;gap:22px;}
 .cl-wrap{padding:44px 24px;}
 .roles{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:36px;}
 .rt{padding:16px 12px;}
@@ -206,6 +214,7 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
   <div class="nav-links">
     <button class="nl" onclick="show('wiki')">Wiki</button>
     <button class="nl" onclick="show('sources')">Sources</button>
+    <button class="nl" onclick="show('methodology')">Method</button>
     <button class="nl" onclick="show('checklist')">Checklist</button>
     <button class="nl" onclick="show('bot')">Ask the Bot ↗</button>
   </div>
@@ -219,8 +228,9 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
   <div class="home-tools">
     <div class="tool" onclick="show('wiki')"><div class="tool-left"><div class="tool-n">01 — Wiki</div><div class="tool-title">Ethics Wiki</div><div class="tool-desc">Structured findings on trust, benevolence, ethical resilience, and collective AI risks. Every claim traced to a named source.</div></div><div class="tool-arrow">→</div></div>
     <div class="tool" onclick="show('sources')"><div class="tool-left"><div class="tool-n">02 — Sources</div><div class="tool-title">Bibliography Register</div><div class="tool-desc">Full corpus source metadata with citations, document tiers, DOI links where available, page counts, and chunk counts.</div></div><div class="tool-arrow">→</div></div>
-    <div class="tool" onclick="show('checklist')"><div class="tool-left"><div class="tool-n">03 — Checklist</div><div class="tool-title">Stakeholder Checklist</div><div class="tool-desc">Ethics self-assessment for regulators, developers, researchers, and product users. Grounded in EMERGE findings.</div></div><div class="tool-arrow">→</div></div>
-    <div class="tool" onclick="show('bot')"><div class="tool-left"><div class="tool-n">04 — Bot</div><div class="tool-title">Ethics Bot</div><div class="tool-desc">Ask questions in natural language. Draws from the EMERGE corpus only — always named sources, no legal advice.</div></div><div class="tool-arrow">→</div></div>
+    <div class="tool" onclick="show('methodology')"><div class="tool-left"><div class="tool-n">03 — Method</div><div class="tool-title">Methodology & Limits</div><div class="tool-desc">How the corpus is processed, how retrieval works, what is logged, and where the bot’s answers should be treated with caution.</div></div><div class="tool-arrow">→</div></div>
+    <div class="tool" onclick="show('checklist')"><div class="tool-left"><div class="tool-n">04 — Checklist</div><div class="tool-title">Stakeholder Checklist</div><div class="tool-desc">Ethics self-assessment for regulators, developers, researchers, and product users. Grounded in EMERGE findings.</div></div><div class="tool-arrow">→</div></div>
+    <div class="tool" onclick="show('bot')"><div class="tool-left"><div class="tool-n">05 — Bot</div><div class="tool-title">Ethics Bot</div><div class="tool-desc">Ask questions in natural language. Draws from the EMERGE corpus only — always named sources, no legal advice.</div></div><div class="tool-arrow">→</div></div>
   </div>
   <footer><span>© 2025 MI3 · LMU München</span><div class="f-links"><a class="f-link" href="https://eic-emerge.eu/" target="_blank" rel="noopener">About EMERGE</a><a class="f-link" href="https://www.mi3.info/" target="_blank" rel="noopener">mi3.info ↗</a><a class="f-link" href="https://eic-emerge.eu/" target="_blank" rel="noopener">eic-emerge.eu ↗</a></div></footer>
 </div>
@@ -284,6 +294,85 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
     <div class="src-list" id="source-list"></div>
   </div>
   <footer><span>© 2025 MI3 · LMU München</span><div class="f-links"><a class="f-link" href="/sources.csv">Download source CSV</a><a class="f-link" href="https://www.mi3.info/" target="_blank" rel="noopener">mi3.info ↗</a></div></footer>
+</div>
+
+<div id="pg-methodology" class="pg">
+  <div class="src-wrap">
+    <div class="src-head">
+      <div>
+        <h1 class="src-title">Methodology & Limitations</h1>
+        <p class="src-sub">This page documents how the EMERGE bot prepares the corpus, retrieves evidence, constrains answers, and records operational limits relevant to interpreting its outputs.</p>
+      </div>
+      <div class="src-actions">
+        <a class="src-download" href="/status">Runtime Status</a>
+        <a class="src-download" href="/sources.csv">Source CSV</a>
+      </div>
+    </div>
+    <div class="method-grid">
+      <section class="method-block">
+        <h2>Corpus Construction</h2>
+        <p>The bot answers from a fixed corpus of EMERGE deliverables, policy documents, and supporting literature included in the repository.</p>
+        <ul>
+          <li><strong>PDF extraction:</strong> source PDFs are processed offline with `pdfplumber` into `chunks.json`.</li>
+          <li><strong>Chunking:</strong> extracted text is split into 400-word windows with 80-word overlap.</li>
+          <li><strong>Metadata:</strong> `source_metadata.json` and `source_metadata.csv` record citation labels, tiers, page counts, chunk counts, DOI or stable URL fields where available, and extractability flags.</li>
+          <li><strong>Known extraction gap:</strong> scanned or image-only PDFs may require OCR before they can contribute text chunks.</li>
+        </ul>
+      </section>
+      <section class="method-block">
+        <h2>Retrieval Pipeline</h2>
+        <p>User questions are matched against the indexed corpus before being sent to the language model.</p>
+        <ul>
+          <li><strong>Primary retrieval:</strong> vector retrieval is used when `vector_index.json.gz` and `OPENAI_API_KEY` are available.</li>
+          <li><strong>Fallback retrieval:</strong> if vector retrieval is unavailable, the app uses a local TF-IDF retriever.</li>
+          <li><strong>Query expansion:</strong> Claude Haiku generates a paraphrase and counter-query to improve recall and surface opposing positions.</li>
+          <li><strong>Source weighting:</strong> core EMERGE deliverables and major policy sources are prioritized over adjacent literature.</li>
+        </ul>
+      </section>
+      <section class="method-block">
+        <h2>Answer Generation</h2>
+        <p>Claude Sonnet receives only retrieved excerpts plus the system prompt and must answer from those excerpts.</p>
+        <ul>
+          <li><strong>Citation rule:</strong> every substantive claim should be traceable to a named retrieved source.</li>
+          <li><strong>Whitelist rule:</strong> works mentioned inside excerpts are not cited as primary sources unless that work itself was retrieved.</li>
+          <li><strong>Answer modes:</strong> Accurate lowers temperature and retrieval breadth; Brainstorm widens retrieval but remains source-grounded.</li>
+          <li><strong>Source list:</strong> the app appends the retrieved source list automatically after each generated answer.</li>
+        </ul>
+      </section>
+      <section class="method-block">
+        <h2>Scope Controls</h2>
+        <p>The bot is designed for AI ethics and policy questions covered by the corpus, not as a general assistant.</p>
+        <ul>
+          <li><strong>Pre-retrieval triage:</strong> greetings, vague prompts, and broad technical implementation requests receive clarification prompts.</li>
+          <li><strong>Scope gate:</strong> the app uses the mean score of the top retrieved chunks to refuse questions with weak corpus overlap.</li>
+          <li><strong>Failure mode:</strong> if the corpus index is missing, the app refuses chat requests instead of pretending the question is out of scope.</li>
+          <li><strong>Redirects:</strong> clearly external questions point users toward appropriate outside resources rather than invented answers.</li>
+        </ul>
+      </section>
+      <section class="method-block">
+        <h2>Logging & Privacy</h2>
+        <p>Chat logging is available for evaluation and debugging when admin logging is enabled.</p>
+        <ul>
+          <li><strong>Logged fields:</strong> prompts, replies, anonymous visitor/session IDs, answer mode, retrieval mode, sources used, scope result, gate score, errors, and latency.</li>
+          <li><strong>Admin access:</strong> logs are password-protected when `ADMIN_PASSWORD` is configured.</li>
+          <li><strong>IP addresses:</strong> client IP logging is disabled by default and only enabled with `CHAT_LOG_IPS=true`.</li>
+          <li><strong>User warning:</strong> the chat interface tells users not to enter personal or sensitive information.</li>
+        </ul>
+      </section>
+      <section class="method-block">
+        <h2>Limitations</h2>
+        <p>The bot is an interpretive retrieval tool, not an authority replacing the underlying documents.</p>
+        <ul>
+          <li><strong>Retrieval dependence:</strong> answers can miss relevant material if retrieval fails to surface the right excerpts.</li>
+          <li><strong>Extraction dependence:</strong> PDF formatting, OCR quality, tables, footnotes, and references can affect chunk quality.</li>
+          <li><strong>Citation granularity:</strong> answers cite source documents, not page-level locations.</li>
+          <li><strong>No legal advice:</strong> regulatory summaries are informational and should not be treated as legal advice.</li>
+          <li><strong>Model fallibility:</strong> even with grounding rules, generated synthesis should be checked against retrieved sources and primary documents.</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+  <footer><span>© 2025 MI3 · LMU München</span><div class="f-links"><a class="f-link" href="/status">Runtime status</a><a class="f-link" href="/sources.csv">Source CSV</a></div></footer>
 </div>
 
 <div id="pg-checklist" class="pg">
@@ -401,7 +490,7 @@ function show(p) {
   document.querySelectorAll('.pg').forEach(x => x.classList.remove('on'));
   document.getElementById('pg-' + p).classList.add('on');
   document.querySelectorAll('.nl').forEach(x => x.classList.remove('on'));
-  const m = { wiki: 0, sources: 1, checklist: 2, bot: 3 };
+  const m = { wiki: 0, sources: 1, methodology: 2, checklist: 3, bot: 4 };
   if (m[p] !== undefined) document.querySelectorAll('.nl')[m[p]].classList.add('on');
   window.scrollTo(0, 0);
   if (p === 'bot') {
