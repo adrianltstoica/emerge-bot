@@ -64,7 +64,7 @@ The bot page includes a corpus status bar showing whether chunks are loaded, how
 **To stop:** Press Ctrl+C in the Terminal window, or just close it.
 
 ## Admin chat logs
-When `ADMIN_PASSWORD` is set, every chat exchange is stored in `chat_logs.db` for later analysis. Open:
+When `ADMIN_PASSWORD` is set, every chat exchange is stored in `chat_logs.db` for later analysis. On Render, `render.yaml` mounts a persistent disk at `/var/data` and sets `CHAT_LOG_DB=/var/data/chat_logs.db`, so future logs survive deploys and restarts once the disk is active.
 
 ```bash
 http://localhost:5050/admin/login
@@ -73,6 +73,8 @@ http://localhost:5050/admin/login
 Log in with username `admin` and your `ADMIN_PASSWORD`. You can also open `/admin/chats` directly and the app will redirect you to the login page. The admin page groups turns into full chat sessions, with each user prompt and bot answer shown chronologically. It supports search, session-level CSV export, and raw turn-level CSV export. The log includes the user message, bot reply, anonymous visitor/session IDs, answer mode, temperature, sources used, retrieval mode, scope result, gate score, errors, and latency.
 
 If the login page says admin logs are disabled, `ADMIN_PASSWORD` is not set on the running server. Set it in your local shell or hosting environment, then restart/redeploy the app.
+
+Render persistent disks require a paid web service and are attached only at runtime. If the disk is not active, logs fall back to the service filesystem and can disappear on redeploy.
 
 By default the app does not store client IP addresses. To include them, set:
 

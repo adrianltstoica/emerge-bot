@@ -4,6 +4,10 @@ services:
     runtime: python
     buildCommand: pip install -r requirements.txt && if [ -f chunks.json ] || [ -d documents ]; then python scripts/build_source_metadata.py; fi && if [ -n "$OPENAI_API_KEY" ] && [ -f chunks.json ]; then python scripts/build_vector_index.py; fi
     startCommand: gunicorn app:app
+    disk:
+      name: chat-logs
+      mountPath: /var/data
+      sizeGB: 1
     envVars:
       - key: PORT
         value: 5000
@@ -15,3 +19,5 @@ services:
         sync: false
       - key: ADMIN_SESSION_SECRET
         generateValue: true
+      - key: CHAT_LOG_DB
+        value: /var/data/chat_logs.db
