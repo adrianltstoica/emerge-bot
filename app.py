@@ -33,6 +33,7 @@ CORS(app)
 CHUNKS_FILE = Path(os.environ.get("CHUNKS_FILE", "chunks.json"))
 VECTOR_INDEX_FILE = Path(os.environ.get("VECTOR_INDEX_FILE", "vector_index.json.gz"))
 SOURCE_METADATA_FILE = Path(os.environ.get("SOURCE_METADATA_FILE", "source_metadata.json"))
+EVALUATION_FILE = Path(os.environ.get("EVALUATION_FILE", "evaluation_questions.json"))
 DOCUMENTS_DIR = Path(os.environ.get("DOCUMENTS_DIR", "documents"))
 CHAT_LOG_DB = Path(os.environ.get("CHAT_LOG_DB", "chat_logs.db"))
 ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
@@ -1221,6 +1222,58 @@ def sources_csv():
         mimetype="text/csv",
         headers={"Content-Disposition": "attachment; filename=emerge-source-metadata.csv"},
     )
+
+
+@app.route("/evaluation")
+def evaluation():
+    metrics = {
+        "open_ended": [
+            "response_accuracy",
+            "citation_validity",
+            "citation_precision",
+            "hallucination_rate",
+            "completeness",
+        ],
+        "multiple_choice": [
+            "answer_accuracy",
+            "citation_validity",
+            "explanation_grounding",
+        ],
+        "system_level": [
+            "latency_ms",
+            "refusal_accuracy",
+            "retrieval_backend",
+            "retrieved_source_coverage",
+        ],
+    }
+    try:
+        payload = json.loads(EVALUATION_FILE.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        payload = {
+            "schema_version": 1,
+            "status": "missing",
+            "questions": [],
+        }
+    except json.JSONDecodeError as exc:
+        return jsonify({
+            "schema_version": 1,
+            "status": "invalid",
+            "error": str(exc),
+            "metrics": metrics,
+            "question_count": 0,
+            "questions": [],
+        }), 500
+
+    questions = payload.get("questions") or []
+    return jsonify({
+        "schema_version": payload.get("schema_version", 1),
+        "status": payload.get("status", "seed"),
+        "description": payload.get("description", ""),
+        "metrics": payload.get("metrics", metrics),
+        "question_count": len(questions),
+        "question_types": sorted({q.get("type", "unknown") for q in questions}),
+        "questions": questions,
+    })
 
 
 def fetch_chat_logs(limit=300, query=""):

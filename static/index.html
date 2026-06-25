@@ -80,6 +80,13 @@ footer{padding:28px 52px;border-top:1px solid var(--g2);display:flex;align-items
 .method-block ul{display:grid;gap:8px;list-style:none;}
 .method-block li{font-size:12px;line-height:1.6;color:var(--g3);border-bottom:1px solid var(--g2);padding-bottom:8px;}
 .method-block strong{color:var(--bk);font-weight:700;}
+.legal-wrap{max-width:760px;margin:0 auto;padding:56px 52px;}
+.legal-section{border-top:1px solid var(--g2);padding-top:20px;margin-top:24px;}
+.legal-section h2{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;}
+.legal-section p,.legal-section li{font-size:13px;line-height:1.75;color:var(--bk);}
+.legal-section ul{display:grid;gap:8px;list-style:none;margin-top:10px;}
+.legal-section li{border-bottom:1px solid var(--g2);padding-bottom:8px;color:var(--g3);}
+.legal-section strong{color:var(--bk);}
 .cl-wrap{max-width:680px;margin:0 auto;padding:72px 52px;}
 .cl-intro{font-size:14px;color:var(--g3);line-height:1.75;margin-bottom:48px;max-width:520px;}
 .roles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:48px;}
@@ -115,6 +122,7 @@ footer{padding:28px 52px;border-top:1px solid var(--g2);display:flex;align-items
 .es-greeting{font-size:26px;font-weight:800;letter-spacing:-.4px;color:var(--bk);text-align:left;}
 .es-input-wrap{width:100%;max-width:640px;margin-bottom:14px;}
 .privacy-note{max-width:640px;text-align:center;font-size:11px;color:var(--g3);margin:-4px 0 14px;line-height:1.45;}
+.prompt-guide{max-width:640px;text-align:center;font-size:12px;color:var(--g3);line-height:1.5;margin:-2px 0 12px;}
 .mode-control{display:flex;align-items:center;justify-content:center;gap:8px;max-width:640px;margin:0 0 14px;flex-wrap:wrap;}
 .mode-label{font-size:11px;color:var(--g3);font-weight:700;}
 .mode-toggle{display:flex;border:1px solid var(--g2);border-radius:8px;overflow:hidden;background:var(--wh);}
@@ -122,12 +130,20 @@ footer{padding:28px 52px;border-top:1px solid var(--g2);display:flex;align-items
 .mode-btn:last-child{border-right:0;}
 .mode-btn.active{background:var(--p);color:var(--wh);}
 .mode-hint{font-size:11px;color:var(--g3);text-align:center;line-height:1.4;max-width:640px;margin:-6px 0 14px;}
+.status-strip{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;max-width:640px;margin:0 0 18px;font-size:11px;color:var(--g3);font-weight:700;}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--g2);display:inline-block;}
+.status-dot.ok{background:var(--p);}
+.status-dot.warn{background:#d7a600;}
+.status-dot.err{background:#c33;}
+.status-link{color:var(--g3);text-decoration:none;border-bottom:1px solid var(--g2);}
+.status-link:hover{color:var(--p);border-bottom-color:var(--p);}
 .input-box{border:1px solid var(--g2);border-radius:12px;display:flex;align-items:center;overflow:hidden;background:var(--wh);transition:border-color .12s;}
 .input-box:focus-within{border-color:var(--p);}
 .bi{flex:1;border:none;font-size:14px;font-family:var(--fn);outline:none;color:var(--bk);background:transparent;padding:13px 16px;line-height:1.5;}
 .bi::placeholder{color:var(--g3);}
 .bs{background:none;border:none;border-left:1px solid var(--g2);padding:0 14px;height:46px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s;flex-shrink:0;}
 .bs:hover{background:var(--g1);}
+.bs:disabled,.bs2:disabled{cursor:not-allowed;opacity:.45;background:var(--g1);}
 .bs svg{width:14px;height:14px;stroke:var(--p);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 .es-pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:640px;}
 .pill-wrap{position:relative;}
@@ -150,6 +166,7 @@ footer{padding:28px 52px;border-top:1px solid var(--g2);display:flex;align-items
 .disc{font-size:11px;color:var(--g3);text-align:center;margin-bottom:10px;max-width:640px;margin-left:auto;margin-right:auto;}
 .bottom-bar .mode-control{margin:0 auto 8px;}
 .bottom-bar .mode-hint{margin:-2px auto 10px;}
+.bottom-bar .status-strip{margin:0 auto 10px;}
 .bottom-input-box{max-width:640px;margin:0 auto;border:1px solid var(--g2);border-radius:12px;display:flex;align-items:center;overflow:hidden;transition:border-color .12s;}
 .bottom-input-box:focus-within{border-color:var(--p);}
 .bi2{flex:1;border:none;font-size:14px;font-family:var(--fn);outline:none;color:var(--bk);background:transparent;padding:12px 16px;}
@@ -177,6 +194,7 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
 .src-actions{margin-top:18px;}
 .src-search{width:100%;min-width:0;}
 .method-grid{grid-template-columns:1fr;gap:22px;}
+.legal-wrap{padding:34px 24px;}
 .cl-wrap{padding:44px 24px;}
 .roles{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:36px;}
 .rt{padding:16px 12px;}
@@ -228,35 +246,35 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
     <div class="tool" onclick="show('checklist')"><div class="tool-left"><div class="tool-n">04 — Checklist</div><div class="tool-title">Stakeholder Checklist</div><div class="tool-desc">Ethics self-assessment for regulators, developers, researchers, and product users. Grounded in EMERGE findings.</div></div><div class="tool-arrow">→</div></div>
     <div class="tool" onclick="show('bot')"><div class="tool-left"><div class="tool-n">05 — Bot</div><div class="tool-title">Ethics Bot</div><div class="tool-desc">Ask questions in natural language. Draws from the EMERGE corpus only — always named sources, no legal advice.</div></div><div class="tool-arrow">→</div></div>
   </div>
-  <footer><span>© 2025 MI3 · LMU München</span><div class="f-links"><a class="f-link" href="https://eic-emerge.eu/" target="_blank" rel="noopener">About EMERGE</a><a class="f-link" href="https://www.mi3.info/" target="_blank" rel="noopener">mi3.info ↗</a><a class="f-link" href="https://eic-emerge.eu/" target="_blank" rel="noopener">eic-emerge.eu ↗</a></div></footer>
+  <footer><span>© 2025 MI3 · LMU München</span><div class="f-links"><a class="f-link" href="https://eic-emerge.eu/" target="_blank" rel="noopener">About EMERGE</a><a class="f-link" onclick="show('legal')">Disclaimer & Privacy</a><a class="f-link" href="https://www.mi3.info/" target="_blank" rel="noopener">mi3.info ↗</a><a class="f-link" href="https://eic-emerge.eu/" target="_blank" rel="noopener">eic-emerge.eu ↗</a></div></footer>
 </div>
 
 <div id="pg-wiki" class="pg wiki-pg">
   <div class="wiki-layout">
     <aside class="wsb">
       <div class="wsb-g">EMERGE Concepts</div>
-      <span class="wsb-a on" onclick="wSel(this)">Collaborative Awareness</span>
-      <span class="wsb-a" onclick="wSel(this)">Trust</span>
-      <span class="wsb-a" onclick="wSel(this)">Benevolence</span>
-      <span class="wsb-a" onclick="wSel(this)">Ethical Resilience</span>
+      <span class="wsb-a on" onclick="wSel(this,'wiki-awareness')">Collaborative Awareness</span>
+      <span class="wsb-a" onclick="wSel(this,'wiki-trust')">Trust</span>
+      <span class="wsb-a" onclick="wSel(this,'wiki-benevolence')">Benevolence</span>
+      <span class="wsb-a" onclick="wSel(this,'wiki-resilience')">Ethical Resilience</span>
       <div class="wsb-g">Risks</div>
-      <span class="wsb-a" onclick="wSel(this)">Risks of Aware AI</span>
-      <span class="wsb-a" onclick="wSel(this)">Explainability</span>
-      <span class="wsb-a" onclick="wSel(this)">Responsibility Gaps</span>
+      <span class="wsb-a" onclick="wSel(this,'wiki-risks')">Risks of Aware AI</span>
+      <span class="wsb-a" onclick="wSel(this,'wiki-explainability')">Explainability</span>
+      <span class="wsb-a" onclick="wSel(this,'wiki-responsibility')">Responsibility Gaps</span>
       <div class="wsb-g">Policy</div>
-      <span class="wsb-a" onclick="wSel(this)">AI Ethics Guidelines</span>
-      <span class="wsb-a" onclick="wSel(this)">EU AI Act</span>
+      <span class="wsb-a" onclick="wSel(this,'wiki-guidelines')">AI Ethics Guidelines</span>
+      <span class="wsb-a" onclick="wSel(this,'wiki-ai-act')">EU AI Act</span>
     </aside>
     <main class="wiki-main">
-      <div class="wb"><div class="wb-tag">EMERGE D1.1 · D1.2 · D1.3</div><div class="wb-h">Collaborative Awareness</div><div class="wb-body"><p>Collaborative awareness is understood as a capacity that emerges in systems composed of multiple agents, where relevant information about a situation is shared, filtered, and integrated for the purposes of communication, coordination, or cooperation. It is not modelled as a direct analogue of human consciousness, but as a dimensional and task-relative property of collective systems.</p><p>D1.1 establishes criteria for local awareness, D1.2 demarcates collaborative awareness from related concepts, and D1.3 develops a dimensional model through which capacities, tasks, and metrics can be related. The concept is therefore intended to support both conceptual clarification and subsequent operational assessment.</p></div><div class="wb-src">Primary sources: EMERGE D1.1 Local Awareness Criteria; EMERGE D1.2 Demarcating Collaborative Awareness from Related Concepts; EMERGE D1.3 Dimensions of Collaborative Awareness.</div></div>
-      <div class="wb"><div class="wb-tag">EMERGE D2.4 · Vereschak et al.</div><div class="wb-h">Trust in Human–AI Systems</div><div class="wb-body"><p>Trust is treated as a relational and context-sensitive condition of human-AI interaction. The relevant objective is not the maximisation of trust, but the establishment of appropriate trust: reliance should correspond to the demonstrated capacities, limitations, and operating conditions of the system.</p><p>In this respect, trustworthy AI requires more than reliable performance. It also requires predictability, transparency, explainability, integrity, and governance arrangements that make it possible for users and overseers to understand when reliance is warranted and when it should be withheld.</p></div><div class="wb-src">Primary sources: EMERGE D2.4 Map of Ethical Virtues; Vereschak et al., work on appropriate trust and human-AI interaction.</div></div>
-      <div class="wb"><div class="wb-tag">EMERGE D2.4 · Vallor & Vierkant 2024</div><div class="wb-h">Benevolence & Alignment</div><div class="wb-body"><p>Benevolence is presented as a substantive ethical virtue rather than a merely functional design preference. It concerns the orientation of a system, and of the institutions responsible for it, toward the good of affected persons and groups.</p><p>Applied to AI alignment, this requires attention to the relation between technical objectives, organisational incentives, and human welfare. A system may satisfy a narrow task specification while nevertheless failing to support the broader ethical conditions under which its deployment is justified.</p></div><div class="wb-src">Primary sources: EMERGE D2.4 Map of Ethical Virtues; Vallor and Vierkant (2024).</div></div>
-      <div class="wb"><div class="wb-tag">EMERGE D2.5</div><div class="wb-h">Ethical Resilience</div><div class="wb-body"><p>Ethical resilience refers to the capacity of AI systems, users, and organisations to preserve ethically acceptable functioning under conditions of uncertainty, novelty, and stress. It is therefore not reducible to initial compliance, but concerns the continuing ability to detect, interpret, and respond to ethically significant change.</p><p>For aware and collective AI, this requires procedures for monitoring, review, escalation, and correction. The emphasis is on forward-looking responsibility: systems should be designed and governed so that accountability remains operative even when agency is distributed across human and artificial components.</p></div><div class="wb-src">Primary source: EMERGE D2.5 Ethical Resilience.</div></div>
-      <div class="wb"><div class="wb-tag">EMERGE D2.2 · D2.3</div><div class="wb-h">Risks of Aware AI</div><div class="wb-body"><p>The risks associated with aware AI concern both system behaviour and human interpretation of that behaviour. D2.2 examines risks in AI systems, including failures of awareness, insufficient transparency, and difficulties in communicating relevant system states. D2.3 examines risks and potentials for humans, including responsibility gaps, over-attribution, and changes in perceived agency.</p><p>A central concern is that awareness claims may affect how humans allocate trust, responsibility, and moral significance. The ethical assessment of aware AI must therefore consider not only what the system can do, but also how its capacities are represented, understood, and acted upon by human stakeholders.</p></div><div class="wb-src">Primary sources: EMERGE D2.2 Map of Risks in AI Systems; EMERGE D2.3 Map of Risks and Potentials for Humans.</div></div>
-      <div class="wb"><div class="wb-tag">EMERGE D2.4 · Lange et al. 2025</div><div class="wb-h">Explainability</div><div class="wb-body"><p>Explainability is treated as a condition for meaningful human understanding, oversight, and accountability. It is particularly significant where AI systems operate as collaborators, advisors, or components of a collective system, since the relevant object of explanation may be a single action, a system state, or an emergent collective pattern.</p><p>The adequacy of an explanation depends on the stakeholder and the purpose for which the explanation is required. In some contexts, highly detailed causal accounts may be less useful than explanations that identify relevant rules, constraints, responsibilities, or limits of competence.</p></div><div class="wb-src">Primary sources: EMERGE D2.4 Map of Ethical Virtues; Lange et al. (2025).</div></div>
-      <div class="wb"><div class="wb-tag">EMERGE D2.3 · D2.5</div><div class="wb-h">Responsibility Gaps</div><div class="wb-body"><p>Responsibility gaps arise where an outcome calls for attribution of responsibility, but the distribution of agency across humans, AI systems, organisations, and collective processes makes such attribution difficult. This problem is intensified in collective AI, where the behaviour of the overall system may not be straightforwardly reducible to any single component.</p><p>The EMERGE approach does not resolve this difficulty by relocating moral responsibility to the machine. Rather, it points to the need for human-centric governance arrangements, traceable decision structures, and oversight mechanisms that preserve meaningful control and accountability across the socio-technical system.</p></div><div class="wb-src">Primary sources: EMERGE D2.3 Map of Risks and Potentials for Humans; EMERGE D2.5 Ethical Resilience.</div></div>
-      <div class="wb"><div class="wb-tag">HLEG · Jobin et al. 2019 · Hagendorff 2022 · Correa et al. 2023</div><div class="wb-h">AI Ethics Guidelines Landscape</div><div class="wb-body"><p>The literature on AI ethics guidelines identifies a substantial degree of convergence around principles such as transparency, accountability, privacy, justice, non-maleficence, responsibility, and human oversight. The HLEG guidelines articulate trustworthy AI in terms of lawful, ethical, and robust systems, while comparative analyses map the recurrence and distribution of such principles across institutional documents.</p><p>At the same time, this literature identifies persistent limitations. Guidelines often remain non-binding, unevenly implemented, and insufficiently connected to technical and organisational practice. For EMERGE, these limitations motivate a more specific analysis of collective and aware AI, where general principle lists may not capture the relevant forms of distributed agency and awareness.</p></div><div class="wb-src">Primary sources: High-Level Expert Group on AI, Ethics Guidelines for Trustworthy AI; Jobin et al. (2019); Hagendorff (2022); Correa et al. (2023).</div></div>
-      <div class="wb"><div class="wb-tag">REGULATION (EU) 2024/1689</div><div class="wb-h">EU AI Act</div><div class="wb-body"><p>The EU AI Act establishes a risk-based regulatory framework for AI systems placed on, or used within, the Union market. It differentiates prohibited practices, high-risk AI systems, transparency obligations, and obligations for general-purpose AI models, with requirements calibrated to the type and intensity of risk.</p><p>Within the toolkit, the Act should be read as a legal and regulatory reference point, not as an exhaustive ethical account. It provides binding categories and obligations, while questions concerning collaborative awareness, trust, benevolence, moral significance, and ethical resilience require further conceptual and normative analysis.</p></div><div class="wb-src">Primary source: Regulation (EU) 2024/1689, Official Journal of the European Union.</div></div>
+      <div class="wb" id="wiki-awareness"><div class="wb-tag">EMERGE D1.1 · D1.2 · D1.3</div><div class="wb-h">Collaborative Awareness</div><div class="wb-body"><p>Collaborative awareness is understood as a capacity that emerges in systems composed of multiple agents, where relevant information about a situation is shared, filtered, and integrated for the purposes of communication, coordination, or cooperation. It is not modelled as a direct analogue of human consciousness, but as a dimensional and task-relative property of collective systems.</p><p>D1.1 establishes criteria for local awareness, D1.2 demarcates collaborative awareness from related concepts, and D1.3 develops a dimensional model through which capacities, tasks, and metrics can be related. The concept is therefore intended to support both conceptual clarification and subsequent operational assessment.</p></div><div class="wb-src">Primary sources: EMERGE D1.1 Local Awareness Criteria; EMERGE D1.2 Demarcating Collaborative Awareness from Related Concepts; EMERGE D1.3 Dimensions of Collaborative Awareness.</div></div>
+      <div class="wb" id="wiki-trust"><div class="wb-tag">EMERGE D2.4 · Vereschak et al.</div><div class="wb-h">Trust in Human–AI Systems</div><div class="wb-body"><p>Trust is treated as a relational and context-sensitive condition of human-AI interaction. The relevant objective is not the maximisation of trust, but the establishment of appropriate trust: reliance should correspond to the demonstrated capacities, limitations, and operating conditions of the system.</p><p>In this respect, trustworthy AI requires more than reliable performance. It also requires predictability, transparency, explainability, integrity, and governance arrangements that make it possible for users and overseers to understand when reliance is warranted and when it should be withheld.</p></div><div class="wb-src">Primary sources: EMERGE D2.4 Map of Ethical Virtues; Vereschak et al., work on appropriate trust and human-AI interaction.</div></div>
+      <div class="wb" id="wiki-benevolence"><div class="wb-tag">EMERGE D2.4 · Vallor & Vierkant 2024</div><div class="wb-h">Benevolence & Alignment</div><div class="wb-body"><p>Benevolence is presented as a substantive ethical virtue rather than a merely functional design preference. It concerns the orientation of a system, and of the institutions responsible for it, toward the good of affected persons and groups.</p><p>Applied to AI alignment, this requires attention to the relation between technical objectives, organisational incentives, and human welfare. A system may satisfy a narrow task specification while nevertheless failing to support the broader ethical conditions under which its deployment is justified.</p></div><div class="wb-src">Primary sources: EMERGE D2.4 Map of Ethical Virtues; Vallor and Vierkant (2024).</div></div>
+      <div class="wb" id="wiki-resilience"><div class="wb-tag">EMERGE D2.5</div><div class="wb-h">Ethical Resilience</div><div class="wb-body"><p>Ethical resilience refers to the capacity of AI systems, users, and organisations to preserve ethically acceptable functioning under conditions of uncertainty, novelty, and stress. It is therefore not reducible to initial compliance, but concerns the continuing ability to detect, interpret, and respond to ethically significant change.</p><p>For aware and collective AI, this requires procedures for monitoring, review, escalation, and correction. The emphasis is on forward-looking responsibility: systems should be designed and governed so that accountability remains operative even when agency is distributed across human and artificial components.</p></div><div class="wb-src">Primary source: EMERGE D2.5 Ethical Resilience.</div></div>
+      <div class="wb" id="wiki-risks"><div class="wb-tag">EMERGE D2.2 · D2.3</div><div class="wb-h">Risks of Aware AI</div><div class="wb-body"><p>The risks associated with aware AI concern both system behaviour and human interpretation of that behaviour. D2.2 examines risks in AI systems, including failures of awareness, insufficient transparency, and difficulties in communicating relevant system states. D2.3 examines risks and potentials for humans, including responsibility gaps, over-attribution, and changes in perceived agency.</p><p>A central concern is that awareness claims may affect how humans allocate trust, responsibility, and moral significance. The ethical assessment of aware AI must therefore consider not only what the system can do, but also how its capacities are represented, understood, and acted upon by human stakeholders.</p></div><div class="wb-src">Primary sources: EMERGE D2.2 Map of Risks in AI Systems; EMERGE D2.3 Map of Risks and Potentials for Humans.</div></div>
+      <div class="wb" id="wiki-explainability"><div class="wb-tag">EMERGE D2.4 · Lange et al. 2025</div><div class="wb-h">Explainability</div><div class="wb-body"><p>Explainability is treated as a condition for meaningful human understanding, oversight, and accountability. It is particularly significant where AI systems operate as collaborators, advisors, or components of a collective system, since the relevant object of explanation may be a single action, a system state, or an emergent collective pattern.</p><p>The adequacy of an explanation depends on the stakeholder and the purpose for which the explanation is required. In some contexts, highly detailed causal accounts may be less useful than explanations that identify relevant rules, constraints, responsibilities, or limits of competence.</p></div><div class="wb-src">Primary sources: EMERGE D2.4 Map of Ethical Virtues; Lange et al. (2025).</div></div>
+      <div class="wb" id="wiki-responsibility"><div class="wb-tag">EMERGE D2.3 · D2.5</div><div class="wb-h">Responsibility Gaps</div><div class="wb-body"><p>Responsibility gaps arise where an outcome calls for attribution of responsibility, but the distribution of agency across humans, AI systems, organisations, and collective processes makes such attribution difficult. This problem is intensified in collective AI, where the behaviour of the overall system may not be straightforwardly reducible to any single component.</p><p>The EMERGE approach does not resolve this difficulty by relocating moral responsibility to the machine. Rather, it points to the need for human-centric governance arrangements, traceable decision structures, and oversight mechanisms that preserve meaningful control and accountability across the socio-technical system.</p></div><div class="wb-src">Primary sources: EMERGE D2.3 Map of Risks and Potentials for Humans; EMERGE D2.5 Ethical Resilience.</div></div>
+      <div class="wb" id="wiki-guidelines"><div class="wb-tag">HLEG · Jobin et al. 2019 · Hagendorff 2022 · Correa et al. 2023</div><div class="wb-h">AI Ethics Guidelines Landscape</div><div class="wb-body"><p>The literature on AI ethics guidelines identifies a substantial degree of convergence around principles such as transparency, accountability, privacy, justice, non-maleficence, responsibility, and human oversight. The HLEG guidelines articulate trustworthy AI in terms of lawful, ethical, and robust systems, while comparative analyses map the recurrence and distribution of such principles across institutional documents.</p><p>At the same time, this literature identifies persistent limitations. Guidelines often remain non-binding, unevenly implemented, and insufficiently connected to technical and organisational practice. For EMERGE, these limitations motivate a more specific analysis of collective and aware AI, where general principle lists may not capture the relevant forms of distributed agency and awareness.</p></div><div class="wb-src">Primary sources: High-Level Expert Group on AI, Ethics Guidelines for Trustworthy AI; Jobin et al. (2019); Hagendorff (2022); Correa et al. (2023).</div></div>
+      <div class="wb" id="wiki-ai-act"><div class="wb-tag">REGULATION (EU) 2024/1689</div><div class="wb-h">EU AI Act</div><div class="wb-body"><p>The EU AI Act establishes a risk-based regulatory framework for AI systems placed on, or used within, the Union market. It differentiates prohibited practices, high-risk AI systems, transparency obligations, and obligations for general-purpose AI models, with requirements calibrated to the type and intensity of risk.</p><p>Within the toolkit, the Act should be read as a legal and regulatory reference point, not as an exhaustive ethical account. It provides binding categories and obligations, while questions concerning collaborative awareness, trust, benevolence, moral significance, and ethical resilience require further conceptual and normative analysis.</p></div><div class="wb-src">Primary source: Regulation (EU) 2024/1689, Official Journal of the European Union.</div></div>
       <section class="wiki-note">
         <h2>Methodological Note</h2>
         <p>The Wiki entries are concise syntheses of recurring claims in the indexed EMERGE corpus. They are intended as orientation texts, not as substitutes for the underlying deliverables or legal instruments.</p>
@@ -272,6 +290,41 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
       </section>
     </main>
   </div>
+</div>
+
+<div id="pg-legal" class="pg">
+  <div class="legal-wrap">
+    <div class="src-head">
+      <div>
+        <h1 class="src-title">Disclaimer, Privacy & Terms</h1>
+        <p class="src-sub">Operational notice for the EMERGE Ethics Toolkit prototype. This page should be reviewed by the project’s legal team before being treated as final policy text.</p>
+      </div>
+    </div>
+    <section class="legal-section">
+      <h2>Toolkit Scope</h2>
+      <p>The EMERGE Ethics Toolkit is an open-access research prototype for exploring EMERGE awareness concepts and ethical issues in human-AI and AI-AI interaction. It is designed to support discussion, reflection, and public communication, not to provide automated ethical judgments.</p>
+    </section>
+    <section class="legal-section">
+      <h2>Disclaimer</h2>
+      <p>The chatbot provides general, exploratory information intended to support discussion and reflection. It may produce incomplete or inaccurate responses. Its scope is limited to EMERGE-related concepts and the indexed corpus, and its outputs should not be treated as instructions, factual authority, legal advice, medical advice, or other professional advice.</p>
+      <p>Users should independently verify important information and consult qualified professionals where appropriate. The project team and creators are not responsible for actions taken based on chatbot output.</p>
+    </section>
+    <section class="legal-section">
+      <h2>Privacy Notice</h2>
+      <ul>
+        <li><strong>Chat logging:</strong> prompts, replies, anonymous visitor/session IDs, answer mode, retrieval mode, sources used, scope results, errors, and latency may be logged for evaluation and debugging.</li>
+        <li><strong>Personal data:</strong> users should not enter personal, confidential, or sensitive information into the chat.</li>
+        <li><strong>IP addresses:</strong> client IP storage is disabled by default and only enabled if the server is configured with <strong>CHAT_LOG_IPS=true</strong>.</li>
+        <li><strong>Training use:</strong> the local application does not fine-tune a model on user chats. Logs are intended for toolkit evaluation and quality improvement.</li>
+        <li><strong>Third-party providers:</strong> generated answers may be processed through configured model providers. The current backend is designed for Anthropic Claude for answer generation and OpenAI embeddings when vector retrieval is enabled.</li>
+      </ul>
+    </section>
+    <section class="legal-section">
+      <h2>Terms of Use</h2>
+      <p>By using the toolkit, users agree to use it as an exploratory research and education aid. Users remain responsible for how they interpret, verify, and act on outputs. The toolkit may refuse questions outside its corpus scope or redirect users toward appropriate external resources.</p>
+    </section>
+  </div>
+  <footer><span>© 2025 MI3 · LMU München</span><div class="f-links"><a class="f-link" onclick="show('bot')">Ask the Bot</a><a class="f-link" onclick="show('methodology')">Methodology</a></div></footer>
 </div>
 
 <div id="pg-sources" class="pg">
@@ -302,6 +355,7 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
       <div class="src-actions">
         <a class="src-download" href="/status">Runtime Status</a>
         <a class="src-download" href="/sources.csv">Source CSV</a>
+        <a class="src-download" href="/evaluation">Evaluation JSON</a>
       </div>
     </div>
     <div class="method-grid">
@@ -366,9 +420,19 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
           <li><strong>Model fallibility:</strong> even with grounding rules, generated synthesis should be checked against retrieved sources and primary documents.</li>
         </ul>
       </section>
+      <section class="method-block">
+        <h2>Evaluation Hooks</h2>
+        <p>The toolkit exposes a seed validation set and metric definitions for evaluating retrieval-augmented answers against EMERGE concepts.</p>
+        <ul>
+          <li><strong>Evaluation set:</strong> `/evaluation` returns open-ended and multiple-choice questions mapped to expected concepts and reference sources.</li>
+          <li><strong>Core metrics:</strong> response accuracy, citation validity, citation precision, hallucination rate, completeness, refusal accuracy, and retrieval coverage.</li>
+          <li><strong>Expansion path:</strong> the seed file can be expanded with the final validated Excel-derived question set when it is available.</li>
+          <li><strong>Current scope:</strong> curated scenario-prompt workflows are excluded from the current toolkit scope.</li>
+        </ul>
+      </section>
     </div>
   </div>
-  <footer><span>© 2025 MI3 · LMU München</span><div class="f-links"><a class="f-link" href="/status">Runtime status</a><a class="f-link" href="/sources.csv">Source CSV</a></div></footer>
+  <footer><span>© 2025 MI3 · LMU München</span><div class="f-links"><a class="f-link" href="/status">Runtime status</a><a class="f-link" href="/sources.csv">Source CSV</a><a class="f-link" href="/evaluation">Evaluation JSON</a></div></footer>
 </div>
 
 <div id="pg-checklist" class="pg">
@@ -399,7 +463,8 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
           <button class="bs" onclick="sendMsg()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button>
         </div>
       </div>
-      <div class="privacy-note">Chats may be logged to improve the bot and analyze failures. Do not enter personal or sensitive information.</div>
+      <div class="prompt-guide">Type a question, scenario, or rough idea. More context helps the bot retrieve better EMERGE sources; for example, ask about benefits of machine awareness, responsibility gaps, trust, or ethical resilience.</div>
+      <div class="privacy-note">Chats may be logged to improve the bot and analyze failures. Do not enter personal or sensitive information. <a class="status-link" onclick="show('legal')">Disclaimer & Privacy</a></div>
       <div class="mode-control" aria-label="Answer mode">
         <span class="mode-label">Mode</span>
         <div class="mode-toggle">
@@ -409,6 +474,7 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
         </div>
       </div>
       <div class="mode-hint" id="mode-hint-empty">Balanced source-grounded answers with normal retrieval.</div>
+      <div class="status-strip" id="status-empty"><span class="status-dot"></span><span>Checking corpus status...</span></div>
       <div class="es-pills">
         <div class="pill-wrap">
           <button class="es-pill" onclick="togglePill('reg')">Regulator</button>
@@ -454,7 +520,8 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
     </div>
     <div class="msgs-area" id="msgs-area"><div class="msgs-inner" id="msgs"></div></div>
     <div class="bottom-bar" id="bottom-bar" style="display:none;">
-      <div class="disc">EMERGE corpus only — named sources, no recommendations, no legal advice. Chats may be logged for analysis.</div>
+      <div class="disc">EMERGE corpus only — named sources, no recommendations, no legal advice. Chats may be logged for analysis. <a class="status-link" onclick="show('legal')">Disclaimer & Privacy</a></div>
+      <div class="status-strip" id="status-bottom"><span class="status-dot"></span><span>Checking corpus status...</span></div>
       <div class="mode-control" aria-label="Answer mode">
         <span class="mode-label">Mode</span>
         <div class="mode-toggle">
@@ -487,18 +554,23 @@ function show(p) {
   document.querySelectorAll('.nl').forEach(x => x.classList.remove('on'));
   const m = { wiki: 0, sources: 1, methodology: 2, checklist: 3, bot: 4 };
   if (m[p] !== undefined) document.querySelectorAll('.nl')[m[p]].classList.add('on');
+  if (history.replaceState) history.replaceState(null, '', p === 'home' ? location.pathname : '#' + p);
   window.scrollTo(0, 0);
   if (p === 'bot') {
     const focusTarget = started ? document.getElementById('input-bottom') : document.getElementById('input-empty');
     setTimeout(function() { if (focusTarget) focusTarget.focus(); }, 50);
   }
   if (p === 'sources') loadSources();
+  if (p === 'bot') loadStatus();
 }
 
 // ── Wiki sidebar ──
-function wSel(el) {
+function wSel(el, targetId) {
   document.querySelectorAll('.wsb-a').forEach(x => x.classList.remove('on'));
   el.classList.add('on');
+  const target = document.getElementById(targetId);
+  if (!target) return;
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ── Checklist ──
@@ -684,6 +756,39 @@ function getOrCreateId(key) {
 const visitorId = getOrCreateId('emergeVisitorId');
 const conversationId = window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(16).slice(2);
 
+let statusLoaded = false;
+
+function setStatus(type, text) {
+  document.querySelectorAll('.status-strip').forEach(function(strip) {
+    const dot = strip.querySelector('.status-dot');
+    const label = strip.querySelector('span:last-child');
+    if (dot) dot.className = 'status-dot ' + type;
+    if (label) label.innerHTML = text;
+  });
+}
+
+async function loadStatus(force) {
+  if (statusLoaded && !force) return;
+  try {
+    const res = await fetch('/status');
+    const data = await res.json();
+    if (!res.ok) throw new Error('Server error ' + res.status);
+    statusLoaded = true;
+    if (!data.ready) {
+      setStatus('err', 'Corpus unavailable. Chat will not answer until chunks are loaded.');
+      return;
+    }
+    const backend = data.retrieval_backend === 'vector' ? 'vector retrieval' : 'TF-IDF fallback';
+    const vectorNote = data.vector_index === 'loaded' ? '' : ' · vector index ' + esc(data.vector_index || 'missing');
+    setStatus(
+      data.vector_index === 'loaded' ? 'ok' : 'warn',
+      esc(data.chunks_loaded) + ' chunks · ' + esc(data.indexed_sources) + ' sources · ' + esc(backend) + vectorNote + ' · <a class="status-link" href="/status">status</a>'
+    );
+  } catch (err) {
+    setStatus('err', 'Server not reachable. Start the Flask app, then refresh.');
+  }
+}
+
 function setAnswerMode(mode) {
   if (!answerModeHints[mode]) mode = 'balanced';
   answerMode = mode;
@@ -764,6 +869,12 @@ function appendBotMsg(html) {
   return bm;
 }
 
+function setSendControlsDisabled(disabled) {
+  document.querySelectorAll('.bs,.bs2').forEach(function(btn) {
+    btn.disabled = disabled;
+  });
+}
+
 // ── Send message ──
 async function sendMsg() {
   const inputEl = started
@@ -800,6 +911,7 @@ async function sendMsg() {
   const ty = appendBotMsg('<span style="color:var(--g3);font-style:italic;">Searching corpus...</span>');
 
   isLoading = true;
+  setSendControlsDisabled(true);
 
   try {
     const res = await fetch('/chat', {
@@ -827,6 +939,7 @@ async function sendMsg() {
   }
 
   isLoading = false;
+  setSendControlsDisabled(false);
 }
 
 // Enter key on empty state input
@@ -836,6 +949,12 @@ document.getElementById('input-empty').addEventListener('keydown', function(e) {
     sendMsg();
   }
 });
+
+loadStatus();
+const initialPage = (location.hash || '').replace('#', '');
+if (['wiki', 'sources', 'methodology', 'checklist', 'bot', 'legal'].includes(initialPage)) {
+  show(initialPage);
+}
 </script>
 </body>
 </html>

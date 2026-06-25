@@ -1,7 +1,11 @@
 import base64
 import importlib
 import json
+from pathlib import Path
 import sys
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def import_test_app(monkeypatch, tmp_path):
@@ -47,6 +51,7 @@ def import_test_app(monkeypatch, tmp_path):
     monkeypatch.setenv("DOCUMENTS_DIR", str(documents_dir))
     monkeypatch.setenv("VECTOR_INDEX_FILE", str(tmp_path / "vector_index.json.gz"))
     monkeypatch.setenv("SOURCE_METADATA_FILE", str(source_metadata_file))
+    monkeypatch.setenv("EVALUATION_FILE", str(ROOT / "evaluation_questions.json"))
     monkeypatch.setenv("CHAT_LOG_DB", str(tmp_path / "chat_logs.db"))
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
@@ -54,6 +59,10 @@ def import_test_app(monkeypatch, tmp_path):
     monkeypatch.delenv("ADMIN_SESSION_SECRET", raising=False)
     sys.modules.pop("app", None)
     return importlib.import_module("app")
+
+
+def read_static_index():
+    return (ROOT / "static" / "index.html").read_text(encoding="utf-8")
 
 
 def test_status_reports_loaded_corpus_and_tfidf_fallback(monkeypatch, tmp_path):
@@ -99,6 +108,51 @@ def test_sources_csv_endpoint(monkeypatch, tmp_path):
     body = response.data.decode("utf-8")
     assert "source_id,citation,title" in body
     assert "EMERGE Test Source" in body
+
+
+def test_homepage_exposes_required_toolkit_surfaces(monkeypatch, tmp_path):
+    app_module = import_test_app(monkeypatch, tmp_path)
+    client = app_module.app.test_client()
+
+    response = client.get("/")
+
+    assert response.status_code == 200
+    body = response.data.decode("utf-8")
+    assert "EMERGE Ethics Toolkit" in body
+    assert "Ethics Wiki" in body
+    assert "Bibliography Register" in body
+    assert "Methodology & Limits" in body
+    assert "Stakeholder Checklist" in body
+    assert "Ethics Bot" in body
+    assert "Disclaimer, Privacy & Terms" in body
+    assert "prompt-guide" in body
+    assert "status-strip" in body
+    assert "Chats may be logged" in body
+
+
+def test_vignette_feature_is_not_exposed():
+    body = read_static_index().lower()
+
+    assert "vignettes" not in body
+    assert "generate question" not in body
+    assert "/vignettes" not in body
+    assert not (ROOT / "vignettes.json").exists()
+
+
+def test_evaluation_endpoint_exposes_seed_metrics(monkeypatch, tmp_path):
+    app_module = import_test_app(monkeypatch, tmp_path)
+    client = app_module.app.test_client()
+
+    response = client.get("/evaluation")
+
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data["status"] == "seed"
+    assert data["question_count"] > 0
+    assert "open_ended" in data["question_types"]
+    assert "multiple_choice" in data["question_types"]
+    assert "citation_precision" in data["metrics"]["open_ended"]
+    assert all("vignette" not in item["question"].lower() for item in data["questions"])
 
 
 def test_empty_chat_request_returns_400(monkeypatch, tmp_path):
@@ -159,6 +213,7 @@ def test_admin_basic_auth_with_password(monkeypatch, tmp_path):
     monkeypatch.setenv("DOCUMENTS_DIR", str(documents_dir))
     monkeypatch.setenv("VECTOR_INDEX_FILE", str(tmp_path / "vector_index.json.gz"))
     monkeypatch.setenv("SOURCE_METADATA_FILE", str(source_metadata_file))
+    monkeypatch.setenv("EVALUATION_FILE", str(ROOT / "evaluation_questions.json"))
     monkeypatch.setenv("CHAT_LOG_DB", str(tmp_path / "chat_logs.db"))
     monkeypatch.setenv("ADMIN_PASSWORD", "secret")
     monkeypatch.setenv("ADMIN_SESSION_SECRET", "test-secret")

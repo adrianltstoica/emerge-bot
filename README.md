@@ -4,7 +4,9 @@
 ---
 
 ## What this is
-A local web app that retrieves relevant excerpts from your EMERGE corpus and passes them to Claude with the bot's full system prompt and sourcing rules. Type a free-form prompt to explore the corpus.
+A local web app and public-facing EMERGE Ethics Toolkit. It retrieves relevant excerpts from the EMERGE corpus and passes them to Claude with the bot's full system prompt and sourcing rules. The website includes an ethics wiki, bibliography register, methodology and limits page, stakeholder checklist, disclaimer/privacy/terms page, and a free-form chatbot for exploring the corpus.
+
+The toolkit currently focuses on free-form prompts, public toolkit pages, and the indexed corpus. Curated scenario-prompt workflows are outside the current scope.
 
 ---
 
@@ -60,6 +62,8 @@ The chat has three answer modes:
 Before retrieval, the bot also runs a lightweight triage. Greetings, very vague prompts, and broad technical implementation requests are answered with a clarifying question instead of searching the corpus.
 
 The bot page includes a corpus status bar showing whether chunks are loaded, how many sources are indexed, which retrieval backend is active, and whether the vector index is missing or stale.
+
+The methodology page links to `/evaluation`, which exposes a seed validation set and metric definitions for response accuracy, citation quality, hallucination checks, completeness, refusal accuracy, and retrieval coverage. Expand `evaluation_questions.json` when the final validated Excel-derived dataset is available.
 
 **To stop:** Press Ctrl+C in the Terminal window, or just close it.
 
@@ -148,6 +152,7 @@ This system uses:
 - **Scope gating:** mean cosine of top-10 chunks; below threshold, the system refuses and points to an external resource category
 - **Source metadata:** `source_metadata.json` contains bibliography/source records for the corpus without document text, chunks, embeddings, or chat logs. The `/sources` route exposes the same records at runtime.
 - **Source register export:** `source_metadata.csv` and `/sources.csv` provide a spreadsheet-ready bibliography register with citation labels, titles, DOI/URL fields, source tiers, PDF page counts, and chunk counts.
+- **Evaluation hook:** `evaluation_questions.json` and `/evaluation` provide a seed validation set with expected concepts, reference sources, and metric definitions.
 - **Models:** OpenAI `text-embedding-3-small` for vector retrieval; Claude Haiku 4.5 for query expansion; Claude Sonnet 4 for user-facing answers
 - **System prompt:** sourcing rules, two-sidedness on contested questions, scope boundaries, friendly-name conventions
 

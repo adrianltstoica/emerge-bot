@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "status": "seed",
+  "description": "Seed evaluation set for EMERGE Ethics Toolkit RAG validation. The final project validation set can expand this file with additional approved open-ended and multiple-choice items.",
+  "metrics": {
+    "open_ended": [
+      "response_accuracy",
+      "citation_validity",
+      "citation_precision",
+      "hallucination_rate",
+      "completeness"
+    ],
+    "multiple_choice": [
+      "answer_accuracy",
+      "citation_validity",
+      "explanation_grounding"
+    ],
+    "system_level": [
+      "latency_ms",
+      "refusal_accuracy",
+      "retrieval_backend",
+      "retrieved_source_coverage"
+    ]
+  },
+  "questions": [
+    {
+      "id": "eval-open-001",
+      "type": "open_ended",
+      "question": "What does EMERGE mean by collaborative awareness?",
+      "expected_concepts": [
+        "awareness as a task-relative or dimensional property",
+        "multi-agent or collective systems",
+        "communication, coordination, or cooperation",
+        "not equivalent to human consciousness"
+      ],
+      "reference_sources": [
+        "D1.1 Local awareness  criteria",
+        "D1.2 Demarcating collaborative awareness from related concepts",
+        "D1.3 Dimensions of collaborative awareness"
+      ]
+    },
+    {
+      "id": "eval-open-002",
+      "type": "open_ended",
+      "question": "How should responsibility gaps be understood in collective AI systems?",
+      "expected_concepts": [
+        "distributed agency across human and artificial components",
+        "difficulty attributing responsibility to one actor",
+        "need for governance, oversight, and traceable decision structures",
+        "do not relocate moral responsibility to the machine"
+      ],
+      "reference_sources": [
+        "D2.3 Map of risks and potentials for humans",
+        "D2.5_Ethical_Resilience"
+      ]
+    },
+    {
+      "id": "eval-open-003",
+      "type": "open_ended",
+      "question": "Why is appropriate trust different from maximizing trust in AI systems?",
+      "expected_concepts": [
+        "trust should match demonstrated capabilities and limits",
+        "overtrust and undertrust are both risks",
+        "transparency, explainability, and reliability help calibrate trust",
+        "context and stakeholder purpose matter"
+      ],
+      "reference_sources": [
+        "D2.4 Map of Ethical Virtues",
+        "Vereschak"
+      ]
+    },
+    {
+      "id": "eval-open-004",
+      "type": "open_ended",
+      "question": "What is ethical resilience in the EMERGE toolkit context?",
+      "expected_concepts": [
+        "preserving ethically acceptable functioning under uncertainty or stress",
+        "ongoing monitoring and correction rather than one-time compliance",
+        "forward-looking responsibility",
+        "relevance to collective and aware AI systems"
+      ],
+      "reference_sources": [
+        "D2.5_Ethical_Resilience"
+      ]
+    },
+    {
+      "id": "eval-open-005",
+      "type": "open_ended",
+      "question": "What are key ethical risks when an AI system is described as aware?",
+      "expected_concepts": [
+        "over-attribution of agency or moral status",
+        "trust calibration problems",
+        "responsibility gaps",
+        "human interpretation of awareness claims"
+      ],
+      "reference_sources": [
+        "D2.2 Map of risks in AI- systems",
+        "D2.3 Map of risks and potentials for humans"
+      ]
+    },
+    {
+      "id": "eval-mc-001",
+      "type": "multiple_choice",
+      "question": "Which answer best describes the toolkit's intended role?",
+      "options": [
+        "A. It provides binding legal decisions about AI systems.",
+        "B. It supports reflection, discussion, and public communication around EMERGE awareness concepts.",
+        "C. It replaces expert review of AI ethics cases.",
+        "D. It fine-tunes a model on user conversations."
+      ],
+      "answer": "B",
+      "reference_sources": [
+        "EMERGE Ethics Toolkit functional requirements",
+        "D2.6 proposal scope"
+      ]
+    },
+    {
+      "id": "eval-mc-002",
+      "type": "multiple_choice",
+      "question": "If vector retrieval is unavailable, what retrieval backend should the current app report?",
+      "options": [
+        "A. No retrieval is possible.",
+        "B. TF-IDF fallback retrieval.",
+        "C. Fine-tuned retrieval.",
+        "D. Manual retrieval only."
+      ],
+      "answer": "B",
+      "reference_sources": [
+        "Runtime /status endpoint",
+        "README retrieval notes"
+      ]
+    },
+    {
+      "id": "eval-mc-003",
+      "type": "multiple_choice",
+      "question": "Which metric directly checks whether cited documents are relevant to the generated answer?",
+      "options": [
+        "A. Citation precision.",
+        "B. Latency.",
+        "C. Token count.",
+        "D. Temperature."
+      ],
+      "answer": "A",
+      "reference_sources": [
+        "EMERGE Ethics Toolkit functional requirements"
+      ]
+    }
+  ]
+}
