@@ -22,6 +22,8 @@ Set the `ANTHROPIC_API_KEY` environment variable before starting the bot. The se
 export ANTHROPIC_API_KEY=sk-ant-...
 ```
 
+The answer model defaults to `claude-sonnet-4-6`, and query expansion defaults to `claude-haiku-4-5-20251001`. Override them with `ANTHROPIC_MODEL` and `ANTHROPIC_EXPANSION_MODEL` if your Anthropic workspace exposes different model IDs.
+
 For vector retrieval, also set `OPENAI_API_KEY`. If a vector index or OpenAI key is missing, the app falls back to the older TF-IDF retriever. On Render, `scripts/ensure_vector_index.py` builds `/var/data/vector_index.json.gz` on startup when `OPENAI_API_KEY` is configured, then reuses it from the persistent disk.
 
 ```bash
@@ -153,7 +155,7 @@ This system uses:
 - **Source metadata:** `source_metadata.json` contains bibliography/source records for the corpus without document text, chunks, embeddings, or chat logs. The `/sources` route exposes the same records at runtime.
 - **Source register export:** `source_metadata.csv` and `/sources.csv` provide a spreadsheet-ready bibliography register with citation labels, titles, DOI/URL fields, source tiers, PDF page counts, and chunk counts.
 - **Evaluation hook:** `evaluation_questions.json` and `/evaluation` provide a seed validation set with expected concepts, reference sources, and metric definitions.
-- **Models:** OpenAI `text-embedding-3-small` for vector retrieval; Claude Haiku 4.5 for query expansion; Claude Sonnet 4 for user-facing answers
+- **Models:** OpenAI `text-embedding-3-small` for vector retrieval; `ANTHROPIC_EXPANSION_MODEL` for query expansion; `ANTHROPIC_MODEL` for user-facing answers
 - **System prompt:** sourcing rules, two-sidedness on contested questions, scope boundaries, friendly-name conventions
 
 For local development the app defaults to port `5050`. Hosted deployments may set a different `PORT` value through the hosting environment.

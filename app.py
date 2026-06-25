@@ -122,6 +122,8 @@ SCOPE_GATE_WEAK = 0.10  # below this → tell the model retrieval is weak
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 EMBEDDING_MODEL = os.environ.get("EMBEDDING_MODEL", "text-embedding-3-small")
+ANTHROPIC_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6")
+ANTHROPIC_EXPANSION_MODEL = os.environ.get("ANTHROPIC_EXPANSION_MODEL", "claude-haiku-4-5-20251001")
 
 chunk_store = []
 chunk_tf = []     # list[dict[token, weight]]
@@ -837,7 +839,7 @@ def expand_query(query, client):
     fallback = {"paraphrase": "", "counter": "", "classification": "ai_ethics", "redirect": ""}
     try:
         msg = client.messages.create(
-            model="claude-haiku-4-5-20251001",
+            model=ANTHROPIC_EXPANSION_MODEL,
             max_tokens=300,
             temperature=0.2,
             system=instructions,
@@ -1167,6 +1169,8 @@ def status():
         "vector_index": corpus_stats["vector_index"],
         "vector_model": corpus_stats["vector_model"],
         "openai_api_key_configured": bool(OPENAI_API_KEY),
+        "anthropic_model": ANTHROPIC_MODEL,
+        "anthropic_expansion_model": ANTHROPIC_EXPANSION_MODEL,
         "source_metadata": corpus_stats["source_metadata"],
         "source_metadata_count": corpus_stats["source_metadata_count"],
         "runtime": "render-flask",
@@ -1900,7 +1904,7 @@ def chat():
 
     full_system = SYSTEM_PROMPT + context_block
 
-    model = "claude-sonnet-4-20250514"
+    model = ANTHROPIC_MODEL
     max_tokens = profile["max_tokens"]
     temperature = profile["temperature"]
 
@@ -1972,6 +1976,22 @@ def chat():
             latency_ms=elapsed_ms(),
         )
         return jsonify({"error": "Rate limit reached. Please wait a moment."}), 429
+    except anthropic.NotFoundError:
+        message = (
+            f"Configured Anthropic model is not available: {model}. "
+            "Set ANTHROPIC_MODEL to an available Claude API model and redeploy."
+        )
+        log_chat_exchange(
+            request_id=request_id,
+            messages=messages,
+            user_message=last_user,
+            error=message,
+            retrieval_mode=profile["mode"],
+            answer_mode=answer_mode,
+            answer_temperature=profile["temperature"],
+            latency_ms=elapsed_ms(),
+        )
+        return jsonify({"error": message}), 502
     except Exception as e:
         log_chat_exchange(
             request_id=request_id,

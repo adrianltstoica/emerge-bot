@@ -935,7 +935,7 @@ async function sendMsg() {
 
   } catch (err) {
     ty.remove();
-    appendBotMsg('<span style="color:#c00;">Could not reach the server. Please check your connection and try again. (' + err.message + ')</span>');
+    appendBotMsg('<span style="color:#c00;">The bot could not generate an answer. ' + esc(err.message) + '</span>');
   }
 
   isLoading = false;
