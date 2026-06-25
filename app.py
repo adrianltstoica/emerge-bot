@@ -1166,6 +1166,7 @@ def status():
         "retrieval_backend": "vector" if chunk_vectors and OPENAI_API_KEY else "tfidf",
         "vector_index": corpus_stats["vector_index"],
         "vector_model": corpus_stats["vector_model"],
+        "openai_api_key_configured": bool(OPENAI_API_KEY),
         "source_metadata": corpus_stats["source_metadata"],
         "source_metadata_count": corpus_stats["source_metadata_count"],
         "runtime": "render-flask",

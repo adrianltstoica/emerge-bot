@@ -17,7 +17,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CHUNKS_FILE = ROOT / "chunks.json"
-OUT_FILE = ROOT / "vector_index.json.gz"
+OUT_FILE = Path(os.environ.get("VECTOR_INDEX_FILE", ROOT / "vector_index.json.gz"))
 DEFAULT_MODEL = "text-embedding-3-small"
 
 
@@ -86,9 +86,14 @@ def main():
         "embeddings": embeddings,
     }
 
+    args.output.parent.mkdir(parents=True, exist_ok=True)
     with gzip.open(args.output, "wt", encoding="utf-8") as f:
         json.dump(index, f)
-    print(f"Wrote {len(embeddings)} vectors to {args.output.relative_to(ROOT)}")
+    try:
+        display_path = args.output.relative_to(ROOT)
+    except ValueError:
+        display_path = args.output
+    print(f"Wrote {len(embeddings)} vectors to {display_path}")
 
 
 if __name__ == "__main__":

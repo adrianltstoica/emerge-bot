@@ -22,7 +22,7 @@ Set the `ANTHROPIC_API_KEY` environment variable before starting the bot. The se
 export ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-For vector retrieval, also set `OPENAI_API_KEY`. If a vector index or OpenAI key is missing, the app falls back to the older TF-IDF retriever.
+For vector retrieval, also set `OPENAI_API_KEY`. If a vector index or OpenAI key is missing, the app falls back to the older TF-IDF retriever. On Render, `scripts/ensure_vector_index.py` builds `/var/data/vector_index.json.gz` on startup when `OPENAI_API_KEY` is configured, then reuses it from the persistent disk.
 
 ```bash
 export OPENAI_API_KEY=sk-...
@@ -166,7 +166,7 @@ For a public academic release, keep secrets and runtime/private artifacts out of
 - The corpus PDFs, `chunks.json`, and `source_metadata.json` are included here because redistribution has been cleared for this project.
 - Do not commit `vector_index.json.gz` unless you explicitly want to publish derived embedding data. Render can regenerate it from `chunks.json` using the secret `OPENAI_API_KEY`.
 
-Render can still use the secret `OPENAI_API_KEY` to build `vector_index.json.gz` during deployment when `chunks.json` is present in the private deployment source.
+Render can still use the secret `OPENAI_API_KEY` to build `/var/data/vector_index.json.gz` during service startup when `chunks.json` is present in the private deployment source.
 
 ---
 
