@@ -79,6 +79,7 @@ def test_status_reports_loaded_corpus_and_tfidf_fallback(monkeypatch, tmp_path):
     assert data["retrieval_backend"] == "tfidf"
     assert data["vector_index"] in {"missing", "chunk_count_mismatch", "loaded"}
     assert data["vector_index_file"]
+    assert "vector_index_error" in data
     assert data["openai_api_key_configured"] is False
     assert data["anthropic_model"]
     assert data["anthropic_expansion_model"]

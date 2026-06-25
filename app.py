@@ -143,6 +143,7 @@ corpus_stats = {
     "indexed_sources": 0,
     "missing_pdf_sources": [],
     "vector_index": "missing",
+    "vector_index_error": "",
     "vector_model": None,
     "source_metadata": "missing",
     "source_metadata_count": 0,
@@ -646,12 +647,15 @@ def ensure_vector_index_background():
                     str(Path(__file__).resolve().parent / "scripts" / "build_vector_index.py"),
                     "--output",
                     str(VECTOR_INDEX_FILE),
+                    "--batch-size",
+                    "32",
                 ],
                 cwd=Path(__file__).resolve().parent,
             )
             load_vector_index()
         except Exception as exc:
             corpus_stats["vector_index"] = "build_failed"
+            corpus_stats["vector_index_error"] = str(exc)
             print(f"WARNING: background vector index build failed: {exc}", flush=True)
 
     thread = threading.Thread(target=build_and_load, name="vector-index-builder", daemon=True)
@@ -724,6 +728,7 @@ def load_chunks():
         "indexed_sources": len(sources),
         "missing_pdf_sources": missing,
         "vector_index": "missing",
+        "vector_index_error": "",
         "vector_model": None,
         "source_metadata": corpus_stats.get("source_metadata", "missing"),
         "source_metadata_count": corpus_stats.get("source_metadata_count", 0),
@@ -1203,6 +1208,7 @@ def status():
         "retrieval_backend": "vector" if chunk_vectors and OPENAI_API_KEY else "tfidf",
         "vector_index": corpus_stats["vector_index"],
         "vector_index_file": str(VECTOR_INDEX_FILE),
+        "vector_index_error": corpus_stats.get("vector_index_error", ""),
         "vector_model": corpus_stats["vector_model"],
         "openai_api_key_configured": bool(OPENAI_API_KEY),
         "anthropic_model": ANTHROPIC_MODEL,
