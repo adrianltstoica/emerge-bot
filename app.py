@@ -641,7 +641,7 @@ def ensure_vector_index_background():
     def build_and_load():
         try:
             print(f"Vector index missing; building in background at {VECTOR_INDEX_FILE}", flush=True)
-            subprocess.check_call(
+            result = subprocess.run(
                 [
                     sys.executable,
                     str(Path(__file__).resolve().parent / "scripts" / "build_vector_index.py"),
@@ -651,7 +651,14 @@ def ensure_vector_index_background():
                     "32",
                 ],
                 cwd=Path(__file__).resolve().parent,
+                capture_output=True,
+                text=True,
             )
+            if result.stdout:
+                print(result.stdout, flush=True)
+            if result.returncode != 0:
+                detail = (result.stderr or result.stdout or "").strip()
+                raise RuntimeError(detail or f"vector build exited with {result.returncode}")
             load_vector_index()
         except Exception as exc:
             corpus_stats["vector_index"] = "build_failed"
