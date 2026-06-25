@@ -144,6 +144,9 @@ def test_homepage_exposes_required_toolkit_surfaces(monkeypatch, tmp_path):
     assert "Disclaimer, Privacy & Terms" in body
     assert "prompt-guide" in body
     assert "status-strip" in body
+    assert "wb-points" in body
+    assert "Assessment angle" in body
+    assert "Governance response" in body
     assert "Chats may be logged" in body
 
 
