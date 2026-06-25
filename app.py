@@ -15,6 +15,9 @@ import html
 import io
 import secrets
 import sqlite3
+import subprocess
+import sys
+import threading
 import time
 import uuid
 import urllib.error
@@ -133,6 +136,7 @@ chunk_vectors = []  # list[list[float]], unit-normalized embedding vectors
 vector_index_meta = {}
 retrieval_backend = "tfidf"
 source_metadata = {}
+vector_build_started = False
 
 corpus_stats = {
     "pdf_documents": 0,
@@ -624,6 +628,36 @@ def load_vector_index():
     )
 
 
+def ensure_vector_index_background():
+    global vector_build_started
+    if vector_build_started or chunk_vectors or not OPENAI_API_KEY:
+        return
+    if corpus_stats.get("vector_index") not in {"missing", "chunk_count_mismatch"}:
+        return
+    vector_build_started = True
+    corpus_stats["vector_index"] = "building"
+
+    def build_and_load():
+        try:
+            print(f"Vector index missing; building in background at {VECTOR_INDEX_FILE}", flush=True)
+            subprocess.check_call(
+                [
+                    sys.executable,
+                    str(Path(__file__).resolve().parent / "scripts" / "build_vector_index.py"),
+                    "--output",
+                    str(VECTOR_INDEX_FILE),
+                ],
+                cwd=Path(__file__).resolve().parent,
+            )
+            load_vector_index()
+        except Exception as exc:
+            corpus_stats["vector_index"] = "build_failed"
+            print(f"WARNING: background vector index build failed: {exc}", flush=True)
+
+    thread = threading.Thread(target=build_and_load, name="vector-index-builder", daemon=True)
+    thread.start()
+
+
 def load_source_metadata():
     global source_metadata
     source_metadata = {}
@@ -698,6 +732,7 @@ def load_chunks():
     if missing:
         print(f"WARNING: {len(missing)} PDFs do not have an obvious source match in chunks.json")
     load_vector_index()
+    ensure_vector_index_background()
 
 
 def score_chunks_tfidf(query):
@@ -1167,6 +1202,7 @@ def status():
         "ready": len(chunk_store) > 0,
         "retrieval_backend": "vector" if chunk_vectors and OPENAI_API_KEY else "tfidf",
         "vector_index": corpus_stats["vector_index"],
+        "vector_index_file": str(VECTOR_INDEX_FILE),
         "vector_model": corpus_stats["vector_model"],
         "openai_api_key_configured": bool(OPENAI_API_KEY),
         "anthropic_model": ANTHROPIC_MODEL,
