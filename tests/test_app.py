@@ -144,9 +144,10 @@ def test_homepage_exposes_required_toolkit_surfaces(monkeypatch, tmp_path):
     assert "Disclaimer, Privacy & Terms" in body
     assert "prompt-guide" in body
     assert "status-strip" in body
-    assert "wb-points" in body
-    assert "Assessment angle" in body
-    assert "Governance response" in body
+    assert "capacities, tasks, environments and metrics" in body
+    assert "EMERGE D1.1; EMERGE D1.2; EMERGE D1.3" in body
+    assert "rather than searched for retrospectively as a single culprit" in body
+    assert "Regulation (EU) 2024/1689" in body
     assert "Chats may be logged" in body
 
 
