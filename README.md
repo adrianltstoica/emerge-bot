@@ -24,6 +24,8 @@ export ANTHROPIC_API_KEY=sk-ant-...
 
 The answer model defaults to `claude-sonnet-4-6`, and query expansion defaults to `claude-haiku-4-5-20251001`. Override them with `ANTHROPIC_MODEL` and `ANTHROPIC_EXPANSION_MODEL` if your Anthropic workspace exposes different model IDs.
 
+Embedding index generation truncates unusually long chunks before sending them to OpenAI embeddings. The default limit is controlled by `EMBEDDING_TEXT_CHAR_LIMIT` and defaults to `12000` characters.
+
 For vector retrieval, also set `OPENAI_API_KEY`. If a vector index or OpenAI key is missing, the app falls back to the older TF-IDF retriever. On Render, `scripts/ensure_vector_index.py` builds `/var/data/vector_index.json.gz` on startup when `OPENAI_API_KEY` is configured, then reuses it from the persistent disk.
 
 ```bash

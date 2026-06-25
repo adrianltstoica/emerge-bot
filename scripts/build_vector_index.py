@@ -19,6 +19,14 @@ ROOT = Path(__file__).resolve().parents[1]
 CHUNKS_FILE = ROOT / "chunks.json"
 OUT_FILE = Path(os.environ.get("VECTOR_INDEX_FILE", ROOT / "vector_index.json.gz"))
 DEFAULT_MODEL = "text-embedding-3-small"
+DEFAULT_TEXT_CHAR_LIMIT = int(os.environ.get("EMBEDDING_TEXT_CHAR_LIMIT", "12000"))
+
+
+def prepare_embedding_text(text, limit=DEFAULT_TEXT_CHAR_LIMIT):
+    text = str(text or "")
+    if len(text) <= limit:
+        return text
+    return text[:limit]
 
 
 def embed_texts(texts, api_key, model):
@@ -62,7 +70,7 @@ def main():
         chunks = json.load(f)
 
     embeddings = []
-    texts = [chunk["text"] for chunk in chunks]
+    texts = [prepare_embedding_text(chunk["text"]) for chunk in chunks]
     for start, batch in batched(texts, args.batch_size):
         for attempt in range(1, 4):
             try:

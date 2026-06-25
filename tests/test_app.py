@@ -65,6 +65,18 @@ def read_static_index():
     return (ROOT / "static" / "index.html").read_text(encoding="utf-8")
 
 
+def test_embedding_text_is_truncated_for_index_build():
+    sys.path.insert(0, str(ROOT / "scripts"))
+    try:
+        import build_vector_index
+
+        text = "x" * 13000
+        assert len(build_vector_index.prepare_embedding_text(text, limit=12000)) == 12000
+        assert build_vector_index.prepare_embedding_text("short", limit=12000) == "short"
+    finally:
+        sys.path.remove(str(ROOT / "scripts"))
+
+
 def test_status_reports_loaded_corpus_and_tfidf_fallback(monkeypatch, tmp_path):
     app_module = import_test_app(monkeypatch, tmp_path)
     client = app_module.app.test_client()
