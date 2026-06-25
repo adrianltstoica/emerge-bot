@@ -6,6 +6,7 @@ counter-query for two-sided coverage), scope-gated refusals.
 """
 
 import os
+import base64
 import json
 import re
 import math
@@ -23,6 +24,7 @@ import uuid
 import urllib.error
 import urllib.parse
 import urllib.request
+from array import array
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -132,7 +134,8 @@ chunk_store = []
 chunk_tf = []     # list[dict[token, weight]]
 doc_norms = []    # list[float]
 idf = {}          # dict[token, idf weight]
-chunk_vectors = []  # list[list[float]], unit-normalized embedding vectors
+chunk_vectors = array("f")  # flat float32 unit-normalized embedding matrix
+chunk_vector_dim = 0
 vector_index_meta = {}
 retrieval_backend = "tfidf"
 source_metadata = {}
@@ -595,8 +598,9 @@ def embed_texts(texts, api_key=OPENAI_API_KEY, model=EMBEDDING_MODEL):
 
 
 def load_vector_index():
-    global chunk_vectors, vector_index_meta, retrieval_backend
-    chunk_vectors = []
+    global chunk_vectors, chunk_vector_dim, vector_index_meta, retrieval_backend
+    chunk_vectors = array("f")
+    chunk_vector_dim = 0
     vector_index_meta = {}
     retrieval_backend = "tfidf"
 
@@ -608,23 +612,59 @@ def load_vector_index():
     with opener(VECTOR_INDEX_FILE, "rt", encoding="utf-8") as f:
         index = json.load(f)
 
-    embeddings = index.get("embeddings", [])
-    if len(embeddings) != len(chunk_store):
+    if index.get("meta", {}).get("format") == "float32_base64":
+        dimension = int(index.get("meta", {}).get("dimension") or 0)
+        raw = base64.b64decode(index.get("embeddings_f32_b64") or "")
+        embeddings = array("f")
+        embeddings.frombytes(raw)
+        count = len(embeddings) // dimension if dimension else 0
+        if dimension <= 0 or len(embeddings) % dimension != 0:
+            corpus_stats["vector_index"] = "invalid"
+            corpus_stats["vector_index_error"] = "Invalid compact vector index dimensions"
+            return
+        if count != len(chunk_store):
+            corpus_stats["vector_index"] = "chunk_count_mismatch"
+            corpus_stats["vector_index_error"] = (
+                f"{count} compact vectors for {len(chunk_store)} chunks"
+            )
+            print(
+                "WARNING: vector index chunk count does not match chunks.json "
+                f"({count} vectors for {len(chunk_store)} chunks)"
+            )
+            return
+        chunk_vectors = embeddings
+        chunk_vector_dim = dimension
+    else:
+        embeddings = index.get("embeddings", [])
+        if len(embeddings) != len(chunk_store):
+            corpus_stats["vector_index"] = "chunk_count_mismatch"
+            corpus_stats["vector_index_error"] = (
+                f"{len(embeddings)} vectors for {len(chunk_store)} chunks"
+            )
+            print(
+                "WARNING: vector index chunk count does not match chunks.json "
+                f"({len(embeddings)} vectors for {len(chunk_store)} chunks)"
+            )
+            return
+        dimension = len(embeddings[0]) if embeddings else 0
+        compact = array("f")
+        for vec in embeddings:
+            compact.extend(l2_normalize(vec))
+        chunk_vectors = compact
+        chunk_vector_dim = dimension
+
+    if len(chunk_vectors) // (chunk_vector_dim or 1) != len(chunk_store):
         corpus_stats["vector_index"] = "chunk_count_mismatch"
-        print(
-            "WARNING: vector index chunk count does not match chunks.json "
-            f"({len(embeddings)} vectors for {len(chunk_store)} chunks)"
-        )
         return
 
-    chunk_vectors = [l2_normalize(vec) for vec in embeddings]
     vector_index_meta = index.get("meta", {})
     corpus_stats["vector_index"] = "loaded"
+    corpus_stats["vector_index_error"] = ""
     corpus_stats["vector_model"] = vector_index_meta.get("model")
     if OPENAI_API_KEY:
         retrieval_backend = "vector"
     print(
-        f"Loaded vector index with {len(chunk_vectors)} embeddings "
+        f"Loaded vector index with {len(chunk_vectors) // chunk_vector_dim} embeddings "
         f"({vector_index_meta.get('model', 'unknown model')})"
     )
 
@@ -771,12 +811,15 @@ def score_chunks_tfidf(query):
 
 
 def score_chunks_vector(query):
-    if not chunk_vectors or not OPENAI_API_KEY:
+    if not chunk_vectors or not chunk_vector_dim or not OPENAI_API_KEY:
         return []
     qvec = l2_normalize(embed_texts([query])[0])
     scored = []
-    for i, cvec in enumerate(chunk_vectors):
-        sim = sum(q * c for q, c in zip(qvec, cvec))
+    for i in range(len(chunk_store)):
+        start = i * chunk_vector_dim
+        sim = 0.0
+        for j, q in enumerate(qvec[:chunk_vector_dim]):
+            sim += q * chunk_vectors[start + j]
         if sim > 0:
             scored.append((sim, i))
     scored.sort(reverse=True)

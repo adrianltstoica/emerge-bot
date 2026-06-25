@@ -6,12 +6,15 @@ runtime query embeddings use the same embedding model.
 """
 
 import argparse
+import base64
 import gzip
 import json
+import math
 import os
 import time
 import urllib.error
 import urllib.request
+from array import array
 from pathlib import Path
 
 
@@ -55,6 +58,11 @@ def batched(items, size):
         yield start, items[start:start + size]
 
 
+def normalized_float32(vec):
+    norm = math.sqrt(sum(float(v) * float(v) for v in vec)) or 1.0
+    return array("f", (float(v) / norm for v in vec))
+
+
 def main():
     parser = argparse.ArgumentParser(description="Build vector_index.json.gz from chunks.json")
     parser.add_argument("--model", default=os.environ.get("EMBEDDING_MODEL", DEFAULT_MODEL))
@@ -69,12 +77,20 @@ def main():
     with open(CHUNKS_FILE, encoding="utf-8") as f:
         chunks = json.load(f)
 
-    embeddings = []
+    embeddings = array("f")
+    dimension = None
     texts = [prepare_embedding_text(chunk["text"]) for chunk in chunks]
     for start, batch in batched(texts, args.batch_size):
         for attempt in range(1, 4):
             try:
-                embeddings.extend(embed_texts(batch, api_key, args.model))
+                for embedding in embed_texts(batch, api_key, args.model):
+                    if dimension is None:
+                        dimension = len(embedding)
+                    elif len(embedding) != dimension:
+                        raise RuntimeError(
+                            f"Embedding dimension changed from {dimension} to {len(embedding)}"
+                        )
+                    embeddings.extend(normalized_float32(embedding))
                 break
             except Exception as exc:
                 if attempt == 3:
@@ -88,10 +104,12 @@ def main():
         "meta": {
             "model": args.model,
             "chunk_count": len(chunks),
+            "dimension": dimension or 0,
+            "format": "float32_base64",
             "source_file": CHUNKS_FILE.name,
             "created_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         },
-        "embeddings": embeddings,
+        "embeddings_f32_b64": base64.b64encode(embeddings.tobytes()).decode("ascii"),
     }
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -101,7 +119,7 @@ def main():
         display_path = args.output.relative_to(ROOT)
     except ValueError:
         display_path = args.output
-    print(f"Wrote {len(embeddings)} vectors to {display_path}")
+    print(f"Wrote {len(chunks)} vectors to {display_path}")
 
 
 if __name__ == "__main__":
