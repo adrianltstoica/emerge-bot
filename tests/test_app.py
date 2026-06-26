@@ -148,6 +148,9 @@ def test_homepage_exposes_required_toolkit_surfaces(monkeypatch, tmp_path):
     assert "EMERGE D1.1; EMERGE D1.2; EMERGE D1.3" in body
     assert "rather than searched for retrospectively as a single culprit" in body
     assert "Regulation (EU) 2024/1689" in body
+    assert "sourceLookup('D1.1')" in body
+    assert "sourceLookup('2024/1689')" in body
+    assert 'class="src-ref"' in body
     assert "Chats may be logged" in body
 
 
