@@ -108,41 +108,68 @@ footer{padding:28px 52px;border-top:1px solid var(--g2);display:flex;align-items
 .legal-section ul{display:grid;gap:8px;list-style:none;margin-top:10px;}
 .legal-section li{border-bottom:1px solid var(--g2);padding-bottom:8px;color:var(--g3);}
 .legal-section strong{color:var(--bk);}
-.cl-wrap{max-width:760px;margin:0 auto;padding:56px 52px;}
-.cl-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:34px;}
-.cl-intro{font-size:13px;color:var(--g3);line-height:1.65;margin-top:8px;max-width:560px;}
+.cl-wrap{max-width:1080px;margin:0 auto;padding:56px 52px 76px;}
+.cl-head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:24px;margin-bottom:28px;}
+.cl-eyebrow{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--p);margin-bottom:10px;}
+.cl-intro{font-size:13px;color:var(--g3);line-height:1.65;margin-top:8px;max-width:620px;}
 .cl-reset{border:1px solid var(--g2);border-radius:8px;background:var(--wh);color:var(--bk);font:700 12px var(--fn);padding:9px 11px;cursor:pointer;display:none;flex-shrink:0;}
-.cl-reset:hover{border-color:var(--p);color:var(--p);}
-.roles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:48px;}
-.rt{background:var(--wh);border:1.5px solid var(--g2);border-radius:10px;padding:20px 14px;cursor:pointer;text-align:left;font-family:var(--fn);transition:all .12s;}
-.rt:hover{border-color:var(--p);}
+.cl-reset:hover,.cl-reset:focus{border-color:var(--p);color:var(--p);outline:none;}
+.roles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 30px;}
+.rt{position:relative;background:var(--wh);border:1px solid var(--g2);border-radius:8px;padding:16px 14px 14px;cursor:pointer;text-align:left;font-family:var(--fn);transition:all .14s;min-height:118px;overflow:hidden;}
+.rt:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--g2);transition:background .14s;}
+.rt:hover,.rt:focus{border-color:var(--p);outline:none;}
 .rt.on{border-color:var(--bk);background:var(--bk);}
-.rt-icon{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--p);margin-bottom:10px;}
+.rt.on:before{background:var(--y);}
+.rt-icon{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--p);margin-bottom:14px;}
 .rt.on .rt-icon{color:var(--y);}
-.rt-name{font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--bk);margin-bottom:3px;}
-.rt.on .rt-name{color:var(--y);}
-.rt-desc{font-size:10px;color:var(--g3);line-height:1.3;}
-.rt.on .rt-desc{color:rgba(255,255,255,.4);}
-.prog-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--g3);margin-bottom:8px;}
-.prog-track{height:2px;background:var(--g2);margin-bottom:48px;}
-.prog-fill{height:2px;background:var(--p);transition:width .3s;width:0%;}
-.cl-g{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--p);margin-bottom:10px;margin-top:32px;}
-.cl-g:first-of-type{margin-top:0;}
-.cl-row{border-bottom:1px solid var(--g2);border-radius:6px;transition:background .1s;}
-.cl-row:hover{background:var(--g1);}
-.cl-row.done{background:rgba(135,137,192,.05);}
-.cl-hit{display:flex;gap:14px;align-items:flex-start;width:100%;border:0;background:transparent;text-align:left;font-family:var(--fn);padding:14px 10px 5px;cursor:pointer;}
-.cl-box{width:17px;height:17px;border:1.5px solid var(--g2);border-radius:4px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;transition:all .1s;}
+.rt-name{font-size:13px;font-weight:800;letter-spacing:.01em;color:var(--bk);margin-bottom:5px;}
+.rt.on .rt-name{color:var(--wh);}
+.rt-desc{font-size:11px;color:var(--g3);line-height:1.45;max-width:150px;}
+.rt.on .rt-desc{color:rgba(255,255,255,.58);}
+.rt-progress{position:absolute;right:12px;bottom:12px;font-size:10px;font-weight:800;color:var(--g3);}
+.rt.on .rt-progress{color:var(--y);}
+.cl-workspace{display:grid;grid-template-columns:250px minmax(0,1fr);gap:30px;align-items:start;}
+.cl-panel{position:sticky;top:84px;border-top:1px solid var(--g2);padding-top:18px;}
+.cl-panel-k{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--g3);margin-bottom:10px;}
+.cl-panel-title{font-size:20px;font-weight:800;letter-spacing:-.3px;color:var(--bk);margin-bottom:8px;}
+.cl-panel-text{font-size:12px;line-height:1.65;color:var(--g3);margin-bottom:18px;}
+.cl-panel-focus{border-top:1px solid var(--g2);border-bottom:1px solid var(--g2);padding:12px 0;margin-bottom:18px;}
+.cl-panel-focus span{display:block;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--p);margin-bottom:5px;}
+.cl-panel-focus p{font-size:12px;line-height:1.55;color:var(--bk);}
+.prog-label{display:flex;align-items:baseline;justify-content:space-between;gap:12px;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--g3);margin-bottom:10px;}
+.prog-score{font-size:24px;font-weight:800;letter-spacing:-.5px;color:var(--bk);}
+.prog-track{height:6px;background:var(--g2);border-radius:999px;overflow:hidden;margin-bottom:18px;}
+.prog-fill{height:100%;background:var(--p);border-radius:999px;transition:width .25s;width:0%;}
+.cl-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+.cl-stat{border-top:1px solid var(--g2);padding-top:9px;}
+.cl-stat strong{display:block;font-size:16px;line-height:1;color:var(--bk);margin-bottom:4px;}
+.cl-stat span{font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--g3);}
+.cl-review{min-width:0;}
+.cl-group{border-top:1px solid var(--g2);padding-top:16px;margin-bottom:30px;}
+.cl-g-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:12px;}
+.cl-g{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--p);}
+.cl-g-sub{font-size:11px;font-weight:700;color:var(--g3);margin-top:5px;}
+.cl-g-count{font-size:11px;font-weight:800;color:var(--bk);white-space:nowrap;}
+.cl-list{display:grid;gap:10px;}
+.cl-row{border:1px solid var(--g2);border-radius:8px;background:var(--wh);transition:border-color .12s,background .12s,box-shadow .12s;overflow:hidden;}
+.cl-row:hover{border-color:#d5d4d0;box-shadow:0 8px 24px rgba(29,29,27,.04);}
+.cl-row.done{background:rgba(135,137,192,.06);border-color:rgba(135,137,192,.34);}
+.cl-hit{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:12px;align-items:start;width:100%;border:0;background:transparent;text-align:left;font-family:var(--fn);padding:14px 16px 11px;cursor:pointer;}
+.cl-box{width:20px;height:20px;border:1.5px solid var(--g2);border-radius:5px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;transition:all .1s;color:transparent;background:var(--wh);}
 .cl-row.done .cl-box{background:var(--p);border-color:var(--p);color:var(--wh);}
-.cl-q{font-size:13px;font-weight:600;color:var(--bk);line-height:1.5;margin-bottom:3px;}
-.cl-row.done .cl-q{color:var(--p);}
-.cl-meta{display:grid;gap:6px;padding:0 10px 10px 41px;}
+.cl-step{display:block;font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--g3);margin-bottom:4px;}
+.cl-q{display:block;font-size:14px;font-weight:700;color:var(--bk);line-height:1.45;}
+.cl-row.done .cl-q{color:var(--bk);}
+.cl-state{border:1px solid var(--g2);border-radius:999px;padding:4px 8px;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--g3);background:var(--wh);white-space:nowrap;}
+.cl-row.done .cl-state{border-color:var(--p);background:var(--p);color:var(--wh);}
+.cl-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;border-top:1px solid var(--g2);padding:12px 16px 12px 50px;}
 .cl-meta-line{font-size:11px;line-height:1.55;color:var(--g3);}
-.cl-meta-line strong{color:var(--bk);font-weight:800;}
-.cl-src{display:flex;gap:6px;flex-wrap:wrap;padding:0 10px 14px 41px;}
-.cl-src-btn{border:0;border-bottom:1px solid var(--g2);background:transparent;color:var(--g3);font:700 10px var(--fn);padding:0;cursor:pointer;}
-.cl-src-btn:hover,.cl-src-btn:focus{color:var(--p);border-bottom-color:var(--p);outline:none;}
-.cl-empty{padding:48px 0;text-align:center;font-size:14px;color:var(--g3);}
+.cl-meta-line strong{display:block;color:var(--bk);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;}
+.cl-src{display:flex;gap:7px;flex-wrap:wrap;padding:0 16px 16px 50px;}
+.cl-src:before{content:"Sources";font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--g3);margin-right:2px;align-self:center;}
+.cl-src-btn{border:1px solid var(--g2);border-radius:999px;background:var(--wh);color:var(--g3);font:800 10px var(--fn);padding:4px 8px;cursor:pointer;transition:all .1s;}
+.cl-src-btn:hover,.cl-src-btn:focus{color:var(--bk);border-color:var(--p);outline:none;}
+.cl-empty{border-top:1px solid var(--g2);border-bottom:1px solid var(--g2);padding:56px 0;text-align:center;font-size:14px;color:var(--g3);}
 .bot-pg{height:calc(100vh - 60px);display:flex;flex-direction:column;overflow:hidden;}
 .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:40px 24px;gap:0;}
 .empty-state.hidden{display:none;}
@@ -229,8 +256,13 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
 .cl-wrap{padding:44px 24px;}
 .cl-head{display:block;margin-bottom:28px;}
 .cl-reset{margin-top:16px;}
-.roles{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:36px;}
+.roles{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:28px;}
 .rt{padding:16px 12px;}
+.cl-workspace{display:block;}
+.cl-panel{position:relative;top:auto;margin-bottom:30px;}
+.cl-meta{grid-template-columns:1fr;gap:10px;}
+.cl-hit{grid-template-columns:22px minmax(0,1fr);}
+.cl-state{grid-column:2;justify-self:start;margin-top:2px;}
 .bot-pg{height:calc(100dvh - 60px);}
 .empty-state{padding:32px 18px;}
 .es-greeting-row{align-items:flex-start;gap:10px;}
@@ -248,7 +280,12 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
 .h-title{font-size:40px;}
 .tool{align-items:flex-start;}
 .tool-arrow{font-size:20px;}
-.roles{grid-template-columns:1fr;}
+.roles{grid-template-columns:repeat(2,minmax(0,1fr));}
+.rt{min-height:104px;padding:14px 12px;}
+.rt-desc{font-size:10px;}
+.rt-progress{top:14px;right:12px;bottom:auto;}
+.cl-meta,.cl-src{padding-left:16px;}
+.cl-src:before{width:100%;margin-bottom:2px;}
 .es-greeting-row{flex-direction:column;}
 .msg-b{gap:10px;}
 }
@@ -484,19 +521,38 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
   <div class="cl-wrap">
     <div class="cl-head">
       <div>
+        <div class="cl-eyebrow">Review tool</div>
         <h1 class="src-title">Stakeholder Checklist</h1>
         <p class="cl-intro">Role-specific prompts for reviewing aware, collective, and high-impact AI systems. Each item links back to the source register so users can check the evidence behind the prompt.</p>
       </div>
       <button class="cl-reset" id="cl-reset" type="button" onclick="resetChecklist()">Reset checks</button>
     </div>
     <div class="roles">
-      <button class="rt" onclick="setRole(this,'reg')"><div class="rt-icon">Policy</div><div class="rt-name">Regulator</div><div class="rt-desc">Governance & oversight</div></button>
-      <button class="rt" onclick="setRole(this,'dev')"><div class="rt-icon">Build</div><div class="rt-name">Developer</div><div class="rt-desc">Building or deploying AI</div></button>
-      <button class="rt" onclick="setRole(this,'res')"><div class="rt-icon">Study</div><div class="rt-name">Researcher</div><div class="rt-desc">Academic or industry AI</div></button>
-      <button class="rt" onclick="setRole(this,'usr')"><div class="rt-icon">Use</div><div class="rt-name">Product User</div><div class="rt-desc">Using AI products</div></button>
+      <button class="rt" data-role="reg" onclick="setRole(this,'reg')"><div class="rt-icon">01 Policy</div><div class="rt-name">Regulator</div><div class="rt-desc">Governance, duties, oversight</div><div class="rt-progress" id="rt-reg-progress">0/12</div></button>
+      <button class="rt" data-role="dev" onclick="setRole(this,'dev')"><div class="rt-icon">02 Build</div><div class="rt-name">Developer</div><div class="rt-desc">Design, release, monitoring</div><div class="rt-progress" id="rt-dev-progress">0/12</div></button>
+      <button class="rt" data-role="res" onclick="setRole(this,'res')"><div class="rt-icon">03 Study</div><div class="rt-name">Researcher</div><div class="rt-desc">Claims, evidence, publication</div><div class="rt-progress" id="rt-res-progress">0/12</div></button>
+      <button class="rt" data-role="usr" onclick="setRole(this,'usr')"><div class="rt-icon">04 Use</div><div class="rt-name">Product User</div><div class="rt-desc">Reliance, rights, recourse</div><div class="rt-progress" id="rt-usr-progress">0/12</div></button>
     </div>
-    <div id="cpw" style="display:none"><div class="prog-label" id="cplbl">0 of 0 completed</div><div class="prog-track"><div class="prog-fill" id="cpbar"></div></div></div>
-    <div id="clbody"><div class="cl-empty">Select your role above to load your checklist.</div></div>
+    <div class="cl-workspace">
+      <aside class="cl-panel" id="cl-panel">
+        <div class="cl-panel-k">Current lens</div>
+        <div class="cl-panel-title" id="cl-role-title">Choose a role</div>
+        <p class="cl-panel-text" id="cl-role-desc">Progress is saved in this browser for each stakeholder view.</p>
+        <div class="cl-panel-focus">
+          <span>Review focus</span>
+          <p id="cl-role-focus">Select a stakeholder lens to load the relevant checks.</p>
+        </div>
+        <div id="cpw">
+          <div class="prog-label"><span id="cplbl">0 of 0 completed</span><strong class="prog-score" id="cppct">0%</strong></div>
+          <div class="prog-track"><div class="prog-fill" id="cpbar"></div></div>
+        </div>
+        <div class="cl-stats">
+          <div class="cl-stat"><strong id="cl-stat-groups">0</strong><span>Sections</span></div>
+          <div class="cl-stat"><strong id="cl-stat-sources">0</strong><span>Source links</span></div>
+        </div>
+      </aside>
+      <div class="cl-review" id="clbody"><div class="cl-empty">Select your role above to load your checklist.</div></div>
+    </div>
   </div>
   <footer><span>© 2025 MI3 · LMU München</span><div class="f-links"><a class="f-link" href="https://eic-emerge.eu/" target="_blank" rel="noopener">About EMERGE</a><a class="f-link" href="https://www.mi3.info/" target="_blank" rel="noopener">mi3.info ↗</a></div></footer>
 </div>
@@ -711,8 +767,45 @@ const CL = {
   ]
 };
 
+const ROLE_META = {
+  reg: {
+    title: 'Regulator',
+    desc: 'A governance lens for duties, public accountability, transparency and oversight.',
+    focus: 'Classify risk, assign responsibility, test transparency duties, and keep ethical review separate from bare compliance.'
+  },
+  dev: {
+    title: 'Developer',
+    desc: 'A build-and-release lens for teams designing, deploying or operating AI systems.',
+    focus: 'Document system boundaries, calibrate trust, design for intervention, and make release blockers explicit.'
+  },
+  res: {
+    title: 'Researcher',
+    desc: 'A research-quality lens for claims, concepts, evidence and dissemination.',
+    focus: 'Define awareness carefully, connect metrics to ethical claims, test limits, and prevent overclaiming.'
+  },
+  usr: {
+    title: 'Product User',
+    desc: 'A practical reliance lens for people evaluating AI products or services.',
+    focus: 'Understand the system, calibrate trust, know when to escalate, and preserve recourse for important decisions.'
+  }
+};
+
 function checklistKey(role, groupIndex, itemIndex) {
   return role + ':' + groupIndex + ':' + itemIndex;
+}
+
+function checklistTotal(role) {
+  return (CL[role] || []).reduce((sum, group) => sum + group.i.length, 0);
+}
+
+function sourceCountForRole(role) {
+  const labels = new Set();
+  (CL[role] || []).forEach(group => {
+    group.i.forEach(item => {
+      String(item.s || '').split(/\s+·\s+/).filter(Boolean).forEach(label => labels.add(label));
+    });
+  });
+  return labels.size;
 }
 
 function getChecklistState(role) {
@@ -743,51 +836,80 @@ function renderSourceButtons(sourceText) {
     .join('');
 }
 
+function refreshRoleProgress() {
+  Object.keys(CL).forEach(role => {
+    const el = document.getElementById('rt-' + role + '-progress');
+    if (!el) return;
+    const total = checklistTotal(role);
+    const done = getChecklistState(role).size;
+    el.textContent = done + '/' + total;
+  });
+}
+
 function setRole(btn, r) {
   document.querySelectorAll('.rt').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
   currentChecklistRole = r;
-  document.getElementById('cpw').style.display = 'block';
   document.getElementById('cl-reset').style.display = 'inline-flex';
+  const meta = ROLE_META[r] || {};
+  document.getElementById('cl-role-title').textContent = meta.title || 'Checklist';
+  document.getElementById('cl-role-desc').textContent = meta.desc || '';
+  document.getElementById('cl-role-focus').textContent = meta.focus || '';
+  document.getElementById('cl-stat-groups').textContent = CL[r].length;
+  document.getElementById('cl-stat-sources').textContent = sourceCountForRole(r);
   const b = document.getElementById('clbody');
   const saved = getChecklistState(r);
-  b.innerHTML = CL[r].map((g, groupIndex) =>
-    '<div class="cl-g">' + esc(g.g) + '</div>' +
-    g.i.map((it, itemIndex) => {
+  b.innerHTML = CL[r].map((g, groupIndex) => {
+    const groupDone = g.i.filter((it, itemIndex) => saved.has(checklistKey(r, groupIndex, itemIndex))).length;
+    return '<section class="cl-group" data-group-index="' + groupIndex + '">' +
+      '<div class="cl-g-head">' +
+      '<div><div class="cl-g">' + esc(g.g) + '</div><div class="cl-g-sub">Source-linked review section</div></div>' +
+      '<span class="cl-g-count">' + groupDone + '/' + g.i.length + '</span>' +
+      '</div>' +
+      '<div class="cl-list">' +
+      g.i.map((it, itemIndex) => {
       const key = checklistKey(r, groupIndex, itemIndex);
       const done = saved.has(key);
       return '<div class="cl-row' + (done ? ' done' : '') + '" data-key="' + esc(key) + '">' +
-        '<button class="cl-hit" type="button" aria-pressed="' + (done ? 'true' : 'false') + '" onclick="tick(this.closest(\'.cl-row\'))">' +
+        '<button class="cl-hit" type="button" aria-pressed="' + (done ? 'true' : 'false') + '" aria-label="Mark reviewed: ' + esc(it.q) + '" onclick="tick(this.closest(\'.cl-row\'))">' +
         '<span class="cl-box">' + (done ? '✓' : '') + '</span>' +
-        '<span><span class="cl-q">' + esc(it.q) + '</span></span>' +
+        '<span><span class="cl-step">Check ' + String(itemIndex + 1).padStart(2, '0') + '</span><span class="cl-q">' + esc(it.q) + '</span></span>' +
+        '<span class="cl-state">' + (done ? 'Reviewed' : 'Open') + '</span>' +
         '</button>' +
         '<div class="cl-meta">' +
-        '<div class="cl-meta-line"><strong>Evidence:</strong> ' + esc(it.e || 'Document the decision, owner, and review status.') + '</div>' +
-        '<div class="cl-meta-line"><strong>Risk if absent:</strong> ' + esc(it.r || 'The issue may remain invisible until after harm or confusion occurs.') + '</div>' +
+        '<div class="cl-meta-line"><strong>Evidence:</strong>' + esc(it.e || 'Document the decision, owner, and review status.') + '</div>' +
+        '<div class="cl-meta-line"><strong>Risk if absent:</strong>' + esc(it.r || 'The issue may remain invisible until after harm or confusion occurs.') + '</div>' +
         '</div>' +
         '<div class="cl-src">' + renderSourceButtons(it.s) + '</div>' +
         '</div>';
-    }).join('')
-  ).join('');
+      }).join('') +
+      '</div>' +
+      '</section>';
+  }).join('');
   upd();
+  refreshRoleProgress();
 }
 
 function tick(el) {
   if (!el) return;
-  el.classList.toggle('done');
-  el.querySelector('.cl-box').textContent = el.classList.contains('done') ? '✓' : '';
+  const isDone = !el.classList.contains('done');
+  el.classList.toggle('done', isDone);
+  el.querySelector('.cl-box').textContent = isDone ? '✓' : '';
+  const stateLabel = el.querySelector('.cl-state');
+  if (stateLabel) stateLabel.textContent = isDone ? 'Reviewed' : 'Open';
   const hit = el.querySelector('.cl-hit');
-  if (hit) hit.setAttribute('aria-pressed', el.classList.contains('done') ? 'true' : 'false');
+  if (hit) hit.setAttribute('aria-pressed', isDone ? 'true' : 'false');
   if (currentChecklistRole) {
     const state = getChecklistState(currentChecklistRole);
     const key = el.getAttribute('data-key');
     if (key) {
-      if (el.classList.contains('done')) state.add(key);
+      if (isDone) state.add(key);
       else state.delete(key);
       saveChecklistState(currentChecklistRole, state);
     }
   }
   upd();
+  refreshRoleProgress();
 }
 
 function resetChecklist() {
@@ -800,9 +922,19 @@ function resetChecklist() {
 function upd() {
   const all = document.querySelectorAll('#clbody .cl-row').length;
   const done = document.querySelectorAll('#clbody .cl-row.done').length;
+  const pct = all ? Math.round(done / all * 100) : 0;
   document.getElementById('cplbl').textContent = done + ' of ' + all + ' completed';
-  document.getElementById('cpbar').style.width = all ? Math.round(done / all * 100) + '%' : '0%';
+  document.getElementById('cppct').textContent = pct + '%';
+  document.getElementById('cpbar').style.width = pct + '%';
+  document.querySelectorAll('#clbody .cl-group').forEach(function(group) {
+    const rows = group.querySelectorAll('.cl-row').length;
+    const reviewed = group.querySelectorAll('.cl-row.done').length;
+    const label = group.querySelector('.cl-g-count');
+    if (label) label.textContent = reviewed + '/' + rows;
+  });
 }
+
+refreshRoleProgress();
 
 // ── Sources ──
 let sourceRecords = [];
