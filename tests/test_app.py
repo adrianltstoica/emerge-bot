@@ -160,9 +160,19 @@ def test_homepage_exposes_required_toolkit_surfaces(monkeypatch, tmp_path):
     assert "Disclaimer, Privacy & Terms" in body
     assert "prompt-guide" in body
     assert "status-strip" in body
+    assert "<strong>Definition.</strong>" in body
+    assert "<strong>Assessment focus.</strong>" in body
+    assert "<strong>Governance implication.</strong>" in body
+    assert "Connects to:" in body
     assert "capacities, tasks, environments and metrics" in body
     assert "EMERGE D1.1; EMERGE D1.2; EMERGE D1.3" in body
     assert "rather than searched for retrospectively as a single culprit" in body
+    assert "Evidence:" in body
+    assert "Risk if absent:" in body
+    assert "Are responsibility routes defined before deployment?" in body
+    assert "Can incidents be traced to inputs, components, versions, and human decisions?" in body
+    assert "Is ethics treated as part of the research lifecycle rather than a final paragraph?" in body
+    assert "Is there a non-AI alternative or human review route for important decisions?" in body
     assert "Regulation (EU) 2024/1689" in body
     assert "sourceLookup('D1.1')" in body
     assert "sourceLookup('2024/1689')" in body
