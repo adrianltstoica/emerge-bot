@@ -155,6 +155,8 @@ def test_homepage_exposes_required_toolkit_surfaces(monkeypatch, tmp_path):
     assert "Methodology & Limits" in body
     assert "Stakeholder Checklist" in body
     assert "Ethics Bot" in body
+    assert ">Focused</button>" in body
+    assert ">Accurate</button>" not in body
     assert "Disclaimer, Privacy & Terms" in body
     assert "prompt-guide" in body
     assert "status-strip" in body

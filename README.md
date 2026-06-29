@@ -59,7 +59,7 @@ Go to: **http://localhost:5050**
 3. Ask questions
 
 The chat has three answer modes:
-- **Accurate:** tight retrieval, lower context count, and temperature `0.0` for maximum source fidelity.
+- **Focused:** tight retrieval, lower context count, and temperature `0.0` for conservative source fidelity.
 - **Balanced:** default source-grounded answers with normal retrieval and temperature `0.2`.
 - **Brainstorm:** wider retrieval and temperature `0.45` for source-grounded ideation.
 

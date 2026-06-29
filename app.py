@@ -83,13 +83,13 @@ RETRIEVAL_PROFILES = {
 }
 ANSWER_MODES = {
     "accurate": {
-        "label": "Accurate",
+        "label": "Focused",
         "temperature": 0.0,
         "top_k_cap": 10,
         "per_source_limit_cap": 2,
         "max_tokens_cap": 700,
         "note": (
-            "Accuracy mode: prioritize tight retrieval, conservative wording, and explicit uncertainty. "
+            "Focused mode: prioritize tight retrieval, conservative wording, and explicit uncertainty. "
             "Do not brainstorm beyond the retrieved excerpts."
         ),
     },

@@ -424,7 +424,7 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
         <ul>
           <li><strong>Citation rule:</strong> every substantive claim should be traceable to a named retrieved source.</li>
           <li><strong>Whitelist rule:</strong> works mentioned inside excerpts are not cited as primary sources unless that work itself was retrieved.</li>
-          <li><strong>Answer modes:</strong> Accurate lowers temperature and retrieval breadth; Brainstorm widens retrieval but remains source-grounded.</li>
+          <li><strong>Answer modes:</strong> Focused lowers temperature and retrieval breadth; Brainstorm widens retrieval but remains source-grounded.</li>
           <li><strong>Source list:</strong> the app appends the retrieved source list automatically after each generated answer.</li>
         </ul>
       </section>
@@ -513,7 +513,7 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
       <div class="mode-control" aria-label="Answer mode">
         <span class="mode-label">Mode</span>
         <div class="mode-toggle">
-          <button class="mode-btn" type="button" data-mode="accurate" onclick="setAnswerMode('accurate')">Accurate</button>
+          <button class="mode-btn" type="button" data-mode="accurate" onclick="setAnswerMode('accurate')">Focused</button>
           <button class="mode-btn active" type="button" data-mode="balanced" onclick="setAnswerMode('balanced')">Balanced</button>
           <button class="mode-btn" type="button" data-mode="brainstorm" onclick="setAnswerMode('brainstorm')">Brainstorm</button>
         </div>
@@ -570,7 +570,7 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
       <div class="mode-control" aria-label="Answer mode">
         <span class="mode-label">Mode</span>
         <div class="mode-toggle">
-          <button class="mode-btn" type="button" data-mode="accurate" onclick="setAnswerMode('accurate')">Accurate</button>
+          <button class="mode-btn" type="button" data-mode="accurate" onclick="setAnswerMode('accurate')">Focused</button>
           <button class="mode-btn active" type="button" data-mode="balanced" onclick="setAnswerMode('balanced')">Balanced</button>
           <button class="mode-btn" type="button" data-mode="brainstorm" onclick="setAnswerMode('brainstorm')">Brainstorm</button>
         </div>
@@ -918,7 +918,7 @@ let activePill = null;
 let answerMode = localStorage.getItem('emergeAnswerMode') || 'balanced';
 
 const answerModeHints = {
-  accurate: 'Tight retrieval and temperature 0 for maximum source fidelity.',
+  accurate: 'Focused retrieval and temperature 0 for conservative source fidelity.',
   balanced: 'Balanced source-grounded answers with normal retrieval.',
   brainstorm: 'Wider retrieval and a warmer style for source-grounded ideation.'
 };
