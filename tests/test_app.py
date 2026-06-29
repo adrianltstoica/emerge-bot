@@ -165,7 +165,7 @@ def test_homepage_exposes_required_toolkit_surfaces(monkeypatch, tmp_path):
     assert "<strong>Definition.</strong>" in body
     assert "<strong>Assessment focus.</strong>" in body
     assert "<strong>Governance implication.</strong>" in body
-    assert "Connects to:" in body
+    assert "Connects to:" not in body
     assert "capacities, tasks, environments and metrics" in body
     assert "EMERGE D1.1; EMERGE D1.2; EMERGE D1.3" in body
     assert "rather than searched for retrospectively as a single culprit" in body
