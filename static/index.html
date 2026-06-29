@@ -66,15 +66,29 @@ footer{padding:28px 52px;border-top:1px solid var(--g2);display:flex;align-items
 .src-search{border:1px solid var(--g2);border-radius:8px;padding:9px 11px;font:500 13px var(--fn);min-width:240px;outline:none;}
 .src-search:focus{border-color:var(--p);}
 .src-download{border:1px solid var(--g2);border-radius:8px;padding:9px 11px;color:var(--bk);font:700 12px var(--fn);text-decoration:none;background:var(--wh);}
+.src-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.src-filter{border:1px solid var(--g2);border-radius:999px;background:var(--wh);color:var(--g3);font:700 11px var(--fn);padding:7px 10px;cursor:pointer;}
+.src-filter:hover{border-color:var(--p);color:var(--bk);}
+.src-filter.on{background:var(--bk);border-color:var(--bk);color:var(--wh);}
 .src-meta{font-size:11px;color:var(--g3);font-weight:700;margin-bottom:14px;}
 .src-list{display:grid;gap:8px;}
 .src-card{border-top:1px solid var(--g2);padding:14px 0;}
 .src-card:last-child{border-bottom:1px solid var(--g2);}
 .src-citation{font-size:14px;font-weight:800;color:var(--bk);line-height:1.45;margin-bottom:4px;}
 .src-bib{font-size:12px;color:var(--bk);line-height:1.6;margin-bottom:7px;}
+.src-bib a{color:var(--bk);text-decoration:none;border-bottom:1px solid var(--g2);overflow-wrap:anywhere;}
+.src-bib a:hover{color:var(--p);border-bottom-color:var(--p);}
 .src-fields{display:flex;gap:8px;flex-wrap:wrap;font-size:10px;color:var(--g3);font-weight:700;}
 .src-chip{border:1px solid var(--g2);border-radius:999px;padding:4px 7px;background:var(--g1);}
 .src-empty{padding:36px 0;color:var(--g3);font-size:13px;text-align:center;}
+.method-status{border-top:1px solid var(--g2);border-bottom:1px solid var(--g2);padding:18px 0;margin:12px 0 8px;}
+.method-status-title{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--g3);margin-bottom:12px;}
+.method-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}
+.method-kpi{background:var(--g1);border:1px solid var(--g2);border-radius:8px;padding:12px;}
+.method-kpi strong{display:block;font-size:18px;line-height:1.1;color:var(--bk);margin-bottom:4px;}
+.method-kpi span{display:block;font-size:10px;font-weight:750;letter-spacing:.05em;text-transform:uppercase;color:var(--g3);}
+.method-note{font-size:12px;line-height:1.6;color:var(--g3);margin-top:12px;}
+.method-note strong{color:var(--bk);}
 .method-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;margin-top:26px;}
 .method-block{border-top:1px solid var(--g2);padding-top:18px;}
 .method-block h2{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--bk);margin-bottom:10px;}
@@ -89,8 +103,11 @@ footer{padding:28px 52px;border-top:1px solid var(--g2);display:flex;align-items
 .legal-section ul{display:grid;gap:8px;list-style:none;margin-top:10px;}
 .legal-section li{border-bottom:1px solid var(--g2);padding-bottom:8px;color:var(--g3);}
 .legal-section strong{color:var(--bk);}
-.cl-wrap{max-width:680px;margin:0 auto;padding:72px 52px;}
-.cl-intro{font-size:14px;color:var(--g3);line-height:1.75;margin-bottom:48px;max-width:520px;}
+.cl-wrap{max-width:760px;margin:0 auto;padding:56px 52px;}
+.cl-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:34px;}
+.cl-intro{font-size:13px;color:var(--g3);line-height:1.65;margin-top:8px;max-width:560px;}
+.cl-reset{border:1px solid var(--g2);border-radius:8px;background:var(--wh);color:var(--bk);font:700 12px var(--fn);padding:9px 11px;cursor:pointer;display:none;flex-shrink:0;}
+.cl-reset:hover{border-color:var(--p);color:var(--p);}
 .roles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:48px;}
 .rt{background:var(--wh);border:1.5px solid var(--g2);border-radius:10px;padding:20px 14px;cursor:pointer;text-align:left;font-family:var(--fn);transition:all .12s;}
 .rt:hover{border-color:var(--p);}
@@ -106,14 +123,17 @@ footer{padding:28px 52px;border-top:1px solid var(--g2);display:flex;align-items
 .prog-fill{height:2px;background:var(--p);transition:width .3s;width:0%;}
 .cl-g{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--p);margin-bottom:10px;margin-top:32px;}
 .cl-g:first-of-type{margin-top:0;}
-.cl-row{display:flex;gap:14px;padding:14px 10px;border-bottom:1px solid var(--g2);cursor:pointer;align-items:flex-start;border-radius:6px;transition:background .1s;}
+.cl-row{border-bottom:1px solid var(--g2);border-radius:6px;transition:background .1s;}
 .cl-row:hover{background:var(--g1);}
 .cl-row.done{background:rgba(135,137,192,.05);}
+.cl-hit{display:flex;gap:14px;align-items:flex-start;width:100%;border:0;background:transparent;text-align:left;font-family:var(--fn);padding:14px 10px 5px;cursor:pointer;}
 .cl-box{width:17px;height:17px;border:1.5px solid var(--g2);border-radius:4px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;transition:all .1s;}
 .cl-row.done .cl-box{background:var(--p);border-color:var(--p);color:var(--wh);}
 .cl-q{font-size:13px;font-weight:600;color:var(--bk);line-height:1.5;margin-bottom:3px;}
 .cl-row.done .cl-q{color:var(--p);}
-.cl-src{font-size:10px;color:var(--g3);font-weight:600;}
+.cl-src{display:flex;gap:6px;flex-wrap:wrap;padding:0 10px 14px 41px;}
+.cl-src-btn{border:0;border-bottom:1px solid var(--g2);background:transparent;color:var(--g3);font:700 10px var(--fn);padding:0;cursor:pointer;}
+.cl-src-btn:hover,.cl-src-btn:focus{color:var(--p);border-bottom-color:var(--p);outline:none;}
 .cl-empty{padding:48px 0;text-align:center;font-size:14px;color:var(--g3);}
 .bot-pg{height:calc(100vh - 60px);display:flex;flex-direction:column;overflow:hidden;}
 .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:40px 24px;gap:0;}
@@ -196,8 +216,11 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
 .src-actions{margin-top:18px;}
 .src-search{width:100%;min-width:0;}
 .method-grid{grid-template-columns:1fr;gap:22px;}
+.method-kpis{grid-template-columns:repeat(2,minmax(0,1fr));}
 .legal-wrap{padding:34px 24px;}
 .cl-wrap{padding:44px 24px;}
+.cl-head{display:block;margin-bottom:28px;}
+.cl-reset{margin-top:16px;}
 .roles{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:36px;}
 .rt{padding:16px 12px;}
 .bot-pg{height:calc(100dvh - 60px);}
@@ -341,6 +364,14 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
         <a class="src-download" href="/sources.csv">Download CSV</a>
       </div>
     </div>
+    <div class="src-filters" id="source-filters" aria-label="Source filters">
+      <button class="src-filter on" type="button" data-tier="" onclick="setSourceTier('')">All</button>
+      <button class="src-filter" type="button" data-tier="Core EMERGE deliverable" onclick="setSourceTier('Core EMERGE deliverable')">Core EMERGE</button>
+      <button class="src-filter" type="button" data-tier="EU/policy source" onclick="setSourceTier('EU/policy source')">EU / Policy</button>
+      <button class="src-filter" type="button" data-tier="Wider supporting literature" onclick="setSourceTier('Wider supporting literature')">Supporting</button>
+      <button class="src-filter" type="button" data-tier="Adjacent literature" onclick="setSourceTier('Adjacent literature')">Adjacent</button>
+      <button class="src-filter" type="button" data-tier="__ocr" onclick="setSourceTier('__ocr')">Needs OCR</button>
+    </div>
     <div class="src-meta" id="source-meta">Loading source metadata...</div>
     <div class="src-list" id="source-list"></div>
   </div>
@@ -360,6 +391,10 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
         <a class="src-download" href="/evaluation">Evaluation JSON</a>
       </div>
     </div>
+    <section class="method-status" id="method-status" aria-live="polite">
+      <div class="method-status-title">Current Runtime</div>
+      <div class="method-note">Loading runtime evidence...</div>
+    </section>
     <div class="method-grid">
       <section class="method-block">
         <h2>Corpus Construction</h2>
@@ -439,7 +474,13 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
 
 <div id="pg-checklist" class="pg">
   <div class="cl-wrap">
-    <p class="cl-intro">Select your role to load a checklist of ethics considerations grounded in EMERGE research findings.</p>
+    <div class="cl-head">
+      <div>
+        <h1 class="src-title">Stakeholder Checklist</h1>
+        <p class="cl-intro">Role-specific prompts for reviewing aware, collective, and high-impact AI systems. Each item links back to the source register so users can check the evidence behind the prompt.</p>
+      </div>
+      <button class="cl-reset" id="cl-reset" type="button" onclick="resetChecklist()">Reset checks</button>
+    </div>
     <div class="roles">
       <button class="rt" onclick="setRole(this,'reg')"><div class="rt-icon">Policy</div><div class="rt-name">Regulator</div><div class="rt-desc">Governance & oversight</div></button>
       <button class="rt" onclick="setRole(this,'dev')"><div class="rt-icon">Build</div><div class="rt-name">Developer</div><div class="rt-desc">Building or deploying AI</div></button>
@@ -563,6 +604,7 @@ function show(p) {
     setTimeout(function() { if (focusTarget) focusTarget.focus(); }, 50);
   }
   if (p === 'sources') loadSources();
+  if (p === 'methodology') loadMethodStatus();
   if (p === 'bot') loadStatus();
 }
 
@@ -576,6 +618,8 @@ function wSel(el, targetId) {
 }
 
 // ── Checklist ──
+let currentChecklistRole = null;
+const CL_STORAGE_PREFIX = 'emergeChecklist:';
 const CL = {
   reg: [
     { g: 'Collective & Aware AI', i: [
@@ -636,27 +680,86 @@ const CL = {
   ]
 };
 
+function checklistKey(role, groupIndex, itemIndex) {
+  return role + ':' + groupIndex + ':' + itemIndex;
+}
+
+function getChecklistState(role) {
+  try {
+    return new Set(JSON.parse(localStorage.getItem(CL_STORAGE_PREFIX + role) || '[]'));
+  } catch (err) {
+    return new Set();
+  }
+}
+
+function saveChecklistState(role, state) {
+  localStorage.setItem(CL_STORAGE_PREFIX + role, JSON.stringify(Array.from(state)));
+}
+
+function jsArg(value) {
+  return JSON.stringify(String(value)).replace(/"/g, '&quot;');
+}
+
+function renderSourceButtons(sourceText) {
+  return String(sourceText || '')
+    .split(/\s+·\s+/)
+    .filter(Boolean)
+    .map(label =>
+      '<button class="cl-src-btn" type="button" onclick="sourceLookup(' + jsArg(label) + ')">' +
+      esc(label) +
+      '</button>'
+    )
+    .join('');
+}
+
 function setRole(btn, r) {
   document.querySelectorAll('.rt').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
+  currentChecklistRole = r;
   document.getElementById('cpw').style.display = 'block';
+  document.getElementById('cl-reset').style.display = 'inline-flex';
   const b = document.getElementById('clbody');
-  b.innerHTML = CL[r].map(g =>
-    '<div class="cl-g">' + g.g + '</div>' +
-    g.i.map(it =>
-      '<div class="cl-row" onclick="tick(this)">' +
-      '<div class="cl-box"></div>' +
-      '<div><div class="cl-q">' + it.q + '</div>' +
-      '<div class="cl-src">' + it.s + '</div></div></div>'
-    ).join('')
+  const saved = getChecklistState(r);
+  b.innerHTML = CL[r].map((g, groupIndex) =>
+    '<div class="cl-g">' + esc(g.g) + '</div>' +
+    g.i.map((it, itemIndex) => {
+      const key = checklistKey(r, groupIndex, itemIndex);
+      const done = saved.has(key);
+      return '<div class="cl-row' + (done ? ' done' : '') + '" data-key="' + esc(key) + '">' +
+        '<button class="cl-hit" type="button" aria-pressed="' + (done ? 'true' : 'false') + '" onclick="tick(this.closest(\'.cl-row\'))">' +
+        '<span class="cl-box">' + (done ? '✓' : '') + '</span>' +
+        '<span><span class="cl-q">' + esc(it.q) + '</span></span>' +
+        '</button>' +
+        '<div class="cl-src">' + renderSourceButtons(it.s) + '</div>' +
+        '</div>';
+    }).join('')
   ).join('');
   upd();
 }
 
 function tick(el) {
+  if (!el) return;
   el.classList.toggle('done');
   el.querySelector('.cl-box').textContent = el.classList.contains('done') ? '✓' : '';
+  const hit = el.querySelector('.cl-hit');
+  if (hit) hit.setAttribute('aria-pressed', el.classList.contains('done') ? 'true' : 'false');
+  if (currentChecklistRole) {
+    const state = getChecklistState(currentChecklistRole);
+    const key = el.getAttribute('data-key');
+    if (key) {
+      if (el.classList.contains('done')) state.add(key);
+      else state.delete(key);
+      saveChecklistState(currentChecklistRole, state);
+    }
+  }
   upd();
+}
+
+function resetChecklist() {
+  if (!currentChecklistRole) return;
+  localStorage.removeItem(CL_STORAGE_PREFIX + currentChecklistRole);
+  const active = document.querySelector('.rt.on');
+  if (active) setRole(active, currentChecklistRole);
 }
 
 function upd() {
@@ -669,6 +772,7 @@ function upd() {
 // ── Sources ──
 let sourceRecords = [];
 let sourcesLoaded = false;
+let sourceTierFilter = '';
 
 function esc(s) {
   return String(s == null ? '' : s)
@@ -676,6 +780,48 @@ function esc(s) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
+}
+
+function norm(s) {
+  return String(s == null ? '' : s)
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
+function sourceHaystack(src) {
+  return norm([
+    src.source_id,
+    src.citation,
+    src.title,
+    src.year,
+    (src.authors || []).join ? (src.authors || []).join(' ') : src.authors,
+    src.publisher_or_institution,
+    src.venue_or_series,
+    src.source_tier,
+    src.document_type,
+    src.pdf_filename,
+    src.doi,
+    src.url,
+    src.bibliography_entry,
+    src.notes
+  ].join(' '));
+}
+
+function sourceMatchesTier(src) {
+  if (!sourceTierFilter) return true;
+  if (sourceTierFilter === '__ocr') {
+    return src.text_extractable === false || Number(src.chunk_count || 0) === 0;
+  }
+  return src.source_tier === sourceTierFilter;
+}
+
+function setSourceTier(tier) {
+  sourceTierFilter = tier || '';
+  document.querySelectorAll('.src-filter').forEach(function(btn) {
+    btn.classList.toggle('on', btn.getAttribute('data-tier') === sourceTierFilter);
+  });
+  renderSources();
 }
 
 async function loadSources() {
@@ -712,15 +858,17 @@ function renderSources() {
   const list = document.getElementById('source-list');
   const meta = document.getElementById('source-meta');
   if (!list) return;
-  const q = (document.getElementById('source-search')?.value || '').toLowerCase().trim();
+  const q = norm(document.getElementById('source-search')?.value || '').trim();
+  const terms = q.split(/\s+/).filter(Boolean);
   const filtered = sourceRecords.filter(function(src) {
-    const hay = [
-      src.citation, src.title, src.year, (src.authors || []).join(' '),
-      src.source_tier, src.pdf_filename, src.doi, src.url, src.bibliography_entry
-    ].join(' ').toLowerCase();
-    return !q || hay.includes(q);
+    if (!sourceMatchesTier(src)) return false;
+    const hay = sourceHaystack(src);
+    return !terms.length || terms.every(term => hay.includes(term));
   });
-  if (meta) meta.textContent = filtered.length + ' of ' + sourceRecords.length + ' source records shown.';
+  const filterText = sourceTierFilter
+    ? (sourceTierFilter === '__ocr' ? ' needing OCR or chunk rebuild' : ' in ' + sourceTierFilter)
+    : '';
+  if (meta) meta.textContent = filtered.length + ' of ' + sourceRecords.length + ' source records shown' + filterText + '.';
   if (!filtered.length) {
     list.innerHTML = '<div class="src-empty">No matching sources.</div>';
     return;
@@ -732,9 +880,13 @@ function renderSources() {
       src.page_count ? src.page_count + ' pages' : '',
       src.chunk_count != null ? src.chunk_count + ' chunks' : '',
       src.doi ? 'DOI' : '',
+      src.metadata_completeness != null ? 'metadata ' + Math.round(Number(src.metadata_completeness) * 100) + '%' : '',
       src.text_extractable === false ? 'needs OCR' : ''
     ].filter(Boolean).map(x => '<span class="src-chip">' + esc(x) + '</span>').join('');
-    const link = src.url ? '<a href="' + esc(src.url) + '" target="_blank" rel="noopener">' + esc(src.url) + '</a>' : '';
+    const rawDoi = String(src.doi || '').replace(/^https?:\/\/(dx\.)?doi\.org\//i, '');
+    const sourceUrl = src.url || (rawDoi ? 'https://doi.org/' + rawDoi : '');
+    const linkLabel = rawDoi ? 'DOI: ' + rawDoi : sourceUrl;
+    const link = sourceUrl ? '<a href="' + esc(sourceUrl) + '" target="_blank" rel="noopener">' + esc(linkLabel) + '</a>' : '';
     return '<article class="src-card">' +
       '<div class="src-citation">' + esc(src.citation || src.source_id) + '</div>' +
       '<div class="src-bib">' + esc(src.bibliography_entry || src.title || '') + '</div>' +
@@ -771,6 +923,7 @@ const visitorId = getOrCreateId('emergeVisitorId');
 const conversationId = window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(16).slice(2);
 
 let statusLoaded = false;
+let lastStatusData = null;
 
 function setStatus(type, text) {
   document.querySelectorAll('.status-strip').forEach(function(strip) {
@@ -787,6 +940,7 @@ async function loadStatus(force) {
     const res = await fetch('/status');
     const data = await res.json();
     if (!res.ok) throw new Error('Server error ' + res.status);
+    lastStatusData = data;
     statusLoaded = true;
     if (!data.ready) {
       setStatus('err', 'Corpus unavailable. Chat will not answer until chunks are loaded.');
@@ -800,6 +954,49 @@ async function loadStatus(force) {
     );
   } catch (err) {
     setStatus('err', 'Server not reachable. Start the Flask app, then refresh.');
+  }
+}
+
+function renderMethodStatus(data) {
+  const el = document.getElementById('method-status');
+  if (!el) return;
+  const backend = data.retrieval_backend === 'vector' ? 'Vector' : 'TF-IDF';
+  const vectorLabel = data.vector_index || 'missing';
+  const missing = data.missing_pdf_sources || [];
+  const openai = data.openai_api_key_configured ? 'configured' : 'not configured';
+  el.innerHTML =
+    '<div class="method-status-title">Current Runtime</div>' +
+    '<div class="method-kpis">' +
+      '<div class="method-kpi"><strong>' + esc(data.chunks_loaded || 0) + '</strong><span>Text chunks</span></div>' +
+      '<div class="method-kpi"><strong>' + esc(data.indexed_sources || 0) + '</strong><span>Indexed sources</span></div>' +
+      '<div class="method-kpi"><strong>' + esc(data.pdf_documents || 0) + '</strong><span>PDF files</span></div>' +
+      '<div class="method-kpi"><strong>' + esc(backend) + '</strong><span>Retrieval</span></div>' +
+    '</div>' +
+    '<div class="method-note"><strong>Vector index:</strong> ' + esc(vectorLabel) +
+    ' · <strong>OpenAI key:</strong> ' + esc(openai) +
+    ' · <strong>Metadata:</strong> ' + esc(data.source_metadata || 'unknown') + '</div>' +
+    (missing.length
+      ? '<div class="method-note"><strong>Extraction gap:</strong> ' + esc(missing.join(', ')) + ' has no obvious matching text chunks.</div>'
+      : '<div class="method-note"><strong>Extraction gap:</strong> no unmatched PDFs reported by the runtime status.</div>');
+}
+
+async function loadMethodStatus(force) {
+  if (lastStatusData && !force) {
+    renderMethodStatus(lastStatusData);
+    return;
+  }
+  const el = document.getElementById('method-status');
+  try {
+    const res = await fetch('/status');
+    const data = await res.json();
+    if (!res.ok) throw new Error('Server error ' + res.status);
+    lastStatusData = data;
+    renderMethodStatus(data);
+  } catch (err) {
+    if (el) {
+      el.innerHTML = '<div class="method-status-title">Current Runtime</div>' +
+        '<div class="method-note">Runtime status is unavailable. Start the Flask app, then refresh.</div>';
+    }
   }
 }
 

@@ -41,7 +41,15 @@ def import_test_app(monkeypatch, tmp_path):
                         "title": "EMERGE Test Source Title",
                         "year": "2026",
                         "source_tier": "Core EMERGE deliverable",
-                    }
+                    },
+                    {
+                        "source_id": "Metadata Only",
+                        "citation": "Metadata Only Source",
+                        "title": "Metadata Only Source Title",
+                        "year": "2025",
+                        "source_tier": "Adjacent literature",
+                        "text_extractable": False,
+                    },
                 ],
             }
         ),
@@ -96,7 +104,7 @@ def test_status_reports_loaded_corpus_and_tfidf_fallback(monkeypatch, tmp_path):
     assert data["anthropic_model"]
     assert data["anthropic_expansion_model"]
     assert data["source_metadata"] == "loaded"
-    assert data["source_metadata_count"] == 1
+    assert data["source_metadata_count"] == 2
 
 
 def test_sources_endpoint_uses_metadata(monkeypatch, tmp_path):
@@ -112,6 +120,12 @@ def test_sources_endpoint_uses_metadata(monkeypatch, tmp_path):
     assert source["citation"] == "EMERGE Test Source"
     assert source["title"] == "EMERGE Test Source Title"
     assert source["chunk_count"] == 1
+    metadata_only = next(item for item in data["sources"] if item["source_id"] == "Metadata Only")
+    assert metadata_only["chunk_count"] == 0
+    assert data["source_count"] == 3
+    assert data["chunked_source_count"] == 2
+    assert data["source_tier_counts"]["Core EMERGE deliverable"] == 1
+    assert data["source_tier_counts"]["Adjacent literature"] == 1
 
 
 def test_sources_csv_endpoint(monkeypatch, tmp_path):
@@ -151,6 +165,13 @@ def test_homepage_exposes_required_toolkit_surfaces(monkeypatch, tmp_path):
     assert "sourceLookup('D1.1')" in body
     assert "sourceLookup('2024/1689')" in body
     assert 'class="src-ref"' in body
+    assert "source-filters" in body
+    assert "setSourceTier('__ocr')" in body
+    assert "method-status" in body
+    assert "loadMethodStatus" in body
+    assert "Reset checks" in body
+    assert "renderSourceButtons" in body
+    assert "emergeChecklist:" in body
     assert "Chats may be logged" in body
 
 

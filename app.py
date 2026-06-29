@@ -1269,24 +1269,46 @@ def status():
     })
 
 
+SOURCE_TIER_SORT_ORDER = {
+    "Core EMERGE deliverable": 0,
+    "EU/policy source": 1,
+    "Wider supporting literature": 2,
+    "Adjacent literature": 3,
+}
+
+
+def source_record(source, chunk_counts):
+    metadata = dict(source_metadata.get(source, {}))
+    metadata.setdefault("source_id", source)
+    metadata.setdefault("citation", friendly_source_name(source))
+    metadata.setdefault("title", full_source_title(source))
+    metadata.setdefault("source_tier", source_tier(source))
+    metadata["chunk_count"] = chunk_counts.get(source, 0)
+    return metadata
+
+
+def source_sort_key(record):
+    tier = record.get("source_tier", "")
+    citation = record.get("citation") or record.get("title") or record.get("source_id") or ""
+    return (
+        SOURCE_TIER_SORT_ORDER.get(tier, 9),
+        str(citation).lower(),
+        str(record.get("source_id", "")).lower(),
+    )
+
+
 @app.route("/sources")
 def sources():
     docs = sorted(set(c["source"] for c in chunk_store) | set(source_metadata))
-    records = []
-    for source in docs:
-        metadata = dict(source_metadata.get(source, {}))
-        metadata.setdefault("source_id", source)
-        metadata.setdefault("citation", friendly_source_name(source))
-        metadata.setdefault("title", full_source_title(source))
-        metadata.setdefault("source_tier", source_tier(source))
-        metadata.setdefault(
-            "chunk_count",
-            sum(1 for chunk in chunk_store if chunk.get("source") == source),
-        )
-        records.append(metadata)
+    chunk_counts = Counter(c.get("source", "") for c in chunk_store)
+    records = [source_record(source, chunk_counts) for source in docs]
+    records.sort(key=source_sort_key)
+    tier_counts = Counter(record.get("source_tier", "Unclassified") for record in records)
     return jsonify({
         "source_count": len(records),
+        "chunked_source_count": sum(1 for record in records if record.get("chunk_count", 0) > 0),
         "metadata_loaded": corpus_stats["source_metadata"] == "loaded",
+        "source_tier_counts": dict(sorted(tier_counts.items())),
         "sources": records,
     })
 
@@ -1305,14 +1327,11 @@ def sources_csv():
     writer = csv.DictWriter(output, fieldnames=columns)
     writer.writeheader()
     chunk_counts = Counter(c.get("source", "") for c in chunk_store)
-    for source in docs:
-        metadata = dict(source_metadata.get(source, {}))
-        metadata.setdefault("source_id", source)
-        metadata.setdefault("citation", friendly_source_name(source))
-        metadata.setdefault("title", full_source_title(source))
-        metadata.setdefault("source_tier", source_tier(source))
-        metadata.setdefault("chunk_count", chunk_counts.get(source, 0))
-        metadata["authors"] = "; ".join(metadata.get("authors") or [])
+    records = [source_record(source, chunk_counts) for source in docs]
+    records.sort(key=source_sort_key)
+    for metadata in records:
+        authors = metadata.get("authors") or []
+        metadata["authors"] = "; ".join(authors) if isinstance(authors, list) else str(authors)
         writer.writerow({col: metadata.get(col) for col in columns})
     return Response(
         output.getvalue(),
