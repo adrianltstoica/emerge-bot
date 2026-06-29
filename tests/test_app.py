@@ -159,7 +159,9 @@ def test_homepage_exposes_required_toolkit_surfaces(monkeypatch, tmp_path):
     assert ">Accurate</button>" not in body
     assert "Disclaimer, Privacy & Terms" in body
     assert "prompt-guide" in body
-    assert "status-strip" in body
+    assert "status-strip" not in body
+    assert "Checking corpus status" not in body
+    assert 'href="/status"' not in body
     assert "<strong>Definition.</strong>" in body
     assert "<strong>Assessment focus.</strong>" in body
     assert "<strong>Governance implication.</strong>" in body
@@ -182,8 +184,8 @@ def test_homepage_exposes_required_toolkit_surfaces(monkeypatch, tmp_path):
     assert "setSourceTier('', false)" in body
     assert "No matching sources in this filter" in body
     assert "Clear filter" in body
-    assert "method-status" in body
-    assert "loadMethodStatus" in body
+    assert "method-status" not in body
+    assert "loadMethodStatus" not in body
     assert "Reset checks" in body
     assert "renderSourceButtons" in body
     assert "emergeChecklist:" in body

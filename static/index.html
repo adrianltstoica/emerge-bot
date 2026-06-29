@@ -86,12 +86,6 @@ footer{padding:28px 52px;border-top:1px solid var(--g2);display:flex;align-items
 .src-empty{padding:36px 0;color:var(--g3);font-size:13px;text-align:center;}
 .src-empty-action{margin-top:12px;border:1px solid var(--g2);border-radius:8px;background:var(--wh);color:var(--bk);font:700 12px var(--fn);padding:9px 11px;cursor:pointer;}
 .src-empty-action:hover{border-color:var(--p);color:var(--p);}
-.method-status{border-top:1px solid var(--g2);border-bottom:1px solid var(--g2);padding:18px 0;margin:12px 0 8px;}
-.method-status-title{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--g3);margin-bottom:12px;}
-.method-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}
-.method-kpi{background:var(--g1);border:1px solid var(--g2);border-radius:8px;padding:12px;}
-.method-kpi strong{display:block;font-size:18px;line-height:1.1;color:var(--bk);margin-bottom:4px;}
-.method-kpi span{display:block;font-size:10px;font-weight:750;letter-spacing:.05em;text-transform:uppercase;color:var(--g3);}
 .method-note{font-size:12px;line-height:1.6;color:var(--g3);margin-top:12px;}
 .method-note strong{color:var(--bk);}
 .method-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;margin-top:26px;}
@@ -187,11 +181,6 @@ footer{padding:28px 52px;border-top:1px solid var(--g2);display:flex;align-items
 .mode-btn:last-child{border-right:0;}
 .mode-btn.active{background:var(--p);color:var(--wh);}
 .mode-hint{font-size:11px;color:var(--g3);text-align:center;line-height:1.4;max-width:640px;margin:-6px 0 14px;}
-.status-strip{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;max-width:640px;margin:0 0 18px;font-size:11px;color:var(--g3);font-weight:700;}
-.status-dot{width:7px;height:7px;border-radius:50%;background:var(--g2);display:inline-block;}
-.status-dot.ok{background:var(--p);}
-.status-dot.warn{background:#d7a600;}
-.status-dot.err{background:#c33;}
 .status-link{color:var(--g3);text-decoration:none;border-bottom:1px solid var(--g2);}
 .status-link:hover{color:var(--p);border-bottom-color:var(--p);}
 .input-box{border:1px solid var(--g2);border-radius:12px;display:flex;align-items:center;overflow:hidden;background:var(--wh);transition:border-color .12s;}
@@ -223,7 +212,6 @@ footer{padding:28px 52px;border-top:1px solid var(--g2);display:flex;align-items
 .disc{font-size:11px;color:var(--g3);text-align:center;margin-bottom:10px;max-width:640px;margin-left:auto;margin-right:auto;}
 .bottom-bar .mode-control{margin:0 auto 8px;}
 .bottom-bar .mode-hint{margin:-2px auto 10px;}
-.bottom-bar .status-strip{margin:0 auto 10px;}
 .bottom-input-box{max-width:640px;margin:0 auto;border:1px solid var(--g2);border-radius:12px;display:flex;align-items:center;overflow:hidden;transition:border-color .12s;}
 .bottom-input-box:focus-within{border-color:var(--p);}
 .bi2{flex:1;border:none;font-size:14px;font-family:var(--fn);outline:none;color:var(--bk);background:transparent;padding:12px 16px;}
@@ -251,7 +239,6 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
 .src-actions{margin-top:18px;}
 .src-search{width:100%;min-width:0;}
 .method-grid{grid-template-columns:1fr;gap:22px;}
-.method-kpis{grid-template-columns:repeat(2,minmax(0,1fr));}
 .legal-wrap{padding:34px 24px;}
 .cl-wrap{padding:44px 24px;}
 .cl-head{display:block;margin-bottom:28px;}
@@ -431,15 +418,10 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
         <p class="src-sub">This page documents how the EMERGE bot prepares the corpus, retrieves evidence, constrains answers, and records operational limits relevant to interpreting its outputs.</p>
       </div>
       <div class="src-actions">
-        <a class="src-download" href="/status">Runtime Status</a>
         <a class="src-download" href="/sources.csv">Source CSV</a>
         <a class="src-download" href="/evaluation">Evaluation JSON</a>
       </div>
     </div>
-    <section class="method-status" id="method-status" aria-live="polite">
-      <div class="method-status-title">Current Runtime</div>
-      <div class="method-note">Loading runtime evidence...</div>
-    </section>
     <div class="method-grid">
       <section class="method-block">
         <h2>Corpus Construction</h2>
@@ -514,7 +496,7 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
       </section>
     </div>
   </div>
-  <footer><span>© 2025 MI3 · LMU München</span><div class="f-links"><a class="f-link" href="/status">Runtime status</a><a class="f-link" href="/sources.csv">Source CSV</a><a class="f-link" href="/evaluation">Evaluation JSON</a></div></footer>
+  <footer><span>© 2025 MI3 · LMU München</span><div class="f-links"><a class="f-link" href="/sources.csv">Source CSV</a><a class="f-link" href="/evaluation">Evaluation JSON</a></div></footer>
 </div>
 
 <div id="pg-checklist" class="pg">
@@ -581,7 +563,6 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
         </div>
       </div>
       <div class="mode-hint" id="mode-hint-empty">Balanced source-grounded answers with normal retrieval.</div>
-      <div class="status-strip" id="status-empty"><span class="status-dot"></span><span>Checking corpus status...</span></div>
       <div class="es-pills">
         <div class="pill-wrap">
           <button class="es-pill" onclick="togglePill('reg')">Regulator</button>
@@ -628,7 +609,6 @@ footer{padding:24px;align-items:flex-start;gap:14px;flex-direction:column;}
     <div class="msgs-area" id="msgs-area"><div class="msgs-inner" id="msgs"></div></div>
     <div class="bottom-bar" id="bottom-bar" style="display:none;">
       <div class="disc">EMERGE corpus only — named sources, no recommendations, no legal advice. Chats may be logged for analysis. <a class="status-link" onclick="show('legal')">Disclaimer & Privacy</a></div>
-      <div class="status-strip" id="status-bottom"><span class="status-dot"></span><span>Checking corpus status...</span></div>
       <div class="mode-control" aria-label="Answer mode">
         <span class="mode-label">Mode</span>
         <div class="mode-toggle">
@@ -668,8 +648,6 @@ function show(p) {
     setTimeout(function() { if (focusTarget) focusTarget.focus(); }, 50);
   }
   if (p === 'sources') loadSources();
-  if (p === 'methodology') loadMethodStatus();
-  if (p === 'bot') loadStatus();
 }
 
 // ── Wiki sidebar ──
@@ -1100,84 +1078,6 @@ function getOrCreateId(key) {
 const visitorId = getOrCreateId('emergeVisitorId');
 const conversationId = window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(16).slice(2);
 
-let statusLoaded = false;
-let lastStatusData = null;
-
-function setStatus(type, text) {
-  document.querySelectorAll('.status-strip').forEach(function(strip) {
-    const dot = strip.querySelector('.status-dot');
-    const label = strip.querySelector('span:last-child');
-    if (dot) dot.className = 'status-dot ' + type;
-    if (label) label.innerHTML = text;
-  });
-}
-
-async function loadStatus(force) {
-  if (statusLoaded && !force) return;
-  try {
-    const res = await fetch('/status');
-    const data = await res.json();
-    if (!res.ok) throw new Error('Server error ' + res.status);
-    lastStatusData = data;
-    statusLoaded = true;
-    if (!data.ready) {
-      setStatus('err', 'Corpus unavailable. Chat will not answer until chunks are loaded.');
-      return;
-    }
-    const backend = data.retrieval_backend === 'vector' ? 'vector retrieval' : 'TF-IDF fallback';
-    const vectorNote = data.vector_index === 'loaded' ? '' : ' · vector index ' + esc(data.vector_index || 'missing');
-    setStatus(
-      data.vector_index === 'loaded' ? 'ok' : 'warn',
-      esc(data.chunks_loaded) + ' chunks · ' + esc(data.indexed_sources) + ' sources · ' + esc(backend) + vectorNote + ' · <a class="status-link" href="/status">status</a>'
-    );
-  } catch (err) {
-    setStatus('err', 'Server not reachable. Start the Flask app, then refresh.');
-  }
-}
-
-function renderMethodStatus(data) {
-  const el = document.getElementById('method-status');
-  if (!el) return;
-  const backend = data.retrieval_backend === 'vector' ? 'Vector' : 'TF-IDF';
-  const vectorLabel = data.vector_index || 'missing';
-  const missing = data.missing_pdf_sources || [];
-  const openai = data.openai_api_key_configured ? 'configured' : 'not configured';
-  el.innerHTML =
-    '<div class="method-status-title">Current Runtime</div>' +
-    '<div class="method-kpis">' +
-      '<div class="method-kpi"><strong>' + esc(data.chunks_loaded || 0) + '</strong><span>Text chunks</span></div>' +
-      '<div class="method-kpi"><strong>' + esc(data.indexed_sources || 0) + '</strong><span>Indexed sources</span></div>' +
-      '<div class="method-kpi"><strong>' + esc(data.pdf_documents || 0) + '</strong><span>PDF files</span></div>' +
-      '<div class="method-kpi"><strong>' + esc(backend) + '</strong><span>Retrieval</span></div>' +
-    '</div>' +
-    '<div class="method-note"><strong>Vector index:</strong> ' + esc(vectorLabel) +
-    ' · <strong>OpenAI key:</strong> ' + esc(openai) +
-    ' · <strong>Metadata:</strong> ' + esc(data.source_metadata || 'unknown') + '</div>' +
-    (missing.length
-      ? '<div class="method-note"><strong>Extraction gap:</strong> ' + esc(missing.join(', ')) + ' has no obvious matching text chunks.</div>'
-      : '<div class="method-note"><strong>Extraction gap:</strong> no unmatched PDFs reported by the runtime status.</div>');
-}
-
-async function loadMethodStatus(force) {
-  if (lastStatusData && !force) {
-    renderMethodStatus(lastStatusData);
-    return;
-  }
-  const el = document.getElementById('method-status');
-  try {
-    const res = await fetch('/status');
-    const data = await res.json();
-    if (!res.ok) throw new Error('Server error ' + res.status);
-    lastStatusData = data;
-    renderMethodStatus(data);
-  } catch (err) {
-    if (el) {
-      el.innerHTML = '<div class="method-status-title">Current Runtime</div>' +
-        '<div class="method-note">Runtime status is unavailable. Start the Flask app, then refresh.</div>';
-    }
-  }
-}
-
 function setAnswerMode(mode) {
   if (!answerModeHints[mode]) mode = 'balanced';
   answerMode = mode;
@@ -1339,7 +1239,6 @@ document.getElementById('input-empty').addEventListener('keydown', function(e) {
   }
 });
 
-loadStatus();
 const initialPage = (location.hash || '').replace('#', '');
 if (['wiki', 'sources', 'methodology', 'checklist', 'bot', 'legal'].includes(initialPage)) {
   show(initialPage);

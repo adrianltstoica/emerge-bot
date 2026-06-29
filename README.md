@@ -48,7 +48,7 @@ The system is a retrieval-augmented generation application with explicit scope c
 | Answer generation | User-facing answers are generated through the configured Anthropic model with source and scope rules in the system prompt. |
 | Evaluation | `/evaluation` exposes a seed validation set with expected concepts, reference sources, and metric definitions. |
 
-The app exposes runtime transparency at `/status`, including chunk count, indexed source count, retrieval backend, vector-index status, model configuration, and extraction gaps.
+A diagnostic `/status` route is retained for maintainers, but runtime internals are not linked from the public user interface.
 
 ## Repository Structure
 
