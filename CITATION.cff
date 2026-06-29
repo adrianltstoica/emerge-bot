@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software or discuss the toolkit in academic work, please cite it using the metadata below and cite the relevant EMERGE deliverables for substantive claims."
+title: "EMERGE Ethics Toolkit"
+authors:
+  - name: "EMERGE Project"
+  - name: "MI3, Ludwig-Maximilians-Universität München"
+abstract: "Research software for source-grounded exploration of ethical questions raised by aware, collective, and high-impact AI systems."
+keywords:
+  - AI ethics
+  - collaborative awareness
+  - responsible AI
+  - trustworthy AI
+  - retrieval-augmented generation
+  - EMERGE
+repository-code: "https://github.com/adrianltstoica/emerge-bot"
+url: "https://emerge-bot.onrender.com/"
+date-released: "2026-06-29"

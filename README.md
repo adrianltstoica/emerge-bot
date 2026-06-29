@@ -1,178 +1,227 @@
-# EMERGE AI Ethics Information Bot
-## Setup & Usage Guide
+# EMERGE Ethics Toolkit
 
----
+Research software for source-grounded exploration of the ethics of aware and collective AI systems.
 
-## What this is
-A local web app and public-facing EMERGE Ethics Toolkit. It retrieves relevant excerpts from the EMERGE corpus and passes them to Claude with the bot's full system prompt and sourcing rules. The website includes an ethics wiki, bibliography register, methodology and limits page, stakeholder checklist, disclaimer/privacy/terms page, and a free-form chatbot for exploring the corpus.
+[Live toolkit](https://emerge-bot.onrender.com/) · [Source register](https://emerge-bot.onrender.com/#sources) · [Evaluation endpoint](https://emerge-bot.onrender.com/evaluation)
 
-The toolkit currently focuses on free-form prompts, public toolkit pages, and the indexed corpus. Curated scenario-prompt workflows are outside the current scope.
+## Overview
 
----
+The EMERGE Ethics Toolkit is a public-facing web application built for the EMERGE project and MI3 at Ludwig-Maximilians-Universität München. It provides a structured, source-grounded interface for exploring ethical questions raised by aware, collective, and high-impact AI systems.
 
-## First-time setup (do this once)
+The application combines five publication-facing surfaces:
 
-### Step 1 — Add your PDFs
-Put all corpus PDFs into the **`documents/`** folder. The filename becomes the raw source name; the system prompt maps known filenames to friendly citations (e.g. `D2.4 Map of Ethical Virtues` → "EMERGE D2.4").
+| Surface | Purpose |
+| --- | --- |
+| Ethics Wiki | Concise syntheses of recurring concepts in the EMERGE corpus, including collaborative awareness, trust, benevolence, explainability, responsibility gaps, risks of aware AI, ethical resilience, and the EU AI Act. |
+| Source Register | Bibliographic and corpus metadata for indexed sources, including source tier, citation label, DOI or stable URL where available, PDF page count, chunk count, and extractability flags. |
+| Methodology & Limits | A transparent account of corpus preprocessing, retrieval, generation, scope boundaries, logging, and evaluation hooks. |
+| Stakeholder Checklist | Role-specific review prompts for regulators, developers, researchers, and product users, with evidence expectations, risk notes, and source links. |
+| Ethics Bot | A natural-language retrieval-augmented assistant that answers only from the indexed EMERGE corpus and returns named sources. |
 
-### Step 2 — Set your API key
-Set the `ANTHROPIC_API_KEY` environment variable before starting the bot. The server reads it from the environment — there is no in-browser key form.
+This repository is intended to support an academic/public deliverable, not to provide legal advice or replace reading the underlying EMERGE deliverables and policy documents.
+
+## Project Context
+
+The toolkit supports EMERGE WP2 Deliverable 2.6 by making project findings easier to inspect, cite, and discuss. The corpus centers on EMERGE deliverables and selected policy or scholarly sources relevant to:
+
+- local and collaborative awareness;
+- risks and potentials of aware AI;
+- trust, explainability, benevolence, and ethical resilience;
+- responsibility gaps in distributed human-AI and AI-AI systems;
+- trustworthy AI guidelines, including the EU AI Act and HLEG framework.
+
+At the current indexed snapshot, the repository contains 84 source metadata records and 4,486 retrieval chunks from 83 text-indexed sources.
+
+## Methodological Design
+
+The system is a retrieval-augmented generation application with explicit scope control.
+
+| Stage | Implementation |
+| --- | --- |
+| Corpus preparation | PDF files in `documents/` are processed offline into `chunks.json` using `pdfplumber`. |
+| Chunking | Documents are split into sliding windows of approximately 400 words with 80-word overlap. |
+| Source metadata | `source_metadata.json` and `source_metadata.csv` record citation labels, source tiers, document metadata, DOI/URL fields, page counts, chunk counts, and extractability flags. |
+| Retrieval | Vector retrieval uses OpenAI `text-embedding-3-small` when `vector_index.json.gz` is available. The app falls back to TF-IDF if the vector index or API key is unavailable. |
+| Query expansion | The app can generate paraphrase and counter-query variants before retrieval to improve recall and surface contrasting material. |
+| Source diversity | Retrieval limits over-concentration from one source and broadens context around selected chunks. |
+| Scope gating | Low-similarity or explicitly out-of-scope prompts are refused or redirected instead of receiving invented corpus-grounded answers. |
+| Answer generation | User-facing answers are generated through the configured Anthropic model with source and scope rules in the system prompt. |
+| Evaluation | `/evaluation` exposes a seed validation set with expected concepts, reference sources, and metric definitions. |
+
+The app exposes runtime transparency at `/status`, including chunk count, indexed source count, retrieval backend, vector-index status, model configuration, and extraction gaps.
+
+## Repository Structure
+
+```text
+.
+├── app.py                         # Flask application, retrieval, routes, chat logging, admin views
+├── static/index.html              # Public toolkit UI
+├── documents/                     # Corpus PDFs cleared for this project repository
+├── chunks.json                    # Generated retrieval chunks
+├── source_metadata.json           # Bibliographic/corpus metadata
+├── source_metadata.csv            # Spreadsheet-ready source register
+├── evaluation_questions.json      # Seed validation questions and metrics
+├── scripts/
+│   ├── build_chunks.py            # Rebuild retrieval chunks from PDFs
+│   ├── build_source_metadata.py   # Rebuild source metadata records
+│   ├── build_vector_index.py      # Build vector index from chunks
+│   └── ensure_vector_index.py     # Build/reuse deployment vector index
+├── tests/test_app.py              # Route and static-surface tests
+├── render.yaml                    # Render deployment configuration
+├── START.command                  # macOS local launcher
+└── requirements.txt               # Python dependencies
+```
+
+## Running Locally
+
+### 1. Create a virtual environment
+
+```bash
+python -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+```
+
+On macOS, `START.command` performs the setup and starts the app for non-technical local use.
+
+### 2. Configure model keys
+
+The server reads credentials from environment variables. Do not enter API keys in the browser.
 
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...
-```
-
-The answer model defaults to `claude-sonnet-4-6`, and query expansion defaults to `claude-haiku-4-5-20251001`. Override them with `ANTHROPIC_MODEL` and `ANTHROPIC_EXPANSION_MODEL` if your Anthropic workspace exposes different model IDs.
-
-Embedding index generation truncates unusually long chunks before sending them to OpenAI embeddings. The default limit is controlled by `EMBEDDING_TEXT_CHAR_LIMIT` and defaults to `12000` characters.
-
-For vector retrieval, also set `OPENAI_API_KEY`. If a vector index or OpenAI key is missing, the app falls back to the older TF-IDF retriever. On Render, `scripts/ensure_vector_index.py` builds `/var/data/vector_index.json.gz` on startup when `OPENAI_API_KEY` is configured, then reuses it from the persistent disk.
-
-```bash
 export OPENAI_API_KEY=sk-...
 ```
 
-To enable the password-protected chat log admin page, set `ADMIN_PASSWORD`:
+Required and optional variables:
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `ANTHROPIC_API_KEY` | Required for chat answers | Calls the answer and query-expansion models. |
+| `OPENAI_API_KEY` | Optional | Enables vector retrieval and vector-index generation. |
+| `ANTHROPIC_MODEL` | Optional | Defaults to `claude-sonnet-4-6`. |
+| `ANTHROPIC_EXPANSION_MODEL` | Optional | Defaults to `claude-haiku-4-5-20251001`. |
+| `EMBEDDING_MODEL` | Optional | Defaults to `text-embedding-3-small`. |
+| `PORT` | Optional | Defaults to `5000` in `app.py`; `5050` is commonly used locally on macOS. |
+| `ADMIN_PASSWORD` | Optional | Enables password-protected access to admin chat-log views. |
+| `ADMIN_SESSION_SECRET` | Recommended when admin is enabled | Keeps admin sessions stable across restarts. |
+| `CHAT_LOG_DB` | Optional | Path to the SQLite chat-log database. |
+| `CHAT_LOG_IPS` | Optional | Set to `true` to store client IPs; disabled by default. |
+
+### 3. Start the app
 
 ```bash
-export ADMIN_PASSWORD='choose-a-long-password'
+PORT=5050 python app.py
 ```
 
-(Add it to your shell profile if you want it set automatically.)
+Then open:
 
-### Step 3 — Start the bot
-**On Mac:** Double-click **START.command**
-- If Mac asks "are you sure?", click Open
-- The first run installs dependencies into `.venv/`
-- When you see `Running on http://localhost:5050`, the bot is ready
-
-### Step 4 — Open your browser
-Go to: **http://localhost:5050**
-
-(The default is `5050` because macOS AirPlay Receiver squats on `5000`. To change it, set `PORT=5000` in your shell before launching, or pass it inline.)
-
----
-
-## Everyday use
-1. Double-click START.command
-2. Open http://localhost:5050 in your browser
-3. Ask questions
-
-The chat has three answer modes:
-- **Focused:** tight retrieval, lower context count, and temperature `0.0` for conservative source fidelity.
-- **Balanced:** default source-grounded answers with normal retrieval and temperature `0.2`.
-- **Brainstorm:** wider retrieval and temperature `0.45` for source-grounded ideation.
-
-Before retrieval, the bot also runs a lightweight triage. Greetings, very vague prompts, and broad technical implementation requests are answered with a clarifying question instead of searching the corpus.
-
-The bot page includes a corpus status bar showing whether chunks are loaded, how many sources are indexed, which retrieval backend is active, and whether the vector index is missing or stale.
-
-The methodology page links to `/evaluation`, which exposes a seed validation set and metric definitions for response accuracy, citation quality, hallucination checks, completeness, refusal accuracy, and retrieval coverage. Expand `evaluation_questions.json` when the final validated Excel-derived dataset is available.
-
-**To stop:** Press Ctrl+C in the Terminal window, or just close it.
-
-## Admin chat logs
-When `ADMIN_PASSWORD` is set, every chat exchange is stored in `chat_logs.db` for later analysis. On Render, `render.yaml` mounts a persistent disk at `/var/data` and sets `CHAT_LOG_DB=/var/data/chat_logs.db`, so future logs survive deploys and restarts once the disk is active.
-
-```bash
-http://localhost:5050/admin/login
+```text
+http://localhost:5050
 ```
 
-Log in with username `admin` and your `ADMIN_PASSWORD`. You can also open `/admin/chats` directly and the app will redirect you to the login page. The admin page groups turns into full chat sessions, with each user prompt and bot answer shown chronologically. It supports search, session-level CSV export, and raw turn-level CSV export. The log includes the user message, bot reply, anonymous visitor/session IDs, answer mode, temperature, sources used, retrieval mode, scope result, gate score, errors, and latency.
+## Updating the Corpus
 
-If the login page says admin logs are disabled, `ADMIN_PASSWORD` is not set on the running server. Set it in your local shell or hosting environment, then restart/redeploy the app.
+When source PDFs change, rebuild the generated artifacts before deployment.
 
-Render persistent disks require a paid web service and are attached only at runtime. If the disk is not active, logs fall back to the service filesystem and can disappear on redeploy.
-
-By default the app does not store client IP addresses. To include them, set:
-
-```bash
-export CHAT_LOG_IPS=true
-```
-
----
-
-## Adding new documents
-1. Stop the bot (Ctrl+C)
-2. Add the new PDF to the `documents/` folder
-3. Rebuild the corpus index:
 ```bash
 python scripts/build_chunks.py
-```
-4. Rebuild the vector index:
-```bash
-python scripts/build_vector_index.py
-```
-5. Rebuild the source metadata:
-```bash
 python scripts/build_source_metadata.py
-```
-6. Commit the updated `documents/`, `chunks.json`, and `source_metadata.json`, then redeploy/restart the bot. `vector_index.json.gz` can be generated during deployment when `OPENAI_API_KEY` is configured.
-
----
-
-## Troubleshooting
-
-**"Server not reachable" in the corpus bar**
-→ The Python server isn't running. Start it with START.command first.
-
-**"No documents loaded"**
-→ The `documents/` folder is empty. Add your PDFs.
-
-**A PDF is uploaded but the bot ignores it**
-→ The bot answers from `chunks.json`, not live PDF reads. Run:
-```bash
-python scripts/build_chunks.py
 python scripts/build_vector_index.py
 ```
-Then check `/status`; `missing_pdf_sources` should be empty or explain what still needs attention.
 
-If a PDF still appears in `missing_pdf_sources` after rebuilding, it may be scanned or image-only. Convert it to a text-readable/OCR PDF, then rerun both build commands.
+Commit the updated corpus artifacts that are intended for publication:
 
-**"Invalid API key"** or **"API key not configured on server"**
-→ The server reads the key from the `ANTHROPIC_API_KEY` environment variable. Set it before starting:
+- `documents/`
+- `chunks.json`
+- `source_metadata.json`
+- `source_metadata.csv`
+
+The vector index is treated as a generated retrieval artifact and is excluded from git by default. On Render, `scripts/ensure_vector_index.py` can rebuild `/var/data/vector_index.json.gz` on startup when `OPENAI_API_KEY` is configured.
+
+## Deployment
+
+The included `render.yaml` deploys the app as a Render web service:
+
+- installs Python dependencies from `requirements.txt`;
+- rebuilds source metadata when corpus files are present;
+- ensures a vector index exists at startup when possible;
+- runs the Flask app with Gunicorn;
+- stores chat logs and the vector index on a persistent disk mounted at `/var/data`.
+
+The production start command is:
+
 ```bash
-export ANTHROPIC_API_KEY=sk-ant-...
+python scripts/ensure_vector_index.py && gunicorn app:app
 ```
-Then restart the bot.
 
-**Bot gives vague answers without named sources**
-→ The retrieved chunks may not contain enough source context. 
-   Try renaming your PDFs to match their citation names exactly.
+## Evaluation and Quality Assurance
 
----
+Run the test suite with:
 
-## Cost estimate
-At ~100 questions/month: roughly $2–5/month in API costs.
-Claude Sonnet is used for all responses. If vector retrieval is enabled, OpenAI embeddings are also used once when building the index and once per retrieval query at runtime.
+```bash
+PYTHONPATH=. pytest -q
+```
 
----
+The current tests check:
 
-## For publication / methodology description
-This system uses:
-- **PDF extraction:** pdfplumber (offline preprocessing into `chunks.json`)
-- **Chunking:** sliding window, 400 words per chunk, 80-word overlap
-- **Retrieval:** embedding cosine over `vector_index.json.gz` when available, with TF-IDF fallback; three-pass retrieval (original query + LLM-generated paraphrase + LLM-generated counter-query), source diversity, and broader context windows to improve recall and surface contrasting positions
-- **Scope gating:** mean cosine of top-10 chunks; below threshold, the system refuses and points to an external resource category
-- **Source metadata:** `source_metadata.json` contains bibliography/source records for the corpus without document text, chunks, embeddings, or chat logs. The `/sources` route exposes the same records at runtime.
-- **Source register export:** `source_metadata.csv` and `/sources.csv` provide a spreadsheet-ready bibliography register with citation labels, titles, DOI/URL fields, source tiers, PDF page counts, and chunk counts.
-- **Evaluation hook:** `evaluation_questions.json` and `/evaluation` provide a seed validation set with expected concepts, reference sources, and metric definitions.
-- **Models:** OpenAI `text-embedding-3-small` for vector retrieval; `ANTHROPIC_EXPANSION_MODEL` for query expansion; `ANTHROPIC_MODEL` for user-facing answers
-- **System prompt:** sourcing rules, two-sidedness on contested questions, scope boundaries, friendly-name conventions
+- core public routes;
+- source metadata and CSV export behavior;
+- evaluation endpoint structure;
+- public toolkit surfaces in the homepage;
+- presence of methodological, privacy, checklist, source-register, and citation-linking UI elements.
 
-For local development the app defaults to port `5050`. Hosted deployments may set a different `PORT` value through the hosting environment.
+The public `/evaluation` endpoint provides a seed validation set for future systematic assessment. The intended metrics include response accuracy, citation validity, citation precision, hallucination rate, completeness, refusal accuracy, and retrieval coverage.
 
-For production deployment the Render configuration runs the Flask app through Gunicorn (`gunicorn app:app`). The corpus is loaded when the app module is imported, so both local `python app.py` and Gunicorn deployments use the same indexed chunks.
+## Privacy and Logging
 
-For a public academic release, keep secrets and runtime/private artifacts out of git:
-- Never commit `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `.env`, or Render secret values.
-- Do not commit `chat_logs.db`; logs can contain user prompts and failure details.
-- The corpus PDFs, `chunks.json`, and `source_metadata.json` are included here because redistribution has been cleared for this project.
-- Do not commit `vector_index.json.gz` unless you explicitly want to publish derived embedding data. Render can regenerate it from `chunks.json` using the secret `OPENAI_API_KEY`.
+Chat requests are logged to SQLite for evaluation and debugging. Logged fields can include:
 
-Render can still use the secret `OPENAI_API_KEY` to build `/var/data/vector_index.json.gz` during service startup when `chunks.json` is present in the private deployment source.
+- user prompt and assistant reply;
+- anonymous visitor and conversation identifiers;
+- answer mode and temperature;
+- retrieval mode and retrieval backend;
+- sources used;
+- scope classification and gate score;
+- errors and latency;
+- user agent.
 
----
+Client IP addresses are not stored by default. Set `CHAT_LOG_IPS=true` only when there is a clear operational reason and an appropriate privacy basis.
 
-EMERGE Project · WP2 Deliverable 2.6
-Ludwig-Maximilians-Universität München
+Admin access to logs is disabled unless `ADMIN_PASSWORD` is configured. If enabled, admin routes are available under `/admin/login`, `/admin/chats`, `/admin/chats.csv`, and `/admin/sessions.csv`.
+
+## Limitations
+
+- The bot answers from the indexed corpus only; it is not a general web-search assistant.
+- Legal and policy answers are informational and should not be treated as legal advice.
+- Source-grounded synthesis can still omit nuance or over-compress a contested issue.
+- OCR quality, PDF formatting, and metadata completeness affect retrieval quality.
+- The source register records bibliographic metadata; it is not a substitute for the original source documents.
+- The corpus includes project-cleared PDFs and derived artifacts. Reuse or redistribution should be checked against the relevant document permissions.
+
+## Citation
+
+If you use this repository, the public toolkit, or its methodology in academic work, cite the software repository and the underlying EMERGE deliverables that support the claim being discussed. A GitHub-compatible citation file is provided in `CITATION.cff`.
+
+Suggested repository citation:
+
+```text
+EMERGE Project and MI3, Ludwig-Maximilians-Universität München. EMERGE Ethics Toolkit: Research software for source-grounded exploration of aware and collective AI ethics. GitHub repository, 2026.
+```
+
+## Reuse Status
+
+No repository-wide open-source license is declared in this snapshot. Before reuse, redistribution, or derivative publication, verify the rights status of the code, PDFs, generated chunks, metadata, and any hosted chat logs.
+
+Runtime secrets and private artifacts must not be committed:
+
+- `ANTHROPIC_API_KEY`
+- `OPENAI_API_KEY`
+- `.env` files
+- `chat_logs.db`
+- `vector_index.json.gz`
+
+## Acknowledgement
+
+EMERGE Project · WP2 Deliverable 2.6<br>
+MI3 · Ludwig-Maximilians-Universität München
