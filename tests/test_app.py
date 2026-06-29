@@ -167,6 +167,9 @@ def test_homepage_exposes_required_toolkit_surfaces(monkeypatch, tmp_path):
     assert 'class="src-ref"' in body
     assert "source-filters" in body
     assert "setSourceTier('__ocr')" in body
+    assert "setSourceTier('', false)" in body
+    assert "No matching sources in this filter" in body
+    assert "Clear filter" in body
     assert "method-status" in body
     assert "loadMethodStatus" in body
     assert "Reset checks" in body

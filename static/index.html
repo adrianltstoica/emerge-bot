@@ -81,6 +81,8 @@ footer{padding:28px 52px;border-top:1px solid var(--g2);display:flex;align-items
 .src-fields{display:flex;gap:8px;flex-wrap:wrap;font-size:10px;color:var(--g3);font-weight:700;}
 .src-chip{border:1px solid var(--g2);border-radius:999px;padding:4px 7px;background:var(--g1);}
 .src-empty{padding:36px 0;color:var(--g3);font-size:13px;text-align:center;}
+.src-empty-action{margin-top:12px;border:1px solid var(--g2);border-radius:8px;background:var(--wh);color:var(--bk);font:700 12px var(--fn);padding:9px 11px;cursor:pointer;}
+.src-empty-action:hover{border-color:var(--p);color:var(--p);}
 .method-status{border-top:1px solid var(--g2);border-bottom:1px solid var(--g2);padding:18px 0;margin:12px 0 8px;}
 .method-status-title{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--g3);margin-bottom:12px;}
 .method-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}
@@ -816,12 +818,12 @@ function sourceMatchesTier(src) {
   return src.source_tier === sourceTierFilter;
 }
 
-function setSourceTier(tier) {
+function setSourceTier(tier, shouldRender) {
   sourceTierFilter = tier || '';
   document.querySelectorAll('.src-filter').forEach(function(btn) {
     btn.classList.toggle('on', btn.getAttribute('data-tier') === sourceTierFilter);
   });
-  renderSources();
+  if (shouldRender !== false) renderSources();
 }
 
 async function loadSources() {
@@ -847,6 +849,7 @@ async function loadSources() {
 async function sourceLookup(query) {
   show('sources');
   await loadSources();
+  setSourceTier('', false);
   const input = document.getElementById('source-search');
   if (!input) return;
   input.value = query;
@@ -860,17 +863,27 @@ function renderSources() {
   if (!list) return;
   const q = norm(document.getElementById('source-search')?.value || '').trim();
   const terms = q.split(/\s+/).filter(Boolean);
-  const filtered = sourceRecords.filter(function(src) {
-    if (!sourceMatchesTier(src)) return false;
+  const matchesSearch = function(src) {
     const hay = sourceHaystack(src);
     return !terms.length || terms.every(term => hay.includes(term));
+  };
+  const searchMatches = sourceRecords.filter(matchesSearch);
+  const filtered = sourceRecords.filter(function(src) {
+    if (!sourceMatchesTier(src)) return false;
+    return matchesSearch(src);
   });
   const filterText = sourceTierFilter
     ? (sourceTierFilter === '__ocr' ? ' needing OCR or chunk rebuild' : ' in ' + sourceTierFilter)
     : '';
   if (meta) meta.textContent = filtered.length + ' of ' + sourceRecords.length + ' source records shown' + filterText + '.';
   if (!filtered.length) {
-    list.innerHTML = '<div class="src-empty">No matching sources.</div>';
+    if (sourceTierFilter && terms.length && searchMatches.length) {
+      list.innerHTML = '<div class="src-empty">No matching sources in this filter, but ' +
+        esc(searchMatches.length) + ' match' + (searchMatches.length === 1 ? ' exists' : 'es exist') +
+        ' outside it.<br><button class="src-empty-action" type="button" onclick="setSourceTier(\'\')">Clear filter</button></div>';
+    } else {
+      list.innerHTML = '<div class="src-empty">No matching sources.</div>';
+    }
     return;
   }
   list.innerHTML = filtered.map(function(src) {
